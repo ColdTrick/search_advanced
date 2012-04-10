@@ -13,6 +13,12 @@
 		<name>search</name>
 	</requires>
 	
+	<requires>
+		<type>priority</type>
+		<plugin>search</plugin>
+		<priority>after</priority>
+	</requires>
+	
 	<suggests>
 		<type>plugin</type>
 		<name>profile_manager</name>

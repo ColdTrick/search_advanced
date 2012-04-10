@@ -1,6 +1,6 @@
 This plugin provides additional search features.
 
-= Features: =
+= Features =
 
 - multitag
 - extends fulltext with wildcards
@@ -15,3 +15,6 @@ This plugin provides additional search features.
  - relevance
  
  and more
+
+= Todo =
+report search $value issue in search/search_box view to trac
