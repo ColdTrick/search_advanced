@@ -5,7 +5,8 @@ require_once(dirname(__FILE__) . "/lib/hooks.php");
 
 function search_advanced_init(){
 	// page handler for search actions and results
-	elgg_register_page_handler('search', 'search_advanced_page_handler');
+	elgg_register_page_handler('search_advanced', 'search_advanced_page_handler');
+	elgg_register_page_handler('search', 'search_advanced_search_page_handler');
 	
 	// search hooks
 	search_advanced_unregister_default_search_hooks();
@@ -17,6 +18,13 @@ function search_advanced_init(){
 }
 
 function search_advanced_page_handler($page){
+	if($page[0] == "autocomplete"){
+		include_once(dirname(__FILE__) . "/procedures/autocomplete.php");
+		return true;
+	}	
+}
+
+function search_advanced_search_page_handler($page){
 	// if there is no q set, we're being called from a legacy installation
 	// it expects a search by tags.
 	// actually it doesn't, but maybe it should.

@@ -31,11 +31,13 @@ if (function_exists('mb_convert_encoding')) {
 	$display_query = preg_replace("/[^\x01-\x7F]/", "", $value);
 }
 $display_query = htmlspecialchars($display_query, ENT_QUOTES, 'UTF-8', false);
-
+$type_selection = elgg_view("search_advanced/search/type_selection");
 ?>
 
+	
 <form class="<?php echo $class; ?>" action="<?php echo elgg_get_site_url(); ?>search" method="get">
 	<fieldset>
+		<?php echo $type_selection;?>
 		<input type="text" class="search-input" size="21" name="q" value="<?php echo $value; ?>" onblur="if (this.value=='') { this.value='<?php echo elgg_echo('search'); ?>' }" onfocus="if (this.value=='<?php echo elgg_echo('search'); ?>') { this.value='' };" />
 		<input type="submit" value="<?php echo elgg_echo('search:go'); ?>" class="search-submit-button" />
 	</fieldset>

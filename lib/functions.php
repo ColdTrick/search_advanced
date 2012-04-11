@@ -14,6 +14,7 @@ function search_advanced_unregister_default_search_hooks(){
 	elgg_unregister_plugin_hook_handler('search_advanced_types', 'get_types', 'search_custom_types_comments_hook');
 	elgg_unregister_plugin_hook_handler('search', 'comments', 'search_comments_hook');
 }
+
 function search_advanced_register_search_hooks(){
 	// register some default search hooks
 	elgg_register_plugin_hook_handler('search', 'object', 'search_advanced_objects_hook');
