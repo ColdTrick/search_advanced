@@ -2,9 +2,18 @@ This plugin provides additional search features.
 
 = Features =
 
-- multitag
+- adds search widget
 - extends fulltext with wildcards
-- additional content filters
+- adds counters to search menu items
+- autocompletes users and groups
+- direct filter menu for direct content search (or all)
+
+WARNING:
+- currently it will remove support for custom search types like tags and comments search
+ 
+ todo:
+ - multitag
+ - additional content filters
  - time created
  - container
  - owner
@@ -13,8 +22,3 @@ This plugin provides additional search features.
  - chronological
  - alphabetical
  - relevance
- 
- and more
-
-= Todo =
-report search $value issue in search/search_box view to trac

@@ -23,9 +23,77 @@ function search_advanced_register_search_hooks(){
 	
 	// tags and comments are a bit different.
 	// register a search types and a hooks for them.
-	elgg_register_plugin_hook_handler('search_advanced_types', 'get_types', 'search_advanced_custom_types_tags_hook');
-	elgg_register_plugin_hook_handler('search', 'tags', 'search_advanced_tags_hook');
+// 	elgg_register_plugin_hook_handler('search_advanced_types', 'get_types', 'search_advanced_custom_types_tags_hook');
+// 	elgg_register_plugin_hook_handler('search', 'tags', 'search_advanced_tags_hook');
 	
-	elgg_register_plugin_hook_handler('search_advanced_types', 'get_types', 'search_advanced_custom_types_comments_hook');
-	elgg_register_plugin_hook_handler('search', 'comments', 'search_advanced_comments_hook');
+// 	elgg_register_plugin_hook_handler('search_advanced_types', 'get_types', 'search_advanced_custom_types_comments_hook');
+// 	elgg_register_plugin_hook_handler('search', 'comments', 'search_advanced_comments_hook');
+}
+
+/**
+* Returns a where clause for a search query. 
+* 
+* Search Advanced: added the ability to use a wildcard in full text search
+*
+* @param str $table Prefix for table to search on
+* @param array $fields Fields to match against
+* @param array $params Original search params
+* @return str
+*/
+function search_advanced_get_where_sql($table, $fields, $params, $use_fulltext = TRUE) {
+	global $CONFIG;
+	$query = $params['query'];
+
+	// add the table prefix to the fields
+	foreach ($fields as $i => $field) {
+		if ($table) {
+			$fields[$i] = "$table.$field";
+		}
+	}
+
+	$where = '';
+
+	// if query is shorter than the min for fts words
+	// it's likely a single acronym or similar
+	// switch to literal mode
+	if (elgg_strlen($query) < $CONFIG->search_info['min_chars']) {
+		$likes = array();
+		$query = sanitise_string($query);
+		foreach ($fields as $field) {
+			$likes[] = "$field LIKE '%$query%'";
+		}
+		$likes_str = implode(' OR ', $likes);
+		$where = "($likes_str)";
+	} else {
+		// if we're not using full text, rewrite the query for bool mode.
+		// exploiting a feature(ish) of bool mode where +-word is the same as -word
+		if (!$use_fulltext) {
+			$query = '+' . str_replace(' ', ' +', $query);
+		}
+
+		// if using advanced, boolean operators, or paired "s, switch into boolean mode
+		$booleans_used = preg_match("/([\-\+~])([\w]+)/i", $query);
+		$advanced_search = (isset($params['advanced_search']) && $params['advanced_search']);
+		$quotes_used = (elgg_substr_count($query, '"') >= 2);
+
+		if (!$use_fulltext || $booleans_used || $advanced_search || $quotes_used) {
+			$options = 'IN BOOLEAN MODE';
+		} else {
+			// natural language mode is default and this keyword isn't supported in < 5.1
+			//$options = 'IN NATURAL LANGUAGE MODE';
+			$options = '';
+		}
+
+		// if short query, use query expansion.
+		// @todo doesn't seem to be working well.
+		//		if (elgg_strlen($query) < 5) {
+		//			$options .= ' WITH QUERY EXPANSION';
+		//		}
+		$query = sanitise_string($query);
+
+		$fields_str = implode(',', $fields);
+		$where = "(MATCH ($fields_str) AGAINST ('$query*' $options))"; // Search Advanced: added the wildcard
+	}
+
+	return $where;
 }

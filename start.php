@@ -15,12 +15,19 @@ function search_advanced_init(){
 	// views
 	elgg_extend_view("css/elgg", "search_advanced/css/site");
 	elgg_extend_view("js/elgg", "search_advanced/js/site");
+	
+	// search widget
+	elgg_register_widget_type("search", elgg_echo("search"), elgg_echo("search"), "profile,dashboard,index,groups", true);	
 }
 
 function search_advanced_page_handler($page){
-	if($page[0] == "autocomplete"){
-		include_once(dirname(__FILE__) . "/procedures/autocomplete.php");
-		return true;
+	switch($page[0]){
+		case "autocomplete":
+			include_once(dirname(__FILE__) . "/procedures/autocomplete.php");
+			return true;
+		case "widget_search":
+			include_once(dirname(__FILE__) . "/procedures/widget.php");
+			return true;
 	}	
 }
 
@@ -34,7 +41,7 @@ function search_advanced_search_page_handler($page){
 		//set_input('search_type', 'tags');
 	}
 	
-	$base_dir = elgg_get_plugins_path() . 'search/pages/search';
+	$base_dir = elgg_get_plugins_path() . 'search_advanced/pages/search';
 	
 	include_once("$base_dir/index.php");
 	return true;
