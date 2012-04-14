@@ -1,5 +1,9 @@
 = Version history: =
 
+x.x:
+
+- fixed: some search fixes
+
 0.1 (2012-04-12):
 
 - first release

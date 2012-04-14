@@ -272,7 +272,7 @@ foreach ($types as $type => $subtypes) {
 			
 			$count = "";
 			if(array_key_exists($label, $search_result_counters)){
-				$count = " [" . $search_result_counters[$label] . "]";
+				$count = " <span class='elgg-quiet'>[" . $search_result_counters[$label] . "]</span>";
 			}
 			
 			$data = htmlspecialchars(http_build_query(array(
@@ -294,7 +294,7 @@ foreach ($types as $type => $subtypes) {
 
 		$count = "";
 		if(array_key_exists($label, $search_result_counters)){
-			$count = " [" . $search_result_counters[$label] . "]";
+			$count = " <span class='elgg-quiet'>[" . $search_result_counters[$label] . "]</span>";
 		}
 		
 		$data = htmlspecialchars(http_build_query(array(

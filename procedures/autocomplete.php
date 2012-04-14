@@ -7,27 +7,27 @@ $page_owner_guid = (int) get_input("page_owner_guid");
 $result = array();
 if(!empty($q)){
 	
-	$user = elgg_get_logged_in_user_entity();
+	$logged_in_user = elgg_get_logged_in_user_entity();
 	
 	// look for users
 	$options = array(
 		"type" => "user",
 		"limit" => 5,
 		"joins" => array("JOIN " . elgg_get_config("dbprefix") . "users_entity ue ON e.guid = ue.guid"),
-		"wheres" => array("ue.name like '%" . $q . "%' OR ue.username like '%" . $q . "%'")
+		"wheres" => array("(ue.name like '%" . $q . "%' OR ue.username like '%" . $q . "%')")
 	);
 	
-	if($user){
+	if($logged_in_user){
 		// look only in friends
 		$options["relationship"] = "friend_of";
-		$options["relationship_guid"] = $user->getGUID();
+		$options["relationship_guid"] = $logged_in_user->getGUID();
 		$users = elgg_get_entities_from_relationship($options);
 	}
 	
 	if(!$users){
 		// no friends or logged out
-		unset($options["relationship"]);
-		unset($options["relationship_guid"]);
+		$options["relationship"] = "member_of_site";
+		$options["relationship_guid"] = elgg_get_site_entity()->getGUID();
 		$users = elgg_get_entities($options);
 	}
 	
@@ -46,10 +46,10 @@ if(!empty($q)){
 		"wheres" => array("ge.name like '%" . $q . "%'")
 	);
 	
-	if($user){
+	if($logged_in_user){
 		// look only in personal groups
 		$options["relationship"] = "member";
-		$options["relationship_guid"] = $user->getGUID();
+		$options["relationship_guid"] = $logged_in_user->getGUID();
 		$groups = elgg_get_entities_from_relationship($options);
 	}
 	
