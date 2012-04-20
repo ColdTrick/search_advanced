@@ -4,7 +4,8 @@
 elgg.provide("elgg.search_advanced");
 
 elgg.search_advanced.init = function() {
-	$(".elgg-search .search-input")
+	$(".elgg-search .search-input").each(function(){
+		$(this)
 		// don't navigate away from the field on tab when selecting an item
 		.bind( "keydown", function( event ) {
 			if ( event.keyCode === $.ui.keyCode.TAB &&
@@ -57,6 +58,7 @@ elgg.search_advanced.init = function() {
 			.append( "<a>" + list_body + "</a>" )
 			.appendTo( ul );
 		};
+	});
 
 	// type selection
 	$(".search-advanced-type-selection > li > a").click(function(e){
