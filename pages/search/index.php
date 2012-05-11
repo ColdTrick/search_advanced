@@ -37,9 +37,11 @@ if (!$query) {
 	}
 	
 	$body .= elgg_echo('search:no_query');
-	$layout = elgg_view_layout('one_sidebar', array('content' => $body));
-	echo elgg_view_page($title, $layout);
-
+	if(!elgg_is_xhr()){
+		$layout = elgg_view_layout('one_sidebar', array('content' => $body));
+		$body = elgg_view_page($title, $layout);
+	}
+	echo $body;
 	return;
 }
 
