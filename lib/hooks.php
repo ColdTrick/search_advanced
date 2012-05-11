@@ -134,7 +134,7 @@ function search_advanced_users_hook($hook, $type, $value, $params) {
 		$entity = get_entity($params["container_guid"]);
 	}
 	
-	if($entity instanceof ElggGroup) {
+	if(isset($entity) && $entity instanceof ElggGroup) {
 		// check for group membership relation
 		$params["relationship"] = "member";
 		$params["relationship_guid"] = $params["container_guid"];

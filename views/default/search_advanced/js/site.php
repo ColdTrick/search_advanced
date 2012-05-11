@@ -109,7 +109,7 @@ elgg.search_advanced.init = function() {
 		$loader.removeClass('hidden');
 		$target.html($loader);
 		
-		$target.load(elgg.get_site_url() + "/search", $(this).serialize()).addClass("mtm");
+		$target.load(elgg.get_site_url() + "search", $(this).serialize()).addClass("mtm");
 		e.preventDefault();
 	});
 	

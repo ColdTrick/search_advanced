@@ -1,6 +1,6 @@
 <?php
 
-	/*$widget = $vars["entity"];
+	$widget = $vars["entity"];
 
 	$types = get_registered_entity_types();
 	$options_values = array();
@@ -30,8 +30,8 @@
 		}
 	}
 	
+	echo elgg_echo("filter") . "&nbsp;";
 	echo elgg_view("input/dropdown", array("name" => "params[types]", "value" => $widget->types, "options_values" => $options_values));
-	echo "<br />";
-	echo elgg_echo("filter");
-	echo elgg_view("input/tags", array("name" => "params[tag_filter]", "value" => $widget->tag_filter));
-	*/
+// 	echo elgg_echo("tags");
+// 	echo elgg_view("input/tags", array("name" => "params[tag_filter]", "value" => $widget->tag_filter));
+	

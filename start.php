@@ -25,9 +25,6 @@ function search_advanced_page_handler($page){
 		case "autocomplete":
 			include_once(dirname(__FILE__) . "/procedures/autocomplete.php");
 			return true;
-		case "widget_search":
-			include_once(dirname(__FILE__) . "/procedures/widget.php");
-			return true;
 	}	
 }
 
@@ -36,7 +33,7 @@ function search_advanced_search_page_handler($page){
 	// it expects a search by tags.
 	// actually it doesn't, but maybe it should.
 	// maintain backward compatibility
-	if(!get_input('q', get_input('tag', NULL))) {
+	if(!get_input('q', get_input('tag', NULL)) && isset($page[0])) {
 		set_input('q', $page[0]);
 		//set_input('search_type', 'tags');
 	}
