@@ -67,6 +67,7 @@ form.elgg-search {
 .elgg-search input[type="text"].search-input {
 	background-position: 210px -934px;
 	padding: 2px 26px 2px 4px;
+	height: 19px;
 	border: none;
 	border-left: 1px solid #71B9F7;
 	-webkit-border-radius: 0px;
