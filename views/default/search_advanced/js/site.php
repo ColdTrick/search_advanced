@@ -23,7 +23,7 @@ elgg.search_advanced.init = function() {
 				// custom minLength
 				var term = this.value;
 				if ( term.length < 2){
-					return false
+					return false;
 				}
 
 				var search_type = $(".elgg-search input[name='entity_type']").val(); 
