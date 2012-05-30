@@ -7,6 +7,7 @@
 .search-advanced-type-selection-dropdown {
 	display: none;
 	position: absolute;
+	top: 18px;
 	right: -4px;
 	background: white;
 	border: 1px solid #71B9F7;
@@ -19,6 +20,12 @@
 	-moz-box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.5);
 	box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.5);
 	
+}
+
+.search-advanced-type-selection > li {
+	display: inline;
+	position: relative;
+	height: 20px;
 }
 
 .search-advanced-type-selection > li > a {
@@ -66,11 +73,12 @@ form.elgg-search {
 
 .elgg-search input[type="text"].search-input {
 	background-position: 210px -934px;
-	padding: 2px 26px 2px 4px;
+	padding: 0px 26px 0px 4px;
 	height: 19px;
 	border: none;
 	border-left: 1px solid #71B9F7;
 	-webkit-border-radius: 0px;
 	-moz-border-radius: 0px;
 	border-radius: 0px;
+	position: relative;
 }
