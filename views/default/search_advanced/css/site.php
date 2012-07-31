@@ -32,7 +32,8 @@
 	padding: 0 5px;
 	margin-right: -4px;
 	display: inline-block;
-	height: 19px;
+	height: 20px;
+	line-height: 20px;
 	background: #71B9F7;
 	
 	color: white;
@@ -81,4 +82,5 @@ form.elgg-search {
 	-moz-border-radius: 0px;
 	border-radius: 0px;
 	position: relative;
+	vertical-align: top;
 }
