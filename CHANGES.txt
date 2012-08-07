@@ -2,6 +2,7 @@
 
 x.x:
 
+- added: multisite search features
 - fixed: some search fixes
 
 0.1 (2012-04-12):

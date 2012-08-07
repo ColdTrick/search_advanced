@@ -155,7 +155,7 @@ function search_advanced_users_hook($hook, $type, $value, $params) {
 	$params['subtype'] = ELGG_ENTITIES_ANY_VALUE;
 
 	$params['count'] = TRUE;
-	$count = elgg_get_entities($params);
+	$count = elgg_get_entities_from_relationship($params);
 
 	// no need to continue if nothing here.
 	if (!$count) {
@@ -163,7 +163,7 @@ function search_advanced_users_hook($hook, $type, $value, $params) {
 	}
 	
 	$params['count'] = FALSE;
-	$entities = elgg_get_entities($params);
+	$entities = elgg_get_entities_from_relationship($params);
 
 	// add the volatile data for why these entities have been returned.
 	foreach ($entities as $entity) {
