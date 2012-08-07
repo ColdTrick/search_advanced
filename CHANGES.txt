@@ -1,6 +1,6 @@
 = Version history: =
 
-x.x:
+0.2 (2012-08-07):
 
 - added: multisite search features
 - fixed: some search fixes
