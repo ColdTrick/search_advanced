@@ -191,128 +191,135 @@ function search_advanced_users_hook($hook, $type, $value, $params) {
  * @param unknown_type $params
  * @return unknown_type
  */
-// function search_tags_hook($hook, $type, $value, $params) {
-// 	$db_prefix = elgg_get_config('dbprefix');
+function search_advanced_tags_hook($hook, $type, $value, $params) {
+	$db_prefix = elgg_get_config('dbprefix');
 
-// 	$valid_tag_names = elgg_get_registered_tag_metadata_names();
+	$valid_tag_names = elgg_get_registered_tag_metadata_names();
 
-// 	// @todo will need to split this up to support searching multiple tags at once.
-// 	$query = sanitise_string($params['query']);
+	// @todo will need to split this up to support searching multiple tags at once.
+	$query = sanitise_string($params['query']);
 
-// 	// if passed a tag metadata name, only search on that tag name.
-// 	// tag_name isn't included in the params because it's specific to
-// 	// tag searches.
-// 	if ($tag_names = get_input('tag_names')) {
-// 		if (is_array($tag_names)) {
-// 			$search_tag_names = $tag_names;
-// 		} else {
-// 			$search_tag_names = array($tag_names);
-// 		}
+	// if passed a tag metadata name, only search on that tag name.
+	// tag_name isn't included in the params because it's specific to
+	// tag searches.
+	if ($tag_names = get_input('tag_names')) {
+		if (is_array($tag_names)) {
+			$search_tag_names = $tag_names;
+		} else {
+			$search_tag_names = array($tag_names);
+		}
 
-// 		// check these are valid to avoid arbitrary metadata searches.
-// 		foreach ($search_tag_names as $i => $tag_name) {
-// 			if (!in_array($tag_name, $valid_tag_names)) {
-// 				unset($search_tag_names[$i]);
-// 			}
-// 		}
-// 	} else {
-// 		$search_tag_names = $valid_tag_names;
-// 	}
+		// check these are valid to avoid arbitrary metadata searches.
+		foreach ($search_tag_names as $i => $tag_name) {
+			if (!in_array($tag_name, $valid_tag_names)) {
+				unset($search_tag_names[$i]);
+			}
+		}
+	} else {
+		$search_tag_names = $valid_tag_names;
+	}
 
-// 	if (!$search_tag_names) {
-// 		return array('entities' => array(), 'count' => $count);
-// 	}
+	if (!$search_tag_names) {
+		return array('entities' => array(), 'count' => $count);
+	}
 
-// 	// don't use elgg_get_entities_from_metadata() here because of
-// 	// performance issues.  since we don't care what matches at this point
-// 	// use an IN clause to grab everything that matches at once and sort
-// 	// out the matches later.
-// 	$params['joins'][] = "JOIN {$db_prefix}metadata md on e.guid = md.entity_guid";
-// 	$params['joins'][] = "JOIN {$db_prefix}metastrings msn on md.name_id = msn.id";
-// 	$params['joins'][] = "JOIN {$db_prefix}metastrings msv on md.value_id = msv.id";
+	// don't use elgg_get_entities_from_metadata() here because of
+	// performance issues.  since we don't care what matches at this point
+	// use an IN clause to grab everything that matches at once and sort
+	// out the matches later.
+	$params['joins'][] = "JOIN {$db_prefix}metadata md on e.guid = md.entity_guid";
+	$params['joins'][] = "JOIN {$db_prefix}metastrings msn on md.name_id = msn.id";
+	$params['joins'][] = "JOIN {$db_prefix}metastrings msv on md.value_id = msv.id";
 
-// 	$access = get_access_sql_suffix('md');
-// 	$sanitised_tags = array();
+	$access = get_access_sql_suffix('md');
+	$sanitised_tags = array();
 
-// 	foreach ($search_tag_names as $tag) {
-// 		$sanitised_tags[] = '"' . sanitise_string($tag) . '"';
-// 	}
+	foreach ($search_tag_names as $tag) {
+		$sanitised_tags[] = '"' . sanitise_string($tag) . '"';
+	}
 
-// 	$tags_in = implode(',', $sanitised_tags);
+	$tags_in = implode(',', $sanitised_tags);
 
-// 	$params['wheres'][] = "(msn.string IN ($tags_in) AND msv.string = '$query' AND $access)";
+	$params['wheres'][] = "(msn.string IN ($tags_in) AND msv.string = '$query' AND $access)";
 
-// 	$params['count'] = TRUE;
-// 	$count = elgg_get_entities($params);
-
-// 	// no need to continue if nothing here.
-// 	if (!$count) {
-// 		return array('entities' => array(), 'count' => $count);
-// 	}
+	$params['count'] = TRUE;
 	
-// 	$params['count'] = FALSE;
-// 	$entities = elgg_get_entities($params);
+	if(!$_SESSION["search_advanced:multisite"]){
+		$site_guid = elgg_get_site_entity()->getGUID();
+		$params['site_guids'] = false;
+		$params['wheres'][] = "((e.site_guid = " . $site_guid . ") OR (e.type = 'user' AND e.guid IN (select r.guid_one from " . elgg_get_config("dbprefix") . "entity_relationships r where r.relationship = 'member_of_site' and r.guid_two = " . $site_guid . ")))" ;
+	}
+	
+	$count = elgg_get_entities($params);
 
-// 	// add the volatile data for why these entities have been returned.
-// 	foreach ($entities as $entity) {
-// 		$matched_tags_strs = array();
+	// no need to continue if nothing here.
+	if (!$count) {
+		return array('entities' => array(), 'count' => $count);
+	}
+	
+	$params['count'] = FALSE;
+	$entities = elgg_get_entities($params);
 
-// 		// get tags for each tag name requested to find which ones matched.
-// 		foreach ($search_tag_names as $tag_name) {
-// 			$tags = $entity->getTags($tag_name);
+	// add the volatile data for why these entities have been returned.
+	foreach ($entities as $entity) {
+		$matched_tags_strs = array();
 
-// 			// @todo make one long tag string and run this through the highlight
-// 			// function.  This might be confusing as it could chop off
-// 			// the tag labels.
-// 			if (in_array(strtolower($query), array_map('strtolower', $tags))) {
-// 				if (is_array($tags)) {
-// 					$tag_name_str = elgg_echo("tag_names:$tag_name");
-// 					$matched_tags_strs[] = "$tag_name_str: " . implode(', ', $tags);
-// 				}
-// 			}
-// 		}
+		// get tags for each tag name requested to find which ones matched.
+		foreach ($search_tag_names as $tag_name) {
+			$tags = $entity->getTags($tag_name);
 
-// 		// different entities have different titles
-// 		switch($entity->type) {
-// 			case 'site':
-// 			case 'user':
-// 			case 'group':
-// 				$title_tmp = $entity->name;
-// 				break;
+			// @todo make one long tag string and run this through the highlight
+			// function.  This might be confusing as it could chop off
+			// the tag labels.
+			if (in_array(strtolower($query), array_map('strtolower', $tags))) {
+				if (is_array($tags)) {
+					$tag_name_str = elgg_echo("tag_names:$tag_name");
+					$matched_tags_strs[] = "$tag_name_str: " . implode(', ', $tags);
+				}
+			}
+		}
 
-// 			case 'object':
-// 				$title_tmp = $entity->title;
-// 				break;
-// 		}
+		// different entities have different titles
+		switch($entity->type) {
+			case 'site':
+			case 'user':
+			case 'group':
+				$title_tmp = $entity->name;
+				break;
 
-// 		// Nick told me my idea was dirty, so I'm hard coding the numbers.
-// 		$title_tmp = strip_tags($title_tmp);
-// 		if (elgg_strlen($title_tmp) > 297) {
-// 			$title_str = elgg_substr($title_tmp, 0, 297) . '...';
-// 		} else {
-// 			$title_str = $title_tmp;
-// 		}
+			case 'object':
+				$title_tmp = $entity->title;
+				break;
+		}
 
-// 		$desc_tmp = strip_tags($entity->description);
-// 		if (elgg_strlen($desc_tmp) > 297) {
-// 			$desc_str = elgg_substr($desc_tmp, 0, 297) . '...';
-// 		} else {
-// 			$desc_str = $desc_tmp;
-// 		}
+		// Nick told me my idea was dirty, so I'm hard coding the numbers.
+		$title_tmp = strip_tags($title_tmp);
+		if (elgg_strlen($title_tmp) > 297) {
+			$title_str = elgg_substr($title_tmp, 0, 297) . '...';
+		} else {
+			$title_str = $title_tmp;
+		}
 
-// 		$tags_str = implode('. ', $matched_tags_strs);
-// 		$tags_str = search_get_highlighted_relevant_substrings($tags_str, $params['query']);
+		$desc_tmp = strip_tags($entity->description);
+		if (elgg_strlen($desc_tmp) > 297) {
+			$desc_str = elgg_substr($desc_tmp, 0, 297) . '...';
+		} else {
+			$desc_str = $desc_tmp;
+		}
 
-// 		$entity->setVolatileData('search_matched_title', $title_str);
-// 		$entity->setVolatileData('search_matched_description', $desc_str);
-// 		$entity->setVolatileData('search_matched_extra', $tags_str);
-// 	}
+		$tags_str = implode('. ', $matched_tags_strs);
+		$tags_str = search_get_highlighted_relevant_substrings($tags_str, $params['query']);
 
-// 	return array(
-// 		'entities' => $entities,
-// 		'count' => $count,
-// 	);
-// }
+		$entity->setVolatileData('search_matched_title', $title_str);
+		$entity->setVolatileData('search_matched_description', $desc_str);
+		$entity->setVolatileData('search_matched_extra', $tags_str);
+	}
+
+	return array(
+		'entities' => $entities,
+		'count' => $count,
+	);
+}
 
 /**
  * Register tags as a custom search type.

@@ -116,7 +116,7 @@ if(($user = elgg_get_logged_in_user_entity()) && elgg_trigger_plugin_hook("searc
 }
 
 $types = get_registered_entity_types();
-// $custom_types = elgg_trigger_plugin_hook('search_types', 'get_types', $params, array());
+$custom_types = elgg_trigger_plugin_hook('search_types', 'get_types', $params, array());
 
 $search_result_counters = array();
 
@@ -146,7 +146,7 @@ if(array_key_exists("object", $types)){
 	$types["object"] = $orig_types["object"];
 }
 
-if ($search_type == 'all' || $search_type == 'tags' || $search_type == 'entities') {
+if ($search_type == 'all' || $search_type == 'entities') {
 	// to pass the correct current search type to the views
 	$current_params = $params;
 	$current_params['search_type'] = 'entities';
@@ -200,16 +200,16 @@ if ($search_type == 'all' || $search_type == 'tags' || $search_type == 'entities
 		}
 
 		// pull in default type entities with no subtypes
-		//@todo: following hook is performing an extra search. Almost noone uses this to limit the search results. This needs improvement
-// 		$current_params['type'] = $type;
-// 		$current_params['subtype'] = ELGG_ENTITIES_NO_VALUE;
-
-// 		$results = elgg_trigger_plugin_hook('search', $type, $current_params, array());
-// 		if ($results === FALSE) {
-// 			// someone is saying not to display these types in searches.
-// 			continue;
-// 		}
-
+		$current_params['type'] = $type;
+		$current_params['subtype'] = ELGG_ENTITIES_NO_VALUE;
+		if($type !== "object"){
+			$results = elgg_trigger_plugin_hook('search', $type, $current_params, array());
+			if ($results === FALSE) {
+				// someone is saying not to display these types in searches.
+				continue;
+			}
+		}
+		
 		if (is_array($results['entities']) && $results['count']) {
 			if ($view = search_get_search_view($current_params, 'list')) {
 				$search_result_counters["item:" . $type] = $results['count'];
@@ -223,34 +223,36 @@ if ($search_type == 'all' || $search_type == 'tags' || $search_type == 'entities
 }
 
 // call custom searches
-// if ($search_type != 'entities' || $search_type == 'all' || $search_type == 'tags') {
-// 	if (is_array($custom_types)) {
-// 		foreach ($custom_types as $type) {
-// 			if ($search_type != 'all' && $search_type != 'tags' && $search_type != $type) {
-// 				continue;
-// 			}
+if ($search_type != 'entities' || $search_type == 'all' || $search_type == 'tags') {
+	if (is_array($custom_types)) {
+		foreach ($custom_types as $type) {
+			if ($search_type != 'all' && $search_type != 'tags' && $search_type != $type) {
+				continue;
+			}
 
-// 			$current_params = $params;
-// 			$current_params['search_type'] = $type;
+			$current_params = $params;
+			$current_params['search_type'] = $type;
 
-// 			$results = elgg_trigger_plugin_hook('search', $type, $current_params, array());
+			$results = elgg_trigger_plugin_hook('search', $type, $current_params, array());
 
-// 			if ($results === FALSE) {
-// 				// someone is saying not to display these types in searches.
-// 				continue;
-// 			}
+			$search_result_counters["search_types:" . $type] = $results['count'];
+			
+			if ($results === FALSE) {
+				// someone is saying not to display these types in searches.
+				continue;
+			}
 
-// 			if (is_array($results['entities']) && $results['count']) {
-// 				if ($view = search_get_search_view($current_params, 'list')) {
-// 					$results_html .= elgg_view($view, array(
-// 						'results' => $results,
-// 						'params' => $current_params,
-// 					));
-// 				}
-// 			}
-// 		}
-// 	}
-// }
+			if (is_array($results['entities']) && $results['count']) {
+				if ($view = search_get_search_view($current_params, 'list')) {
+					$results_html .= elgg_view($view, array(
+						'results' => $results,
+						'params' => $current_params,
+					));
+				}
+			}
+		}
+	}
+}
 
 // highlight search terms
 $searched_words = search_remove_ignored_words($display_query, 'array');
@@ -336,6 +338,29 @@ foreach ($types as $type => $subtypes) {
 		$menu_item = new ElggMenuItem($label, elgg_echo($label) . $count, $url);
 		elgg_register_menu_item('page', $menu_item);
 	}
+}
+
+// add sidebar for custom searches
+foreach ($custom_types as $type) {
+	if($type == "comments"){
+		continue;
+	}
+	$label = "search_types:$type";
+
+	$count = "";
+	if(array_key_exists($label, $search_result_counters)){
+		$count = " <span class='elgg-quiet'>[" . $search_result_counters[$label] . "]</span>";
+	}
+
+	$data = htmlspecialchars(http_build_query(array(
+		'q' => $query,
+		'search_type' => $type,
+	)));
+
+	$url = elgg_get_site_url()."search?$data";
+
+	$menu_item = new ElggMenuItem($label, elgg_echo($label). $count, $url);
+	elgg_register_menu_item('page', $menu_item);
 }
 
 // this is passed the original params because we don't care what actually

@@ -24,7 +24,7 @@ function search_advanced_register_search_hooks(){
 	// tags and comments are a bit different.
 	// register a search types and a hooks for them.
 // 	elgg_register_plugin_hook_handler('search_advanced_types', 'get_types', 'search_advanced_custom_types_tags_hook');
-// 	elgg_register_plugin_hook_handler('search', 'tags', 'search_advanced_tags_hook');
+ 	elgg_register_plugin_hook_handler('search', 'tags', 'search_advanced_tags_hook');
 	
 // 	elgg_register_plugin_hook_handler('search_advanced_types', 'get_types', 'search_advanced_custom_types_comments_hook');
 // 	elgg_register_plugin_hook_handler('search', 'comments', 'search_advanced_comments_hook');
@@ -56,7 +56,7 @@ function search_advanced_get_where_sql($table, $fields, $params, $use_fulltext =
 	// if query is shorter than the min for fts words
 	// it's likely a single acronym or similar
 	// switch to literal mode
-	if (elgg_strlen($query) < $CONFIG->search_info['min_chars']) {
+	if (true || elgg_strlen($query) < $CONFIG->search_info['min_chars']) {
 		$likes = array();
 		$query = sanitise_string($query);
 		foreach ($fields as $field) {
