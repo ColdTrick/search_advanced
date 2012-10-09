@@ -81,12 +81,16 @@ elgg.search_advanced.init = function() {
 		var rel = $(this).attr("rel");
 		
 		if(rel){
-			$(".elgg-search input[name='search_type']").removeAttr("disabled");
+			$(".elgg-search input[name='search_type']").val("entities").removeAttr("disabled");
 
 			var input_vals = rel.split(" ");
-
+			
 			if(input_vals[0]){
-				$(".elgg-search input[name='entity_type']").val(input_vals[0]).removeAttr("disabled");
+				if(input_vals[0] == "tags"){
+					$(".elgg-search input[name='search_type']").val(input_vals[0]);
+				} else {
+					$(".elgg-search input[name='entity_type']").val(input_vals[0]).removeAttr("disabled");
+				}
 			} 
 
 			if(input_vals[1]){
