@@ -97,3 +97,58 @@ function search_advanced_get_where_sql($table, $fields, $params, $use_fulltext =
 
 	return $where;
 }
+
+function search_advanced_get_keywords(){
+	$result = array();
+	
+	$plugin_entity = elgg_get_plugin_from_id("search_advanced");
+	if($plugin_entity){
+		// check if cachefile exists, if not create
+
+		$file = new ElggFile();
+		$file->owner_guid = $plugin_entity->getGUID();
+		$file->setFilename("search_advanced_keywords_cache.json");
+		if(!$file->exists()){
+			// create new cache
+			
+			$keywords = array();
+			
+			// check global tags plugin
+			if(elgg_is_active_plugin("global_tags")){
+				if($setting = elgg_get_plugin_setting("global_tags", "global_tags")) {
+					$tags = string_to_tag_array($setting);
+					if(!empty($tags)){
+						$keywords = array_merge($keywords, $tags);
+					}
+				} 
+			}
+			
+			// check categories plugin
+			if(elgg_is_active_plugin("categories")){
+				
+				$categories = elgg_get_site_entity()->categories;
+				if(!is_array($categories)){
+					$categories = array($categories);
+				}
+				
+				if(!empty($categories)){
+					$keywords = array_merge($keywords, $categories);
+				}
+			}
+			$keywords = array_unique($keywords);
+			natcasesort($keywords);
+			$data = json_encode($keywords);
+			$file->open("write");
+			$file->write($data);
+			$file->close();
+		}
+		
+		// read from cachefile
+		if($file->open("read")){
+			if($file_contents = $file->grabFile()){
+				$result = json_decode($file_contents);
+			}	
+		}
+	}
+	return $result;
+}

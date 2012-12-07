@@ -7,6 +7,16 @@ $page_owner_guid = (int) get_input("page_owner_guid");
 $result = array();
 if(!empty($q)){
 	
+	// keywords (tags, categories)
+	$keywords = search_advanced_get_keywords();
+	if(!empty($keywords)){
+		foreach($keywords as $content){
+			if(stristr($content, $q)){
+				$result[] = array("type" => "tag", "content" => search_highlight_words(array($q), $content), "value" => $content, "href" => elgg_normalize_url("search?q=" . urlencode($content)));
+			}
+		}
+	}
+	
 	$logged_in_user = elgg_get_logged_in_user_entity();
 	
 	// look for users
@@ -100,6 +110,9 @@ if(!empty($q)){
 			$result[] = array("type" => "group", "value" => $group->name, "href" => $group->getURL(), "content" => elgg_view("search_advanced/autocomplete/group", array("entity" => $group)));
 		}
 	}
+	
+	
+	
 }	
 
 header("Content-Type: application/json");
