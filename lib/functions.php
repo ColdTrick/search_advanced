@@ -103,14 +103,14 @@ function search_advanced_get_keywords(){
 	
 	$plugin_entity = elgg_get_plugin_from_id("search_advanced");
 	if($plugin_entity){
-		// check if cachefile exists, if not create
 
+		// check if cachefile exists, if not create
 		$file = new ElggFile();
 		$file->owner_guid = $plugin_entity->getGUID();
 		$file->setFilename("search_advanced_keywords_cache.json");
 		if(!$file->exists()){
-			// create new cache
 			
+			// create new cache
 			$keywords = array();
 			
 			// check global tags plugin
@@ -135,8 +135,13 @@ function search_advanced_get_keywords(){
 					$keywords = array_merge($keywords, $categories);
 				}
 			}
+			// remove duplicates
 			$keywords = array_unique($keywords);
+			
+			// sort naturally
 			natcasesort($keywords);
+			
+			// save as json
 			$data = json_encode($keywords);
 			$file->open("write");
 			$file->write($data);
@@ -151,4 +156,22 @@ function search_advanced_get_keywords(){
 		}
 	}
 	return $result;
+}
+
+/**
+ * 
+ * Removes the file cache for keywords
+ */
+function search_advanced_clear_keywords_cache(){
+	$plugin_entity = elgg_get_plugin_from_id("search_advanced");
+	if($plugin_entity){
+		
+		// check if cachefile exists, if exists delete it	
+		$file = new ElggFile();
+		$file->owner_guid = $plugin_entity->getGUID();
+		$file->setFilename("search_advanced_keywords_cache.json");
+		if($file->exists()){
+			$file->delete();
+		}
+	}
 }

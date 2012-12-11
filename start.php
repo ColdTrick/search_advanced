@@ -46,3 +46,14 @@ function search_advanced_search_page_handler($page){
 
 
 elgg_register_event_handler('init','system','search_advanced_init');
+
+// hooks and events to clear cache
+// register hooks
+elgg_register_plugin_hook_handler("action", "admin/plugins/activate", "search_advanced_clear_keywords_cache");
+elgg_register_plugin_hook_handler("action", "admin/plugins/deactivate", "search_advanced_clear_keywords_cache");
+elgg_register_plugin_hook_handler("action", "admin/plugins/activate_all", "search_advanced_clear_keywords_cache");
+elgg_register_plugin_hook_handler("action", "admin/plugins/deactivate_all", "search_advanced_clear_keywords_cache");
+elgg_register_plugin_hook_handler("action", "plugins/settings/save", "search_advanced_clear_keywords_cache");
+
+// register events
+elgg_register_event_handler("upgrade", "system", "search_advanced_clear_keywords_cache");
