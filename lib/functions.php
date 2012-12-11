@@ -42,58 +42,21 @@ function search_advanced_register_search_hooks(){
 */
 function search_advanced_get_where_sql($table, $fields, $params, $use_fulltext = TRUE) {
 	global $CONFIG;
-	$query = $params['query'];
+	$query = sanitise_string($params['query']);
 
 	// add the table prefix to the fields
-	foreach ($fields as $i => $field) {
-		if ($table) {
+	if ($table) {
+		foreach ($fields as $i => $field) {
 			$fields[$i] = "$table.$field";
 		}
 	}
 
-	$where = '';
-
-	// if query is shorter than the min for fts words
-	// it's likely a single acronym or similar
-	// switch to literal mode
-	if (true || elgg_strlen($query) < $CONFIG->search_info['min_chars']) {
-		$likes = array();
-		$query = sanitise_string($query);
-		foreach ($fields as $field) {
-			$likes[] = "$field LIKE '%$query%'";
-		}
-		$likes_str = implode(' OR ', $likes);
-		$where = "($likes_str)";
-	} else {
-		// if we're not using full text, rewrite the query for bool mode.
-		// exploiting a feature(ish) of bool mode where +-word is the same as -word
-		if (!$use_fulltext) {
-			$query = '+' . str_replace(' ', ' +', $query);
-		}
-
-		// if using advanced, boolean operators, or paired "s, switch into boolean mode
-		$booleans_used = preg_match("/([\-\+~])([\w]+)/i", $query);
-		$advanced_search = (isset($params['advanced_search']) && $params['advanced_search']);
-		$quotes_used = (elgg_substr_count($query, '"') >= 2);
-
-		if (!$use_fulltext || $booleans_used || $advanced_search || $quotes_used) {
-			$options = 'IN BOOLEAN MODE';
-		} else {
-			// natural language mode is default and this keyword isn't supported in < 5.1
-			//$options = 'IN NATURAL LANGUAGE MODE';
-			$options = '';
-		}
-
-		// if short query, use query expansion.
-		// @todo doesn't seem to be working well.
-		//		if (elgg_strlen($query) < 5) {
-		//			$options .= ' WITH QUERY EXPANSION';
-		//		}
-		$query = sanitise_string($query);
-
-		$fields_str = implode(',', $fields);
-		$where = "(MATCH ($fields_str) AGAINST ('$query*' $options))"; // Search Advanced: added the wildcard
+	$likes = array();
+	foreach ($fields as $field) {
+		$likes[] = "$field LIKE '%$query%'";
 	}
+	$likes_str = implode(' OR ', $likes);
+	$where = "($likes_str)";
 
 	return $where;
 }
