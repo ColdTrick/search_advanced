@@ -5,11 +5,11 @@ This plugin provides additional search features.
 - adds search widget
 - extends fulltext with wildcards
 - adds counters to search menu items
-- autocompletes users and groups
+- autocompletes users and groups and global site categories/tags
 - direct filter menu for direct content search (or all)
 
 WARNING:
-- currently it will remove support for custom search types like tags and comments search
+- currently it will remove support for custom search types like comments search
  
  todo:
  - multitag
