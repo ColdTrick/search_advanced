@@ -110,9 +110,6 @@ if(!empty($q)){
 			$result[] = array("type" => "group", "value" => $group->name, "href" => $group->getURL(), "content" => elgg_view("search_advanced/autocomplete/group", array("entity" => $group)));
 		}
 	}
-	
-	
-	
 }	
 
 header("Content-Type: application/json");
