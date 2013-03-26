@@ -240,7 +240,7 @@ if ($search_type != 'entities' || $search_type == 'all' || $search_type == 'tags
 				continue;
 			}
 			
-			if (is_array($results['entities']) && $results['count']) {
+			if (isset($results['entities']) && is_array($results['entities']) && $results['count']) {
 				if ($view = search_get_search_view($current_params, 'list')) {
 					$search_result_counters["search_types:" . $type] = $results['count'];
 					$results_html .= elgg_view($view, array(
