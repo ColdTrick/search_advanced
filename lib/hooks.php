@@ -240,8 +240,13 @@ function search_advanced_tags_hook($hook, $type, $value, $params) {
 
 	$tags_in = implode(',', $sanitised_tags);
 
-	$params['wheres'][] = "(msn.string IN ($tags_in) AND msv.string = '$query' AND $access)";
-
+	$multi_tag_query = explode(" ", $query);
+	if(count($multi_tag_query) > 1){ 
+		$multi_tag_query[] = $query;
+		$params['wheres'][] = "(msn.string IN ($tags_in) AND msv.string IN ('" . implode("', '", $multi_tag_query) . "') AND $access)";
+	} else {
+		$params['wheres'][] = "(msn.string IN ($tags_in) AND msv.string = '$query' AND $access)";
+	}
 	$params['count'] = TRUE;
 	
 	if(!$_SESSION["search_advanced:multisite"]){
