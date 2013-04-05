@@ -1,5 +1,10 @@
 = Version history: =
 
+0.4 (2013-04-05):
+
+- added: multiple tags search
+- fixed: some php notices
+
 0.3 (2012-12-11):
 
 - added: keyword autocompletion for global tags and site categories plugin
