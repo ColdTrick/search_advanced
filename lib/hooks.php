@@ -141,7 +141,7 @@ function search_advanced_users_hook($hook, $type, $value, $params) {
 		$params["inverse_relationship"] = TRUE;
 	} else {
 		// check for site relation ship
-		if(!isset($_SESSION["search_advanced:multisite"])){
+		if(empty($_SESSION["search_advanced:multisite"])){
 			$params["relationship"] = "member_of_site";
 			$params["relationship_guid"] = elgg_get_site_entity()->getGUID();
 			$params["inverse_relationship"] = TRUE;
@@ -249,7 +249,7 @@ function search_advanced_tags_hook($hook, $type, $value, $params) {
 	}
 	$params['count'] = TRUE;
 	
-	if(!isset($_SESSION["search_advanced:multisite"])) {
+	if(empty($_SESSION["search_advanced:multisite"])) {
 		$site_guid = elgg_get_site_entity()->getGUID();
 		$params['site_guids'] = false;
 		$params['wheres'][] = "((e.site_guid = " . $site_guid . ") OR (e.type = 'user' AND e.guid IN (select r.guid_one from " . elgg_get_config("dbprefix") . "entity_relationships r where r.relationship = 'member_of_site' and r.guid_two = " . $site_guid . ")))" ;
