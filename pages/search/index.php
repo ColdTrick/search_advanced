@@ -199,15 +199,20 @@ if ($search_type == 'all' || $search_type == 'entities') {
 			}
 		}
 
+		
+		if($type === "object"){
+			// shortcut 
+			continue;
+		}
+		
 		// pull in default type entities with no subtypes
 		$current_params['type'] = $type;
 		$current_params['subtype'] = ELGG_ENTITIES_NO_VALUE;
-		if($type !== "object"){
-			$results = elgg_trigger_plugin_hook('search', $type, $current_params, array());
-			if ($results === FALSE) {
-				// someone is saying not to display these types in searches.
-				continue;
-			}
+		
+		$results = elgg_trigger_plugin_hook('search', $type, $current_params, array());
+		if ($results === FALSE) {
+			// someone is saying not to display these types in searches.
+			continue;
 		}
 		
 		if (is_array($results['entities']) && $results['count']) {
