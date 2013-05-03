@@ -346,9 +346,7 @@ foreach ($types as $type => $subtypes) {
 
 // add sidebar for custom searches
 foreach ($custom_types as $type) {
-	if($type == "comments"){
-		continue;
-	}
+	
 	$label = "search_types:$type";
 
 	$count = "";

@@ -27,7 +27,7 @@ function search_advanced_register_search_hooks(){
  	elgg_register_plugin_hook_handler('search', 'tags', 'search_advanced_tags_hook');
 	
 // 	elgg_register_plugin_hook_handler('search_advanced_types', 'get_types', 'search_advanced_custom_types_comments_hook');
-// 	elgg_register_plugin_hook_handler('search', 'comments', 'search_advanced_comments_hook');
+	elgg_register_plugin_hook_handler('search', 'comments', 'search_advanced_comments_hook');
 }
 
 /**
