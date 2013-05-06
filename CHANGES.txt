@@ -1,4 +1,10 @@
 = Version history: =
+0.5 (2013-05-06):
+
+- added: comments search
+- fixed: user search now also search profile fields (like core search does also)
+- fixed: duplicate result set if object type was specified
+- fixed: correct check for multisite flag
 
 0.4 (2013-04-05):
 
