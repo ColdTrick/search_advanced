@@ -17,10 +17,35 @@
  */
 function search_advanced_objects_hook($hook, $type, $value, $params) {
 
+	static $tag_name_ids;
+	static $valid_tag_names;
+	
 	$db_prefix = elgg_get_config('dbprefix');
 
-	$join = "JOIN {$db_prefix}objects_entity oe ON e.guid = oe.guid";
-	$params['joins'] = array($join);
+	$query = sanitise_string($params['query']);
+	
+	if (!isset($tag_name_ids)) {
+		if ($valid_tag_names = elgg_get_registered_tag_metadata_names()) {
+			$tag_name_ids = array();
+			foreach($valid_tag_names as $tag_name){
+				$tag_name_ids[] = add_metastring($tag_name);
+			}
+		} else {
+			$tag_name_ids = false;
+		}
+	}
+	
+	if($tag_name_ids){
+		$params['joins'] = array(
+			"JOIN {$db_prefix}objects_entity oe ON e.guid = oe.guid",
+			"JOIN {$db_prefix}metadata md on e.guid = md.entity_guid",
+			"JOIN {$db_prefix}metastrings msv ON md.value_id = msv.id"
+		);
+	} else {
+		$join = "JOIN {$db_prefix}objects_entity oe ON e.guid = oe.guid";
+		$params['joins'] = array($join);
+	}
+	
 	$fields = array('title', 'description');
 	
 	if($params["subtype"] === "page"){
@@ -29,7 +54,21 @@ function search_advanced_objects_hook($hook, $type, $value, $params) {
 	
 	$where = search_advanced_get_where_sql('oe', $fields, $params, FALSE);
 
-	$params['wheres'] = array($where);
+	if($tag_name_ids){
+		// get the where clauses for the md names
+		// can't use egef_metadata() because the n_table join comes too late.
+// 		$clauses = elgg_entities_get_metastrings_options('metadata', array(
+// 				'metadata_names' => $valid_tag_names,
+// 		));
+	
+// 		$params['joins'] = array_merge($clauses['joins'], $params['joins']);
+		$md_where = "((md.name_id IN (" . implode(",", $tag_name_ids) . ")) AND msv.string = '$query')";
+	
+		$params['wheres'] = array("(($where) OR ($md_where))");
+	} else {
+		$params['wheres'] = array($where);
+	}
+	
 	$params['count'] = TRUE;
 	$count = elgg_get_entities($params);
 	
@@ -43,6 +82,30 @@ function search_advanced_objects_hook($hook, $type, $value, $params) {
 
 	// add the volatile data for why these entities have been returned.
 	foreach ($entities as $entity) {
+		if($valid_tag_names){
+			$matched_tags_strs = array();
+	
+			// get tags for each tag name requested to find which ones matched.
+			foreach ($valid_tag_names as $tag_name) {
+				$tags = $entity->getTags($tag_name);
+	
+				// @todo make one long tag string and run this through the highlight
+				// function.  This might be confusing as it could chop off
+				// the tag labels.
+				if (in_array(strtolower($query), array_map('strtolower', $tags))) {
+					if (is_array($tags)) {
+						$tag_name_str = elgg_echo("tag_names:$tag_name");
+						$matched_tags_strs[] = "$tag_name_str: " . implode(', ', $tags);
+					}
+				}
+			}
+	
+			$tags_str = implode('. ', $matched_tags_strs);
+			$tags_str = search_get_highlighted_relevant_substrings($tags_str, $params['query']);
+	
+			$entity->setVolatileData('search_matched_extra', $tags_str);
+		}
+		
 		$title = search_get_highlighted_relevant_substrings($entity->title, $params['query']);
 		$entity->setVolatileData('search_matched_title', $title);
 
@@ -70,8 +133,17 @@ function search_advanced_groups_hook($hook, $type, $value, $params) {
 
 	$query = sanitise_string($params['query']);
 
-	$join = "JOIN {$db_prefix}groups_entity ge ON e.guid = ge.guid";
-	$params['joins'] = array($join);
+	$profile_fields = array_keys(elgg_get_config('group'));
+	if($profile_fields){
+		$params['joins'] = array(
+				"JOIN {$db_prefix}groups_entity ge ON e.guid = ge.guid",
+				"JOIN {$db_prefix}metadata md on e.guid = md.entity_guid",
+				"JOIN {$db_prefix}metastrings msv ON md.value_id = msv.id"
+				);
+	} else {
+		$join = "JOIN {$db_prefix}groups_entity ge ON e.guid = ge.guid";
+		$params['joins'] = array($join);
+	}
 	
 	$fields = array('name', 'description');
 
@@ -79,8 +151,26 @@ function search_advanced_groups_hook($hook, $type, $value, $params) {
 	// "if > 50% match 0 sets are returns" problem.
 	$where = search_advanced_get_where_sql('ge', $fields, $params, FALSE);
 
-	$params['wheres'] = array($where);
-
+	if($profile_fields){
+		// get the where clauses for the md names
+		// can't use egef_metadata() because the n_table join comes too late.
+// 		$clauses = elgg_entities_get_metastrings_options('metadata', array(
+// 				'metadata_names' => $profile_fields,
+// 		));
+		
+// 		$params['joins'] = array_merge($clauses['joins'], $params['joins']);
+		
+		$tag_name_ids = array();
+		foreach($profile_fields as $field){
+			$tag_name_ids[] = add_metastring($field);
+		}
+		
+		$md_where = "((md.name_id IN (" . implode(",", $tag_name_ids) . ")) AND msv.string LIKE '%$query%')";
+		$params['wheres'] = array("(($where) OR ($md_where))");
+	} else {
+		$params['wheres'] = array($where);
+	}
+	
 	// override subtype -- All groups should be returned regardless of subtype.
 	$params['subtype'] = ELGG_ENTITIES_ANY_VALUE;
 
@@ -97,6 +187,30 @@ function search_advanced_groups_hook($hook, $type, $value, $params) {
 
 	// add the volatile data for why these entities have been returned.
 	foreach ($entities as $entity) {
+// 		if($profile_fields){
+// 			$matched_tags_strs = array();
+			
+// 			// get tags for each tag name requested to find which ones matched.
+// 			foreach ($profile_fields as $tag_name) {
+// 				$tags = $entity->getTags($tag_name);
+			
+// 				// @todo make one long tag string and run this through the highlight
+// 				// function.  This might be confusing as it could chop off
+// 				// the tag labels.
+// 				if (in_array(strtolower($query), array_map('strtolower', $tags))) {
+// 					if (is_array($tags)) {
+// 						$tag_name_str = elgg_echo("tag_names:$tag_name");
+// 						$matched_tags_strs[] = "$tag_name_str: " . implode(', ', $tags);
+// 					}
+// 				}
+// 			}
+			
+// 			$tags_str = implode('. ', $matched_tags_strs);
+// 			$tags_str = search_get_highlighted_relevant_substrings($tags_str, $params['query']);
+			
+// 			$entity->setVolatileData('search_matched_extra', $tags_str);
+// 		}
+		
 		$name = search_get_highlighted_relevant_substrings($entity->name, $query);
 		$entity->setVolatileData('search_matched_title', $name);
 
@@ -122,6 +236,8 @@ function search_advanced_groups_hook($hook, $type, $value, $params) {
  * @return unknown_type
  */
 function search_advanced_users_hook($hook, $type, $value, $params) {
+	
+	
 	$db_prefix = elgg_get_config('dbprefix');
 
 	$query = sanitise_string($params['query']);
@@ -129,7 +245,7 @@ function search_advanced_users_hook($hook, $type, $value, $params) {
 	$params['joins'] = array(
 		"JOIN {$db_prefix}users_entity ue ON e.guid = ue.guid",
 		"JOIN {$db_prefix}metadata md on e.guid = md.entity_guid",
-		"JOIN {$db_prefix}metastrings msv ON n_table.value_id = msv.id"
+		"JOIN {$db_prefix}metastrings msv ON md.value_id = msv.id"
 	);
 	
 	if(isset($params["container_guid"])){
@@ -155,20 +271,28 @@ function search_advanced_users_hook($hook, $type, $value, $params) {
 	
 	// profile fields
 	$profile_fields = array_keys(elgg_get_config('profile_fields'));
+	if ($profile_fields) {
+		// get the where clauses for the md names
+		// can't use egef_metadata() because the n_table join comes too late.
+// 		$clauses = elgg_entities_get_metastrings_options('metadata', array(
+// 				'metadata_names' => $profile_fields,
+// 		));
 	
-	// get the where clauses for the md names
-	// can't use egef_metadata() because the n_table join comes too late.
-	$clauses = elgg_entities_get_metastrings_options('metadata', array(
-			'metadata_names' => $profile_fields,
-	));
-	
-	$params['joins'] = array_merge($clauses['joins'], $params['joins']);
-	// no fulltext index, can't disable fulltext search in this function.
-	// $md_where .= " AND " . search_get_where_sql('msv', array('string'), $params, FALSE);
-	$md_where = "(({$clauses['wheres'][0]}) AND msv.string LIKE '%$query%')";
-	
-	$params['wheres'] = array("(($where) OR ($md_where))");
-	
+// 		$params['joins'] = array_merge($clauses['joins'], $params['joins']);
+
+		// no fulltext index, can't disable fulltext search in this function.
+		// $md_where .= " AND " . search_get_where_sql('msv', array('string'), $params, FALSE);
+		$tag_name_ids = array();
+		foreach($profile_fields as $field){
+			$tag_name_ids[] = add_metastring($field);
+		}
+		
+		$md_where = "((md.name_id IN (" . implode(",", $tag_name_ids) . ")) AND msv.string LIKE '%$query%')";
+		
+		$params['wheres'] = array("(($where) OR ($md_where))");
+	} else {
+		$params['wheres'] = array($where);
+	}
 	// override subtype -- All users should be returned regardless of subtype.
 	$params['subtype'] = ELGG_ENTITIES_ANY_VALUE;
 

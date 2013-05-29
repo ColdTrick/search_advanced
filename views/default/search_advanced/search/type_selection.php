@@ -4,13 +4,13 @@ $types = get_registered_entity_types();
 $current_selected = elgg_echo("all");
 
 $search_type = get_input("search_type");
-if($search_type == "tags"){
-	$current_selected = elgg_echo("search_types:" .  $search_type);
+// if($search_type == "tags"){
+// 	$current_selected = elgg_echo("search_types:" .  $search_type);
 	
-	echo elgg_view("input/hidden", array("name" => "search_type", "value" => $search_type));
-	echo elgg_view("input/hidden", array("name" => "entity_type", "disabled" => "disabled"));
-	echo elgg_view("input/hidden", array("name" => "entity_subtype", "disabled" => "disabled"));
-} else {
+// 	echo elgg_view("input/hidden", array("name" => "search_type", "value" => $search_type));
+// 	echo elgg_view("input/hidden", array("name" => "entity_type", "disabled" => "disabled"));
+// 	echo elgg_view("input/hidden", array("name" => "entity_subtype", "disabled" => "disabled"));
+// } else {
 	$entity_type = get_input("entity_type");
 	$entity_subtype = get_input("entity_subtype");
 	
@@ -32,7 +32,7 @@ if($search_type == "tags"){
 		echo elgg_view("input/hidden", array("name" => "entity_type", "disabled" => "disabled"));
 		echo elgg_view("input/hidden", array("name" => "entity_subtype", "disabled" => "disabled"));
 	}
-}
+// }
 
 ?>
 <ul class="search-advanced-type-selection">
@@ -48,9 +48,7 @@ if($search_type == "tags"){
 			<li>
 				<a rel='group'><?php echo elgg_echo("item:group");?></a>
 			</li>
-			<li>
-				<a rel='tags'><?php echo elgg_echo("search_types:tags");?></a>
-			</li>
+			
 			<?php 
 			/*
 			 <li>
