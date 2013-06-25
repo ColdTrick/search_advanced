@@ -38,6 +38,11 @@ function search_advanced_search_page_handler($page){
 		//set_input('search_type', 'tags');
 	}
 	
+	// as there is no tags search any more, replace it with ALL search
+	if (get_input("search_type") == "tags") {
+		set_input("search_type", "all");
+	}
+	
 	$base_dir = elgg_get_plugins_path() . 'search_advanced/pages/search';
 	
 	include_once("$base_dir/index.php");
