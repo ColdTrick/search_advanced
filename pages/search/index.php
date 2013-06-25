@@ -155,11 +155,22 @@ if ($search_type == 'all' || $search_type == 'entities') {
 	// if a plugin returns FALSE for subtype ignore it.
 	// if a plugin returns NULL or '' for subtype, pass to generic type search function.
 	// if still NULL or '' or empty(array()) no results found. (== don't show??)
+	
+	$combine_search_results = false;
+	if (elgg_get_plugin_setting("combine_search_results", "search_advanced") == "yes") {
+		$combine_search_results = true;
+	}
+	
 	foreach ($types as $type => $subtypes) {
 		if ($search_type != 'all' && $search_type != 'tags' && $entity_type != $type) {
 			continue;
 		}
-
+		
+		if($combine_search_results && ($search_type == 'all') && ($type == "object")) {
+			// combined search results are fetched after the foreach
+			continue;
+		}
+		
 		if (is_array($subtypes) && count($subtypes)) {
 			foreach ($subtypes as $subtype) {
 				if($subtype === "page_top"){
@@ -198,33 +209,50 @@ if ($search_type == 'all' || $search_type == 'entities') {
 				}
 			}
 		}
-
 		
-		if($type === "object"){
-			// shortcut 
-			continue;
-		}
-		
-		// pull in default type entities with no subtypes
-		$current_params['type'] = $type;
-		$current_params['subtype'] = ELGG_ENTITIES_NO_VALUE;
-		
-		$results = elgg_trigger_plugin_hook('search', $type, $current_params, array());
-		if ($results === FALSE) {
-			// someone is saying not to display these types in searches.
-			continue;
-		}
-		
-		if (is_array($results['entities']) && $results['count']) {
-			if ($view = search_get_search_view($current_params, 'list')) {
-				$search_result_counters["item:" . $type] = $results['count'];
-				$results_html .= elgg_view($view, array(
-					'results' => $results,
-					'params' => $current_params,
-				));
+		if($type !== "object"){
+			// pull in default type entities with no subtypes
+			$current_params['type'] = $type;
+			$current_params['subtype'] = ELGG_ENTITIES_NO_VALUE;
+			
+			$results = elgg_trigger_plugin_hook('search', $type, $current_params, array());
+			if ($results) {
+				// if $results = FALSE => someone is saying not to display these types in searches.
+				if (is_array($results['entities']) && $results['count']) {
+					if ($view = search_get_search_view($current_params, 'list')) {
+						$search_result_counters["item:" . $type] = $results['count'];
+						$results_html .= elgg_view($view, array(
+							'results' => $results,
+							'params' => $current_params,
+						));
+					}
+				}
 			}
 		}
 	}
+	
+	
+	// add the combined content search results
+	if ($combine_search_results && ($search_type == 'all')) {
+		$current_params = $params;
+		$current_params['search_type'] = 'entities';
+		$current_params['type'] = "object";
+		$current_params['limit'] = 20;
+		if(array_key_exists("object", $types)){
+			$current_params['subtype'] = $types["object"];
+			$results = elgg_trigger_plugin_hook('search', $type, $current_params, array());
+			if (is_array($results['entities']) && $results['count']) {
+				if ($view = search_get_search_view($current_params, 'list')) {
+					$results_html .= elgg_view($view, array(
+							'results' => $results,
+							'params' => $current_params,
+					));
+				}
+			}
+		}
+		
+	}
+	
 }
 
 // call custom searches

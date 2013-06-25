@@ -50,7 +50,6 @@ if (!$time) {
 	} else {
 		$time = elgg_echo("search_advanced:content:created") . " " . elgg_view_friendly_time($tc);
 	}
-	
 }
 
 $body = "<p class=\"mbn\">$title</p>$description";
