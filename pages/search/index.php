@@ -286,7 +286,31 @@ if ($search_type == 'all' || $search_type == 'entities') {
 			}
 			
 			$count_query .= " AND ";
-				
+			
+			if($search_multisite){
+				$site_options = array(
+						"type" => "site",
+						"relationship" => "member_of_site",
+						"relationship_guid" => $user->getGUID(),
+						"limit" => false,
+						"site_guids" => false
+						// custom callback for guids only
+				);
+				if($sites = elgg_get_entities_from_relationship($site_options)){
+					$site_guids = array();
+					foreach($sites as $row){
+						$site_guids[] = $row->guid;
+					}
+					$count_query .= "e.site_guid IN (" . implode(", ", $site_guids) . ") ";
+				} else {
+					$count_query .= "e.site_guid = " . elgg_get_site_entity()->getGUID() . " ";
+				}
+			} else {
+				$count_query .= "e.site_guid = " . elgg_get_site_entity()->getGUID() . " ";
+			}
+			
+			$count_query .= " AND ";
+			
 			// Add access controls
 			$count_query .= get_access_sql_suffix('e');
 			
