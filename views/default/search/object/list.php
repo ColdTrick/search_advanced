@@ -22,6 +22,11 @@ if (!is_array($entities) || !count($entities)) {
 	return FALSE;
 }
 
+$combine_search_results = false;
+if (elgg_get_plugin_setting("combine_search_results", "search_advanced") == "yes") {
+	$combine_search_results = true;
+}
+
 $query = http_build_query(
 	array(
 		'q' => $vars['params']['query'],
@@ -104,6 +109,12 @@ if ($view) {
 	foreach ($entities as $entity) {
 		$id = "elgg-{$entity->getType()}-{$entity->getGUID()}";
 		$body .= "<li id=\"$id\" class=\"elgg-item\">";
+		
+		if ($combine_search_results && (get_input("search_type", "all") == "all")) {
+			// add a floating tag 
+			$subtype = $entity->getSubtype();
+			$body .= elgg_View("output/url", array("class" => "float-alt elgg-quiet", "href" => "search?q=" . $vars['params']['query'] . "&entity_subtype=" . $subtype . "&entity_type=" . $entity->getType() . "&search_type=entities", "text" => elgg_echo("item:" . $entity->getType() . ":" . $subtype)));	
+		}
 		$body .= elgg_view($view, array(
 			'entity' => $entity,
 			'params' => $vars['params'],

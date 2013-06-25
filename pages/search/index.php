@@ -249,8 +249,55 @@ if ($search_type == 'all' || $search_type == 'entities') {
 					));
 				}
 			}
-		}
-		
+			
+			// determine menu counters
+			$db_prefix = elgg_get_config('dbprefix');
+						
+			$count_query  = "SELECT es.subtype, count(distinct e.guid) as total";
+			$count_query .= " FROM {$db_prefix}entities e";
+			$count_query .= " JOIN {$db_prefix}objects_entity oe ON e.guid = oe.guid";
+			$count_query .= " JOIN {$db_prefix}entity_subtypes es ON e.subtype = es.id";
+
+			$fields = array('title', 'description');
+			$where = search_advanced_get_where_sql('oe', $fields, $params);
+			
+			// add tags search
+			if ($valid_tag_names = elgg_get_registered_tag_metadata_names()) {
+				$tag_name_ids = array();
+				foreach($valid_tag_names as $tag_name){
+					$tag_name_ids[] = add_metastring($tag_name);
+				}
+				
+				$count_query .= " JOIN {$db_prefix}metadata md on e.guid = md.entity_guid";
+				$count_query .= " JOIN {$db_prefix}metastrings msv ON md.value_id = msv.id";
+				
+				$md_where = "((md.name_id IN (" . implode(",", $tag_name_ids) . ")) AND msv.string = '" . $params["query"] . "')";
+			}
+			
+			
+			// add wheres
+			
+			$count_query .= " WHERE e.type = 'object' AND es.subtype IN ('" . implode("', '", $current_params['subtype']) . "') AND ";
+			
+			if ($md_where) {
+				$count_query .= "((" . $where . ") OR (" . $md_where . "))";
+			} else {
+				$count_query .= $where;
+			}
+			
+			$count_query .= " AND ";
+				
+			// Add access controls
+			$count_query .= get_access_sql_suffix('e');
+			
+			$count_query .= " GROUP BY e.subtype";
+			$totals = get_data($count_query);
+			if ($totals) {
+				foreach ($totals as $row) {
+					$search_result_counters["item:object:" . $row->subtype] = $row->total;
+				}
+			}
+		}		
 	}
 	
 }
