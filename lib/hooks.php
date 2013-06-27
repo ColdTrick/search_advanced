@@ -547,7 +547,7 @@ function search_advanced_comments_hook($hook, $type, $value, $params) {
 		return array ('entities' => array(), 'count' => 0);
 	}
 	
-	$order_by = search_get_order_by_sql('e', null, $params['sort'], $params['order']);
+	$order_by = search_get_order_by_sql('e', null, "created", $params['order']);
 	if ($order_by) {
 		$order_by = "ORDER BY $order_by";
 	}
