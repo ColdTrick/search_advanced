@@ -103,17 +103,19 @@ $body = elgg_view('page/elements/title', array(
 	'class' => 'search-heading-category',
 ));
 
-$view = search_get_search_view($vars['params'], 'entity');
-if ($view) {
-	$body .= '<ul class="elgg-list search-list">';
-	foreach ($entities as $entity) {
+$body .= '<ul class="elgg-list search-list">';
+foreach ($entities as $entity) {
+	$view_params = array("type" => $entity->type, "subtype" => $entity->getSubtype(), "search_type" => $vars['params']["search_type"]);
+	$view = search_get_search_view($view_params, 'entity');
+	
+	if ($view) {
 		$id = "elgg-{$entity->getType()}-{$entity->getGUID()}";
 		$body .= "<li id=\"$id\" class=\"elgg-item\">";
 		
 		if ($combine_search_results && (get_input("search_type", "all") == "all")) {
-			// add a floating tag 
+			// add a floating tag
 			$subtype = $entity->getSubtype();
-			$body .= elgg_View("output/url", array("class" => "float-alt elgg-quiet", "href" => "search?q=" . $vars['params']['query'] . "&entity_subtype=" . $subtype . "&entity_type=" . $entity->getType() . "&search_type=entities", "text" => elgg_echo("item:" . $entity->getType() . ":" . $subtype)));	
+			$body .= elgg_view("output/url", array("class" => "float-alt elgg-quiet", "href" => "search?q=" . $vars['params']['query'] . "&entity_subtype=" . $subtype . "&entity_type=" . $entity->getType() . "&search_type=entities", "text" => elgg_echo("item:" . $entity->getType() . ":" . $subtype)));
 		}
 		$body .= elgg_view($view, array(
 			'entity' => $entity,
@@ -122,9 +124,9 @@ if ($view) {
 		));
 		$body .= '</li>';
 	}
-	$body .= $more_link;
-	$body .= '</ul>';
 }
+$body .= $more_link;
+$body .= '</ul>';
 
 echo $body;
 echo $nav;
