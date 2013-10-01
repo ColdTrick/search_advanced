@@ -17,7 +17,13 @@ function search_advanced_init(){
 	elgg_extend_view("js/elgg", "search_advanced/js/site");
 	
 	// search widget
-	elgg_register_widget_type("search", elgg_echo("search"), elgg_echo("search"), "profile,dashboard,index,groups", true);	
+	elgg_register_widget_type("search", elgg_echo("search"), elgg_echo("search"), "profile,dashboard,index,groups", true);
+	
+	if (elgg_is_active_plugin("categories")) {
+		// make universal categories searchable
+		add_translation(get_current_language(), array("tag_names:universal_categories" => elgg_echo("categories")));
+		elgg_register_tag_metadata_name("universal_categories");
+	}
 }
 
 function search_advanced_page_handler($page){
@@ -25,7 +31,7 @@ function search_advanced_page_handler($page){
 		case "autocomplete":
 			include_once(dirname(__FILE__) . "/procedures/autocomplete.php");
 			return true;
-	}	
+	}
 }
 
 function search_advanced_search_page_handler($page){
