@@ -85,16 +85,19 @@ if (array_key_exists('search_type', $vars['params'])
 }
 
 // get any more links.
-$more_check = $vars['results']['count'] - ($vars['params']['offset'] + $vars['params']['limit']);
-$more = ($more_check > 0) ? $more_check : 0;
-
-if ($more) {
-	$title_key = ($more == 1) ? 'comment' : 'comments';
-	$more_str = elgg_echo('search:more', array($count, $type_str));
-	$more_url = elgg_http_remove_url_query_element($url, 'limit');
-	$more_link = "<li class='elgg-item'><a href=\"$more_url\">$more_str</a></li>";
-} else {
-	$more_link = '';
+$more_link = "";
+if ($vars['params']["search_type"] !== "entities") {
+	$more_check = $vars['results']['count'] - ($vars['params']['offset'] + $vars['params']['limit']);
+	$more = ($more_check > 0) ? $more_check : 0;
+	
+	if ($more) {
+		$title_key = ($more == 1) ? 'comment' : 'comments';
+		$more_str = elgg_echo('search:more', array($count, $type_str));
+		$more_url = elgg_http_remove_url_query_element($url, 'limit');
+		$more_link = "<li class='elgg-item'><a href=\"$more_url\">$more_str</a></li>";
+	} else {
+		$more_link = '';
+	}
 }
 
 // @todo once elgg_view_title() supports passing a $vars array use it
