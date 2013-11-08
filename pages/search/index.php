@@ -92,6 +92,9 @@ $params = array(
 );
 
 // check for multisite possibilities
+
+$search_multisite = null;
+
 if(($user = elgg_get_logged_in_user_entity()) && elgg_trigger_plugin_hook("search_multisite", "search", array("user" => $user), false)){
 	// get and store search preference
 	$search_multisite = (int) get_input("multisite", $_SESSION["search_advanced:multisite"]);
@@ -321,7 +324,7 @@ if ($search_type == 'all' || $search_type == 'entities') {
 					$search_result_counters["item:object:" . $row->subtype] = $row->total;
 				}
 			}
-		}		
+		}
 	}
 	
 }

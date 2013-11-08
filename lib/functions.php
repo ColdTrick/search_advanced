@@ -33,8 +33,8 @@ function search_advanced_register_search_hooks(){
 }
 
 /**
-* Returns a where clause for a search query. 
-* 
+* Returns a where clause for a search query.
+*
 * Search Advanced: added the ability to use a wildcard in full text search
 *
 * @param str $table Prefix for table to search on
@@ -46,20 +46,44 @@ function search_advanced_get_where_sql($table, $fields, $params, $use_fulltext =
 	global $CONFIG;
 	$query = sanitise_string($params['query']);
 
+	if (elgg_get_plugin_setting("enable_multi_tag", "search_advanced") == "yes") {
+		$query_array = explode(",", $query);
+		
+		if (count($query_array) > 1) {
+			$multi_query = array();
+			foreach ($query_array as $value) {
+				$temp_field = trim($value);
+				if (!empty($temp_field)) {
+					$multi_query[] = $temp_field;
+				}
+			}
+			
+			if (count($multi_query) > 1) {
+				$query = $multi_query;
+			}
+		}
+	}
+	
 	// add the table prefix to the fields
 	if ($table) {
 		foreach ($fields as $i => $field) {
 			$fields[$i] = "$table.$field";
 		}
 	}
+	
+	if (!is_array($query)) {
+		$query = array($query);
+	}
 
 	$likes = array();
-	foreach ($fields as $field) {
-		$likes[] = "$field LIKE '%$query%'";
+	foreach ($query as $query_part) {
+		foreach ($fields as $field) {
+			$likes[] = "$field LIKE '%$query_part%'";
+		}
 	}
 	$likes_str = implode(' OR ', $likes);
 	$where = "($likes_str)";
-
+	
 	return $where;
 }
 
@@ -85,7 +109,7 @@ function search_advanced_get_keywords(){
 					if(!empty($tags)){
 						$keywords = array_merge($keywords, $tags);
 					}
-				} 
+				}
 			}
 			
 			// check categories plugin
@@ -117,21 +141,21 @@ function search_advanced_get_keywords(){
 		if($file->open("read")){
 			if($file_contents = $file->grabFile()){
 				$result = json_decode($file_contents);
-			}	
+			}
 		}
 	}
 	return $result;
 }
 
 /**
- * 
+ *
  * Removes the file cache for keywords
  */
 function search_advanced_clear_keywords_cache(){
 	$plugin_entity = elgg_get_plugin_from_id("search_advanced");
 	if($plugin_entity){
 		
-		// check if cachefile exists, if exists delete it	
+		// check if cachefile exists, if exists delete it
 		$file = new ElggFile();
 		$file->owner_guid = $plugin_entity->getGUID();
 		$file->setFilename("search_advanced_keywords_cache.json");
