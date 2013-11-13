@@ -86,7 +86,8 @@ if (array_key_exists('search_type', $vars['params'])
 
 // get any more links.
 $more_link = "";
-if ($vars['params']["search_type"] !== "entities") {
+
+if (get_input("search_type") !== "entities") {
 	$more_check = $vars['results']['count'] - ($vars['params']['offset'] + $vars['params']['limit']);
 	$more = ($more_check > 0) ? $more_check : 0;
 	
