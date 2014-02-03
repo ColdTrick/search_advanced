@@ -44,7 +44,7 @@ function search_advanced_register_search_hooks(){
 */
 function search_advanced_get_where_sql($table, $fields, $params, $use_fulltext = TRUE) {
 	global $CONFIG;
-	$query = sanitise_string($params['query']);
+	$query = elgg_extract("query", $params, "");
 
 	if (elgg_get_plugin_setting("enable_multi_tag", "search_advanced") == "yes") {
 		$query_array = explode(",", $query);
@@ -77,6 +77,7 @@ function search_advanced_get_where_sql($table, $fields, $params, $use_fulltext =
 
 	$likes = array();
 	foreach ($query as $query_part) {
+		$query_part = sanitise_string($query_part);
 		foreach ($fields as $field) {
 			$likes[] = "$field LIKE '%$query_part%'";
 		}
