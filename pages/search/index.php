@@ -274,7 +274,7 @@ if ($search_type == 'all' || $search_type == 'entities') {
 				$count_query .= " JOIN {$db_prefix}metadata md on e.guid = md.entity_guid";
 				$count_query .= " JOIN {$db_prefix}metastrings msv ON md.value_id = msv.id";
 				
-				$md_where = "((md.name_id IN (" . implode(",", $tag_name_ids) . ")) AND msv.string = '" . $params["query"] . "')";
+				$md_where = "((md.name_id IN (" . implode(",", $tag_name_ids) . ")) AND msv.string = '" . sanitise_string($params["query"]) . "')";
 			}
 			
 			
