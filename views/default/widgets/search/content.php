@@ -20,7 +20,13 @@
 
 	$form_body .= elgg_view("input/submit", array("value" => elgg_echo("search"), "class" => "hidden"));
 
-	$form = elgg_view("input/form", array("body" => $form_body, "action" => "/search", "disable_security" => true, "class" => "search-advanced-widget-search-form"));
+	$action = "/search";
+	$container_entity = $widget->getContainerEntity();
+	if ($container_entity instanceof ElggGroup) {
+		$action .= "?container_guid=" . $container_entity->getGUID();
+	}
+	
+	$form = elgg_view("input/form", array("body" => $form_body, "action" => $action, "disable_security" => true, "class" => "search-advanced-widget-search-form"));
 
 	echo $form;
 

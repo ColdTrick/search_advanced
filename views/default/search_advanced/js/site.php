@@ -26,7 +26,7 @@ elgg.search_advanced.init = function() {
 					return false;
 				}
 
-				var search_type = $(".elgg-search input[name='entity_type']").val(); 
+				var search_type = $(".elgg-search input[name='entity_type']").val();
 				if( search_type && search_type != "user" && search_type != "group"){
 					return false;
 				}
@@ -91,7 +91,7 @@ elgg.search_advanced.init = function() {
 				} else {
 					$(".elgg-search input[name='entity_type']").val(input_vals[0]).removeAttr("disabled");
 				}
-			} 
+			}
 
 			if(input_vals[1]){
 				$(".elgg-search input[name='entity_subtype']").val(input_vals[1]).removeAttr("disabled");
@@ -112,8 +112,8 @@ elgg.search_advanced.init = function() {
 		$loader.attr('id', '#elgg-widget-active-loader');
 		$loader.removeClass('hidden');
 		$target.html($loader);
-		
-		$target.load(elgg.get_site_url() + "search", $(this).serialize()).addClass("mtm");
+
+		$target.load($(this).attr("action"), $(this).serialize()).addClass("mtm");
 		e.preventDefault();
 	});
 	
