@@ -153,7 +153,6 @@ if ($search_type == 'all' || $search_type == 'entities') {
 	// to pass the correct current search type to the views
 	$current_params = $params;
 	$current_params['search_type'] = 'entities';
-
 	// foreach through types.
 	// if a plugin returns FALSE for subtype ignore it.
 	// if a plugin returns NULL or '' for subtype, pass to generic type search function.
@@ -187,7 +186,7 @@ if ($search_type == 'all' || $search_type == 'entities') {
 				}
 				$current_params['subtype'] = $subtype;
 				$current_params['type'] = $type;
-
+				
 				$results = elgg_trigger_plugin_hook('search', "$type:$subtype", $current_params, NULL);
 				if ($results === FALSE) {
 					// someone is saying not to display these types in searches.
@@ -279,8 +278,10 @@ if ($search_type == 'all' || $search_type == 'entities') {
 			
 			
 			// add wheres
-			
 			$count_query .= " WHERE e.type = 'object' AND es.subtype IN ('" . implode("', '", $current_params['subtype']) . "') AND ";
+			if ($container_guid) {
+				$count_query .= "e.container_guid = " . $container_guid . " AND ";
+			}
 			
 			if ($md_where) {
 				$count_query .= "((" . $where . ") OR (" . $md_where . "))";
@@ -414,6 +415,7 @@ foreach ($types as $type => $subtypes) {
 				'entity_subtype' => $subtype,
 				'entity_type' => $type,
 				'owner_guid' => $owner_guid,
+				'container_guid' => $container_guid,
 				'search_type' => 'entities',
 				'friends' => $friends
 			)));
@@ -435,6 +437,7 @@ foreach ($types as $type => $subtypes) {
 			'q' => $query,
 			'entity_type' => $type,
 			'owner_guid' => $owner_guid,
+			'container_guid' => $container_guid,
 			'search_type' => 'entities',
 			'friends' => $friends
 		)));
@@ -459,6 +462,7 @@ foreach ($custom_types as $type) {
 	$data = htmlspecialchars(http_build_query(array(
 		'q' => $query,
 		'search_type' => $type,
+		'container_guid' => $container_guid,
 	)));
 
 	$url = elgg_get_site_url()."search?$data";
