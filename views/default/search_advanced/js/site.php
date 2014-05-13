@@ -4,10 +4,10 @@
 elgg.provide("elgg.search_advanced");
 
 elgg.search_advanced.init = function() {
-	$(".elgg-search .search-input").each(function(){
+	$(".elgg-search .search-input").each(function() {
 		$(this)
 		// don't navigate away from the field on tab when selecting an item
-		.bind( "keydown", function( event ) {
+		.bind( "keydown", function(event) {
 			if ( event.keyCode === $.ui.keyCode.TAB &&
 					$( this ).data( "autocomplete" ).menu.active ) {
 				event.preventDefault();
@@ -61,17 +61,17 @@ elgg.search_advanced.init = function() {
 	});
 
 	// type selection
-	$(".search-advanced-type-selection > li > a").click(function(e){
+	$(".search-advanced-type-selection > li > a").click(function(e) {
 		$(this).next().show();
 		e.preventDefault();
 		e.stopPropagation();
 	});
 
-	$(".search-advanced-type-selection-dropdown").click(function(e){
+	$(".search-advanced-type-selection-dropdown").click(function(e) {
 		e.stopPropagation();
 	});
 
-	$(".search-advanced-type-selection-dropdown a").click(function(e){
+	$(".search-advanced-type-selection-dropdown a").click(function(e) {
 		$(".search-advanced-type-selection > li > a").html($(this).html());
 
 		$(".elgg-search input[name='search_type']").attr("disabled", "disabled");
@@ -80,20 +80,20 @@ elgg.search_advanced.init = function() {
 		
 		var rel = $(this).attr("rel");
 		
-		if(rel){
+		if (rel) {
 			$(".elgg-search input[name='search_type']").val("entities").removeAttr("disabled");
 
 			var input_vals = rel.split(" ");
 			
-			if(input_vals[0]){
-				if(input_vals[0] == "tags"){
+			if (input_vals[0]) {
+				if (input_vals[0] == "tags") {
 					$(".elgg-search input[name='search_type']").val(input_vals[0]);
 				} else {
 					$(".elgg-search input[name='entity_type']").val(input_vals[0]).removeAttr("disabled");
 				}
 			}
 
-			if(input_vals[1]){
+			if (input_vals[1]) {
 				$(".elgg-search input[name='entity_subtype']").val(input_vals[1]).removeAttr("disabled");
 			}
 		}
@@ -101,11 +101,11 @@ elgg.search_advanced.init = function() {
 		$(".search-advanced-type-selection-dropdown").hide();
 	});
 
-	$(document).click(function(){
+	$(document).click(function() {
 		$(".search-advanced-type-selection-dropdown").hide();
 	});
 
-	$(".search-advanced-widget-search-form").live("submit", function(e){
+	$(".search-advanced-widget-search-form").live("submit", function(e) {
 		var $target = $(this).next();
 		
 		var $loader = $('#elgg-widget-loader').clone();
@@ -116,7 +116,6 @@ elgg.search_advanced.init = function() {
 		$target.load($(this).attr("action"), $(this).serialize()).addClass("mtm");
 		e.preventDefault();
 	});
-	
 }
 
 elgg.register_hook_handler('init', 'system', elgg.search_advanced.init);

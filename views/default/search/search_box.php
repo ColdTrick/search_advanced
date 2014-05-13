@@ -32,9 +32,7 @@ if (function_exists('mb_convert_encoding')) {
 }
 $display_query = htmlspecialchars($display_query, ENT_QUOTES, 'UTF-8', false);
 $type_selection = elgg_view("search_advanced/search/type_selection");
-?>
-
-	
+?>	
 <form class="<?php echo $class; ?>" action="<?php echo elgg_get_site_url(); ?>search" method="get">
 	<fieldset>
 		<?php echo $type_selection;?>

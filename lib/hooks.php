@@ -1,19 +1,17 @@
 <?php
 /**
- * Elgg core search.
- *
- * @package Elgg
- * @subpackage Core
+ * All hooks are bundled here
  */
 
 /**
  * Return default results for searches on objects.
  *
- * @param unknown_type $hook
- * @param unknown_type $type
- * @param unknown_type $value
- * @param unknown_type $params
- * @return unknown_type
+ * @param string $hook        name of hook
+ * @param string $type        type of hook
+ * @param unknown_type $value current value
+ * @param array $params       parameters
+ * 
+ * @return array
  */
 function search_advanced_objects_hook($hook, $type, $value, $params) {
 
@@ -27,7 +25,7 @@ function search_advanced_objects_hook($hook, $type, $value, $params) {
 	if (!isset($tag_name_ids)) {
 		if ($valid_tag_names = elgg_get_registered_tag_metadata_names()) {
 			$tag_name_ids = array();
-			foreach($valid_tag_names as $tag_name){
+			foreach ($valid_tag_names as $tag_name) {
 				$tag_name_ids[] = add_metastring($tag_name);
 			}
 		} else {
@@ -35,7 +33,7 @@ function search_advanced_objects_hook($hook, $type, $value, $params) {
 		}
 	}
 	
-	if($tag_name_ids){
+	if ($tag_name_ids) {
 		$params['joins'] = array(
 			"JOIN {$db_prefix}objects_entity oe ON e.guid = oe.guid",
 			"JOIN {$db_prefix}metadata md on e.guid = md.entity_guid"
@@ -47,13 +45,13 @@ function search_advanced_objects_hook($hook, $type, $value, $params) {
 	
 	$fields = array('title', 'description');
 	
-	if($params["subtype"] === "page"){
+	if ($params["subtype"] === "page") {
 		$params["subtype"] = array("page", "page_top");
 	}
 	
 	$where = search_advanced_get_where_sql('oe', $fields, $params, FALSE);
 
-	if($tag_name_ids){
+	if ($tag_name_ids) {
 		// look up value ids to save a join
 		$value_ids = array();
 		$query_parts = array();
@@ -70,7 +68,7 @@ function search_advanced_objects_hook($hook, $type, $value, $params) {
 			$query_parts[] = $query;
 		}
 		
-		foreach($query_parts as $query_part){
+		foreach ($query_parts as $query_part) {
 			$value_ids[] = add_metastring($query_part);
 		}
 				
@@ -101,7 +99,7 @@ function search_advanced_objects_hook($hook, $type, $value, $params) {
 
 	// add the volatile data for why these entities have been returned.
 	foreach ($entities as $entity) {
-		if($valid_tag_names){
+		if ($valid_tag_names) {
 			$matched_tags_strs = array();
 	
 			// get tags for each tag name requested to find which ones matched.
@@ -147,11 +145,12 @@ function search_advanced_objects_hook($hook, $type, $value, $params) {
 /**
  * Return default results for searches on groups.
  *
- * @param unknown_type $hook
- * @param unknown_type $type
- * @param unknown_type $value
- * @param unknown_type $params
- * @return unknown_type
+ * @param string $hook        name of hook
+ * @param string $type        type of hook
+ * @param unknown_type $value current value
+ * @param array $params       parameters
+ * 
+ * @return array
  */
 function search_advanced_groups_hook($hook, $type, $value, $params) {
 	$db_prefix = elgg_get_config('dbprefix');
@@ -159,12 +158,12 @@ function search_advanced_groups_hook($hook, $type, $value, $params) {
 	$query = sanitise_string($params['query']);
 
 	$profile_fields = array_keys(elgg_get_config('group'));
-	if($profile_fields){
+	if ($profile_fields) {
 		$params['joins'] = array(
-				"JOIN {$db_prefix}groups_entity ge ON e.guid = ge.guid",
-				"JOIN {$db_prefix}metadata md on e.guid = md.entity_guid",
-				"JOIN {$db_prefix}metastrings msv ON md.value_id = msv.id"
-				);
+			"JOIN {$db_prefix}groups_entity ge ON e.guid = ge.guid",
+			"JOIN {$db_prefix}metadata md on e.guid = md.entity_guid",
+			"JOIN {$db_prefix}metastrings msv ON md.value_id = msv.id"
+		);
 	} else {
 		$join = "JOIN {$db_prefix}groups_entity ge ON e.guid = ge.guid";
 		$params['joins'] = array($join);
@@ -176,7 +175,7 @@ function search_advanced_groups_hook($hook, $type, $value, $params) {
 	// "if > 50% match 0 sets are returns" problem.
 	$where = search_advanced_get_where_sql('ge', $fields, $params, FALSE);
 
-	if($profile_fields){
+	if ($profile_fields) {
 		// get the where clauses for the md names
 		// can't use egef_metadata() because the n_table join comes too late.
 // 		$clauses = elgg_entities_get_metastrings_options('metadata', array(
@@ -186,7 +185,7 @@ function search_advanced_groups_hook($hook, $type, $value, $params) {
 // 		$params['joins'] = array_merge($clauses['joins'], $params['joins']);
 		
 		$tag_name_ids = array();
-		foreach($profile_fields as $field){
+		foreach ($profile_fields as $field) {
 			$tag_name_ids[] = add_metastring($field);
 		}
 		
@@ -267,17 +266,15 @@ function search_advanced_groups_hook($hook, $type, $value, $params) {
  *
  * @todo add profile field MD searching
  *
- * @param unknown_type $hook
- * @param unknown_type $type
- * @param unknown_type $value
- * @param unknown_type $params
- * @return unknown_type
+ * @param string $hook        name of hook
+ * @param string $type        type of hook
+ * @param unknown_type $value current value
+ * @param array $params       parameters
+ * 
+ * @return array
  */
 function search_advanced_users_hook($hook, $type, $value, $params) {
-	
-	
 	$db_prefix = elgg_get_config('dbprefix');
-
 	$query = sanitise_string($params['query']);
 
 	$params['joins'] = array(
@@ -286,18 +283,18 @@ function search_advanced_users_hook($hook, $type, $value, $params) {
 		"JOIN {$db_prefix}metastrings msv ON md.value_id = msv.id"
 	);
 	
-	if(isset($params["container_guid"])){
+	if (isset($params["container_guid"])) {
 		$entity = get_entity($params["container_guid"]);
 	}
 	
-	if(isset($entity) && $entity instanceof ElggGroup) {
+	if (isset($entity) && $entity instanceof ElggGroup) {
 		// check for group membership relation
 		$params["relationship"] = "member";
 		$params["relationship_guid"] = $params["container_guid"];
 		$params["inverse_relationship"] = TRUE;
 	} else {
 		// check for site relation ship
-		if(empty($_SESSION["search_advanced:multisite"])){
+		if (empty($_SESSION["search_advanced:multisite"])) {
 			$params["relationship"] = "member_of_site";
 			$params["relationship_guid"] = elgg_get_site_entity()->getGUID();
 			$params["inverse_relationship"] = TRUE;
@@ -321,7 +318,7 @@ function search_advanced_users_hook($hook, $type, $value, $params) {
 		// no fulltext index, can't disable fulltext search in this function.
 		// $md_where .= " AND " . search_get_where_sql('msv', array('string'), $params, FALSE);
 		$tag_name_ids = array();
-		foreach($profile_fields as $field){
+		foreach ($profile_fields as $field) {
 			$tag_name_ids[] = add_metastring($field);
 		}
 		
@@ -380,6 +377,7 @@ function search_advanced_users_hook($hook, $type, $value, $params) {
  * @param string $type   Hook type
  * @param array  $value  Empty array
  * @param array  $params Search parameters
+ * 
  * @return array
  */
 function search_advanced_comments_hook($hook, $type, $value, $params) {
@@ -402,7 +400,7 @@ function search_advanced_comments_hook($hook, $type, $value, $params) {
 	}
 
 	$site_and = "";
-	if(empty($_SESSION["search_advanced:multisite"])) {
+	if (empty($_SESSION["search_advanced:multisite"])) {
 		$site_guid = elgg_get_site_entity()->getGUID();
 		$site_and = "AND ((e.site_guid = " . $site_guid . ") OR (e.type = 'user' AND e.guid IN (select r.guid_one from " . elgg_get_config("dbprefix") . "entity_relationships r where r.relationship = 'member_of_site' and r.guid_two = " . $site_guid . ")))" ;
 	}
@@ -488,17 +486,3 @@ function search_advanced_comments_hook($hook, $type, $value, $params) {
 		'count' => $count,
 	);
 }
-
-/**
- * Register comments as a custom search type.
- *
- * @param unknown_type $hook
- * @param unknown_type $type
- * @param unknown_type $value
- * @param unknown_type $params
- * @return unknown_type
- */
-// function search_custom_types_comments_hook($hook, $type, $value, $params) {
-// 	$value[] = 'comments';
-// 	return $value;
-// }

@@ -3,6 +3,11 @@
 require_once(dirname(__FILE__) . "/lib/functions.php");
 require_once(dirname(__FILE__) . "/lib/hooks.php");
 
+/**
+ * Initializes the plugin
+ * 
+ * @return void
+ */
 function search_advanced_init(){
 	// page handler for search actions and results
 	elgg_register_page_handler('search_advanced', 'search_advanced_page_handler');
@@ -26,20 +31,34 @@ function search_advanced_init(){
 	}
 }
 
+/**
+ * Handles search pages
+ * 
+ * @param array $page page segments
+ * 
+ * @return boolean
+ */
 function search_advanced_page_handler($page){
-	switch($page[0]){
+	switch ($page[0]) {
 		case "autocomplete":
 			include_once(dirname(__FILE__) . "/procedures/autocomplete.php");
 			return true;
 	}
 }
 
+/**
+ * Handles search advanced pages
+ * 
+ * @param array $page page segments
+ * 
+ * @return boolean
+ */
 function search_advanced_search_page_handler($page){
 	// if there is no q set, we're being called from a legacy installation
 	// it expects a search by tags.
 	// actually it doesn't, but maybe it should.
 	// maintain backward compatibility
-	if(!get_input('q', get_input('tag', NULL)) && isset($page[0])) {
+	if (!get_input('q', get_input('tag', NULL)) && isset($page[0])) {
 		set_input('q', $page[0]);
 		//set_input('search_type', 'tags');
 	}
@@ -54,7 +73,6 @@ function search_advanced_search_page_handler($page){
 	include_once("$base_dir/index.php");
 	return true;
 }
-
 
 elgg_register_event_handler('init','system','search_advanced_init');
 

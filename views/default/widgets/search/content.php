@@ -1,33 +1,33 @@
 <?php
 
-	$widget = $vars["entity"];
+$widget = $vars["entity"];
 
-	$form_body = elgg_view("input/text", array("name" => "q"));
+$form_body = elgg_view("input/text", array("name" => "q"));
 
-	$type = "";
-	$types = $widget->types;
-	if (!empty($types)) {
-		list($type, $subtype) = explode(":" , $types);
+$type = "";
+$types = $widget->types;
+if (!empty($types)) {
+	list($type, $subtype) = explode(":" , $types);
+}
+
+if (!empty($type)) {
+	$form_body .= elgg_view("input/hidden", array("name" => "search_type", "value" => "entities"));
+	$form_body .= elgg_view("input/hidden", array("name" => "entity_type", "value" => $type));
+	if (!empty($subtype)) {
+		$form_body .= elgg_view("input/hidden", array("name" => "entity_subtype", "value" => $subtype));
 	}
+}
 
-	if (!empty($type)) {
-		$form_body .= elgg_view("input/hidden", array("name" => "search_type", "value" => "entities"));
-		$form_body .= elgg_view("input/hidden", array("name" => "entity_type", "value" => $type));
-		if (!empty($subtype)) {
-			$form_body .= elgg_view("input/hidden", array("name" => "entity_subtype", "value" => $subtype));
-		}
-	}
+$form_body .= elgg_view("input/submit", array("value" => elgg_echo("search"), "class" => "hidden"));
 
-	$form_body .= elgg_view("input/submit", array("value" => elgg_echo("search"), "class" => "hidden"));
+$action = "/search";
+$container_entity = $widget->getContainerEntity();
+if ($container_entity instanceof ElggGroup) {
+	$action .= "?container_guid=" . $container_entity->getGUID();
+}
 
-	$action = "/search";
-	$container_entity = $widget->getContainerEntity();
-	if ($container_entity instanceof ElggGroup) {
-		$action .= "?container_guid=" . $container_entity->getGUID();
-	}
-	
-	$form = elgg_view("input/form", array("body" => $form_body, "action" => $action, "disable_security" => true, "class" => "search-advanced-widget-search-form"));
+$form = elgg_view("input/form", array("body" => $form_body, "action" => $action, "disable_security" => true, "class" => "search-advanced-widget-search-form"));
 
-	echo $form;
+echo $form;
 
-	echo "<div class='search-advanced-widget-search-results'></div>";
+echo "<div class='search-advanced-widget-search-results'></div>";
