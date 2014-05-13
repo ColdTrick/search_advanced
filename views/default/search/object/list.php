@@ -119,7 +119,16 @@ foreach ($entities as $entity) {
 		if ($combine_search_results && (get_input("search_type", "all") == "all")) {
 			// add a floating tag
 			$subtype = $entity->getSubtype();
-			$body .= elgg_view("output/url", array("class" => "float-alt elgg-quiet", "href" => "search?q=" . $vars['params']['query'] . "&entity_subtype=" . $subtype . "&entity_type=" . $entity->getType() . "&search_type=entities", "text" => elgg_echo("item:" . $entity->getType() . ":" . $subtype)));
+			$url_options = array(
+				"class" => "float-alt elgg-quiet", 
+				"href" => "search?q=" . $vars['params']['query'] . "&entity_subtype=" . $subtype . "&entity_type=" . $entity->getType() . "&search_type=entities", 
+				"text" => elgg_echo("item:" . $entity->getType() . ":" . $subtype)
+			);
+			if ($vars['params']['container_guid']) {
+				$url_options["href"] .= "&container_guid=" . $vars['params']['container_guid'];
+			}
+			
+			$body .= elgg_view("output/url", $url_options);
 		}
 		$body .= elgg_view($view, array(
 			'entity' => $entity,
