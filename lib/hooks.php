@@ -292,6 +292,8 @@ function search_advanced_users_hook($hook, $type, $value, $params) {
 		$params["relationship"] = "member";
 		$params["relationship_guid"] = $params["container_guid"];
 		$params["inverse_relationship"] = TRUE;
+		
+		unset($params["container_guid"]);
 	} else {
 		// check for site relation ship
 		if (empty($_SESSION["search_advanced:multisite"])) {
