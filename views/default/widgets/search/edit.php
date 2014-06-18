@@ -7,6 +7,10 @@ $options_values = array();
 
 $options_values[0] = elgg_echo("all");
 foreach ($types as $type => $subtypes) {
+	if ($widget->getOwnerEntity() instanceof ElggGroup && $type == "group") {
+		continue;
+	}
+	
 	// @todo when using index table, can include result counts on each of these.
 	if (is_array($subtypes) && count($subtypes)) {
 		foreach ($subtypes as $subtype) {
