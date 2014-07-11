@@ -47,16 +47,22 @@ elgg.search_advanced.init = function() {
 				}
 				return false;
 			},
-			autoFocus: true
-		}).data( "autocomplete" )._renderItem = function( ul, item ) {
+			autoFocus: true,
+			messages: {
+				noResults: '',
+				results: function() {}
+			},
+			create: function (e) {
+				$(this).prev('.ui-helper-hidden-accessible').remove();
+			}
+		}).data( "ui-autocomplete" )._renderItem = function(ul, item) {
 			var list_body = "";
 			list_body = item.content;
 			
-		
-			return $( "<li></li>" )
-			.data( "item.autocomplete", item )
-			.append( "<a>" + list_body + "</a>" )
-			.appendTo( ul );
+			return $("<li></li>")
+			.data("item.autocomplete", item)
+			.append("<a>" + list_body + "</a>")
+			.appendTo(ul);
 		};
 	});
 

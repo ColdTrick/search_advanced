@@ -16,7 +16,7 @@ if($vars["container_guid"]){
 	echo elgg_view("input/hidden", array("name" => "container_guid", "value" => $vars["container_guid"]));
 }
 
-echo elgg_view("input/text", array("name" => "q", "value" => $vars["query"]));
+echo elgg_view("input/text", array("name" => "q", "value" => $vars["query"] , "class" => "ui-front"));
 
 if (($user = elgg_get_logged_in_user_entity()) && elgg_trigger_plugin_hook("search_multisite", "search", array("user" => $user), false)) {
 	$current_value = 0;
