@@ -70,6 +70,7 @@
 form.elgg-search {
 	border: 1px solid #71B9F7;
 	height: 19px;
+	z-index: 1;
 }
 
 .elgg-search input[type="text"].search-input {
