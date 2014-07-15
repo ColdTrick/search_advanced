@@ -150,6 +150,14 @@ if (!empty($q)) {
 			));
 		}
 	}
+	
+	// let other plugins add content
+	$params = array(
+		"query" => $q,
+		"limit" => $limit,
+		"page_owner_guid" => $page_owner_guid
+	);
+	$result = elgg_trigger_plugin_hook("autocomplete", "search_advanced", $params, $result);
 }
 
 header("Content-Type: application/json");
