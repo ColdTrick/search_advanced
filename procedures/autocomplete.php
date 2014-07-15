@@ -158,6 +158,14 @@ if (!empty($q)) {
 		"page_owner_guid" => $page_owner_guid
 	);
 	$result = elgg_trigger_plugin_hook("autocomplete", "search_advanced", $params, $result);
+	
+	if (!empty($result)) {
+		$result[] = array(
+			"type" => "placeholder",
+			"content" => "<label>" . elgg_echo("search_advanced:autocomplete:all") . "</label>",
+			"href" => elgg_normalize_url("search?q=" . $q)
+		);
+	}
 }
 
 header("Content-Type: application/json");

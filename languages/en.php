@@ -11,5 +11,6 @@ return array(
 	'search_advanced:content:title' => "Content",
 	'search_advanced:content:last_updated' => "Last updated",
 	'search_advanced:content:created' => "Created",
-	'search_advanced:searchbox' => "Search"
+	'search_advanced:searchbox' => "Search",
+	'search_advanced:autocomplete:all' => "Search in all content",
 );

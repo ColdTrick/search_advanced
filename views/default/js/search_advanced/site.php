@@ -56,12 +56,10 @@ elgg.search_advanced.init = function() {
 				$(this).prev('.ui-helper-hidden-accessible').remove();
 			}
 		}).data( "ui-autocomplete" )._renderItem = function(ul, item) {
-			var list_body = "";
-			list_body = item.content;
 			
 			return $("<li></li>")
 			.data("item.autocomplete", item)
-			.append("<a>" + list_body + "</a>")
+			.append("<a class='search-advanced-autocomplete-" + item.type + "'>" + item.content + "</a>")
 			.appendTo(ul);
 		};
 	});
