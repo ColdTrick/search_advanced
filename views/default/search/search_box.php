@@ -35,7 +35,7 @@ $type_selection = elgg_view("search_advanced/search/type_selection");
 <form class="<?php echo $class; ?>" action="<?php echo elgg_get_site_url(); ?>search" method="get">
 	<fieldset>
 		<?php echo $type_selection;?>
-		<input type="text" class="search-input" size="21" name="q" value="<?php echo $display_query; ?>" placeholder="<?php echo elgg_echo("search_asvanced:searchbox"); ?>" />
+		<input type="text" class="search-input" size="21" name="q" value="<?php echo $display_query; ?>" placeholder="<?php echo elgg_echo("search_advanced:searchbox"); ?>" />
 		<input type="submit" value="<?php echo elgg_echo("search:go"); ?>" class="search-submit-button" />
 	</fieldset>
 </form>
