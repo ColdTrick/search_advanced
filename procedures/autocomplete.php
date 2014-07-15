@@ -12,7 +12,12 @@ if (!empty($q)) {
 	if (!empty($keywords)) {
 		foreach ($keywords as $content) {
 			if (stristr($content, $q)) {
-				$result[] = array("type" => "tag", "content" => search_highlight_words(array($q), $content), "value" => $content, "href" => elgg_normalize_url("search?q=" . urlencode($content)));
+				$result[] = array(
+					"type" => "tag",
+					"content" => search_highlight_words(array($q), $content),
+					"value" => $content,
+					"href" => elgg_normalize_url("search?q=" . urlencode($content)
+				));
 			}
 		}
 	}
@@ -31,7 +36,10 @@ if (!empty($q)) {
 		// look only in friends
 		$options["relationship"] = "friend";
 		$options["relationship_guid"] = $logged_in_user->getGUID();
+		
 		$users = elgg_get_entities_from_relationship($options);
+		
+		
 	}
 	
 	if (!$users || (count($users) < $limit)) {
@@ -58,10 +66,26 @@ if (!empty($q)) {
 		}
 	}
 	
+	if (count($users) >= $limit) {
+		$options["count"] = true;
+		$user_count = elgg_get_entities_from_relationship($options);
+	} else {
+		$user_count = count($users);
+	}
+	
 	if ($users) {
-		$result[] = array("type" => "placeholder", "content" => "<label>" . elgg_echo("item:user") . "</label>");
+		$result[] = array(
+			"type" => "placeholder",
+			"content" => "<label>" . elgg_echo("item:user") . " (" . $user_count . ")</label>",
+			"href" => elgg_normalize_url("search?entity_type=user&search_type=entities&q=" . $q)
+		);
 		foreach ($users as $user) {
-			$result[] = array("type" => "user", "value" => $user->name, "href" => $user->getURL(), "content" => elgg_view("search_advanced/autocomplete/user", array("entity" => $user)));
+			$result[] = array(
+				"type" => "user",
+				"value" => $user->name,
+				"href" => $user->getURL(),
+				"content" => elgg_view("search_advanced/autocomplete/user", array("entity" => $user))
+			);
 		}
 	}
 	
@@ -104,13 +128,29 @@ if (!empty($q)) {
 		}
 	}
 	
+	if (count($groups) >= $limit) {
+		$options["count"] = true;
+		$group_count = elgg_get_entities_from_relationship($options);
+	} else {
+		$group_count = count($groups);
+	}
+	
 	if ($groups) {
-		$result[] = array("type" => "placeholder", "content" => "<label>" . elgg_echo("item:group") . "</label>");
+		$result[] = array(
+			"type" => "placeholder",
+			"content" => "<label>" . elgg_echo("item:group") . " (" . $group_count . ")</label>",
+			"href" => elgg_normalize_url("search?entity_type=group&search_type=entities&q=" . $q)
+		);
 		foreach ($groups as $group) {
-			$result[] = array("type" => "group", "value" => $group->name, "href" => $group->getURL(), "content" => elgg_view("search_advanced/autocomplete/group", array("entity" => $group)));
+			$result[] = array(
+				"type" => "group",
+				"value" => $group->name,
+				"href" => $group->getURL(),
+				"content" => elgg_view("search_advanced/autocomplete/group", array("entity" => $group)
+			));
 		}
 	}
-}	
+}
 
 header("Content-Type: application/json");
 echo json_encode(array_values($result));

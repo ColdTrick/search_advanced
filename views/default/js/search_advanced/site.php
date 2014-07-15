@@ -38,10 +38,10 @@ elgg.search_advanced.init = function() {
 				return false;
 			},
 			select: function( event, ui ) {
-				if(ui.item.type == "placeholder"){
-					return false;
-				} else if(ui.item.href){
+				if (ui.item.href) {
 					document.location.href = ui.item.href;
+				} else if(ui.item.type == "placeholder"){
+					return false;
 				} else {
 					this.value = ui.item.value;
 				}
