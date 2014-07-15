@@ -10,7 +10,7 @@
  * @param string $type        type of hook
  * @param unknown_type $value current value
  * @param array $params       parameters
- * 
+ *
  * @return array
  */
 function search_advanced_objects_hook($hook, $type, $value, $params) {
@@ -26,7 +26,7 @@ function search_advanced_objects_hook($hook, $type, $value, $params) {
 		if ($valid_tag_names = elgg_get_registered_tag_metadata_names()) {
 			$tag_name_ids = array();
 			foreach ($valid_tag_names as $tag_name) {
-				$tag_name_ids[] = add_metastring($tag_name);
+				$tag_name_ids[] = elgg_get_metastring_id($tag_name);
 			}
 		} else {
 			$tag_name_ids = false;
@@ -69,7 +69,7 @@ function search_advanced_objects_hook($hook, $type, $value, $params) {
 		}
 		
 		foreach ($query_parts as $query_part) {
-			$value_ids[] = add_metastring($query_part);
+			$value_ids[] = elgg_get_metastring_id($query_part);
 		}
 				
 		// get the where clauses for the md names
@@ -149,7 +149,7 @@ function search_advanced_objects_hook($hook, $type, $value, $params) {
  * @param string $type        type of hook
  * @param unknown_type $value current value
  * @param array $params       parameters
- * 
+ *
  * @return array
  */
 function search_advanced_groups_hook($hook, $type, $value, $params) {
@@ -186,7 +186,7 @@ function search_advanced_groups_hook($hook, $type, $value, $params) {
 		
 		$tag_name_ids = array();
 		foreach ($profile_fields as $field) {
-			$tag_name_ids[] = add_metastring($field);
+			$tag_name_ids[] = elgg_get_metastring_id($field);
 		}
 		
 		$likes = array();
@@ -270,7 +270,7 @@ function search_advanced_groups_hook($hook, $type, $value, $params) {
  * @param string $type        type of hook
  * @param unknown_type $value current value
  * @param array $params       parameters
- * 
+ *
  * @return array
  */
 function search_advanced_users_hook($hook, $type, $value, $params) {
@@ -321,7 +321,7 @@ function search_advanced_users_hook($hook, $type, $value, $params) {
 		// $md_where .= " AND " . search_get_where_sql('msv', array('string'), $params, FALSE);
 		$tag_name_ids = array();
 		foreach ($profile_fields as $field) {
-			$tag_name_ids[] = add_metastring($field);
+			$tag_name_ids[] = elgg_get_metastring_id($field);
 		}
 		
 		$likes = array();
@@ -379,7 +379,7 @@ function search_advanced_users_hook($hook, $type, $value, $params) {
  * @param string $type   Hook type
  * @param array  $value  Empty array
  * @param array  $params Search parameters
- * 
+ *
  * @return array
  */
 function search_advanced_comments_hook($hook, $type, $value, $params) {
