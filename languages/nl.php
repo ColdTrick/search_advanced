@@ -1,5 +1,12 @@
 <?php
+/**
+ * This file was created by Translation Editor v2.0
+ * On 2014-07-17 09:58
+ */
+
 $language = array (
+  'search_advanced:searchbox' => 'Zoeken',
+  'search_advanced:autocomplete:all' => 'Doorzoek alle content',
   'search_advanced:settings:combine_search_results' => 'Combineer zoekresultaten',
   'search_advanced:settings:combine_search_results:info' => 'Dit zal een gecombineerde lijst van de meest recente content tonen op basis van een zoekopdracht. Er zal geen groepering meer zijn op de resultaten pagina. Filteren middels het menu is nog steeds mogelijk.',
   'search_advanced:settings:enable_multi_tag' => 'Multi tag search activeren',
