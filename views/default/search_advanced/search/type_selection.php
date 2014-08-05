@@ -3,9 +3,16 @@ $types = get_registered_entity_types();
 
 $current_selected = elgg_echo("all");
 
-$search_type = get_input("search_type");
 $entity_type = get_input("entity_type");
 $entity_subtype = get_input("entity_subtype");
+
+if (!array_key_exists($entity_type, $types)) {
+	$entity_type = "";
+}
+
+if (array_key_exists($entity_type, $types) && !in_array($entity_subtype, $types[$entity_type])) {
+	$entity_subtype = "";
+}
 
 if (!empty($entity_type)) {
 	echo elgg_view("input/hidden", array("name" => "search_type", "value" => "entities"));
@@ -19,9 +26,9 @@ if (!empty($entity_type)) {
 		echo elgg_view("input/hidden", array("name" => "entity_subtype", "value" => $entity_subtype));
 	} else {
 		echo elgg_view("input/hidden", array("name" => "entity_subtype", "disabled" => "disabled"));
-	}	
+	}
 } else {
-	echo elgg_view("input/hidden", array("name" => "search_type", "value" => "entities","disabled" => "disabled"));
+	echo elgg_view("input/hidden", array("name" => "search_type", "value" => "entities", "disabled" => "disabled"));
 	echo elgg_view("input/hidden", array("name" => "entity_type", "disabled" => "disabled"));
 	echo elgg_view("input/hidden", array("name" => "entity_subtype", "disabled" => "disabled"));
 }
@@ -41,7 +48,7 @@ if (!empty($entity_type)) {
 				<a rel='group'><?php echo elgg_echo("item:group");?></a>
 			</li>
 			
-			<?php 
+			<?php
 				foreach ($types["object"] as $subtype) {
 					if ($subtype === "page_top") {
 						// skip this one as it is merged with page objects
@@ -51,5 +58,5 @@ if (!empty($entity_type)) {
 				}
 			?>
 		</ul>
-	</li>	
+	</li>
 </ul>
