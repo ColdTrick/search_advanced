@@ -120,6 +120,12 @@ elgg.search_advanced.init = function() {
 		$target.load($(this).attr("action"), $(this).serialize()).addClass("mtm");
 		e.preventDefault();
 	});
+
+	$("form.elgg-search").live("submit", function(e) {
+		$(".elgg-search .search-input").each(function() {
+			$(this).autocomplete("destroy");
+		});
+	});
 }
 
 elgg.register_hook_handler('init', 'system', elgg.search_advanced.init);
