@@ -36,7 +36,7 @@ function search_advanced_objects_hook($hook, $type, $value, $params) {
 	if ($tag_name_ids) {
 		$params['joins'] = array(
 			"JOIN {$db_prefix}objects_entity oe ON e.guid = oe.guid",
-			"JOIN {$db_prefix}metadata md on e.guid = md.entity_guid"
+			"LEFT OUTER JOIN {$db_prefix}metadata md on e.guid = md.entity_guid"
 		);
 	} else {
 		$join = "JOIN {$db_prefix}objects_entity oe ON e.guid = oe.guid";
@@ -47,6 +47,10 @@ function search_advanced_objects_hook($hook, $type, $value, $params) {
 	
 	if ($params["subtype"] === "page") {
 		$params["subtype"] = array("page", "page_top");
+	}
+
+	if ($params["subtype"] === "groupforumtopic") {
+		$params["subtype"] = array("groupforumtopic", "discussion_reply");
 	}
 	
 	$where = search_advanced_get_where_sql('oe', $fields, $params, FALSE);
@@ -364,123 +368,6 @@ function search_advanced_users_hook($hook, $type, $value, $params) {
 
 		$name = search_get_highlighted_relevant_substrings($entity->name, $query);
 		$entity->setVolatileData('search_matched_description', $name);
-	}
-
-	return array(
-		'entities' => $entities,
-		'count' => $count,
-	);
-}
-
-/**
- * Get comments that match the search parameters.
- *
- * @param string $hook   Hook name
- * @param string $type   Hook type
- * @param array  $value  Empty array
- * @param array  $params Search parameters
- *
- * @return array
- */
-function search_advanced_comments_hook($hook, $type, $value, $params) {
-	$db_prefix = elgg_get_config('dbprefix');
-
-	$query = sanitise_string($params['query']);
-	$limit = sanitise_int($params['limit']);
-	$offset = sanitise_int($params['offset']);
-	$params['annotation_names'] = array('generic_comment', 'group_topic_post');
-
-	$fields = array('string');
-
-	// force IN BOOLEAN MODE since fulltext isn't
-	// available on metastrings (and boolean mode doesn't need it)
-	$search_where = search_advanced_get_where_sql('msv', $fields, $params, FALSE);
-
-	$container_and = '';
-	if ($params['container_guid'] && $params['container_guid'] !== ELGG_ENTITIES_ANY_VALUE) {
-		$container_and = 'AND e.container_guid = ' . sanitise_int($params['container_guid']);
-	}
-
-	$site_and = "";
-	if (empty($_SESSION["search_advanced:multisite"])) {
-		$site_guid = elgg_get_site_entity()->getGUID();
-		$site_and = "AND ((e.site_guid = " . $site_guid . ") OR (e.type = 'user' AND e.guid IN (select r.guid_one from " . elgg_get_config("dbprefix") . "entity_relationships r where r.relationship = 'member_of_site' and r.guid_two = " . $site_guid . ")))" ;
-	}
-	
-	$e_access = get_access_sql_suffix('e');
-	$a_access = get_access_sql_suffix('a');
-	// @todo this can probably be done through the api..
-	$q = "SELECT count(DISTINCT a.id) as total FROM {$db_prefix}annotations a
-		JOIN {$db_prefix}metastrings msn ON a.name_id = msn.id
-		JOIN {$db_prefix}metastrings msv ON a.value_id = msv.id
-		JOIN {$db_prefix}entities e ON a.entity_guid = e.guid
-		WHERE msn.string IN ('generic_comment', 'group_topic_post')
-			AND ($search_where)
-			AND $e_access
-			AND $a_access
-			$container_and
-			$site_and
-		";
-
-	if (!$result = get_data($q)) {
-		return FALSE;
-	}
-	
-	$count = $result[0]->total;
-	
-	// don't continue if nothing there...
-	if (!$count) {
-		return array ('entities' => array(), 'count' => 0);
-	}
-	
-	$order_by = search_get_order_by_sql('e', null, "created", $params['order']);
-	if ($order_by) {
-		$order_by = "ORDER BY $order_by";
-	}
-	
-	$q = "SELECT DISTINCT a.*, msv.string as comment FROM {$db_prefix}annotations a
-		JOIN {$db_prefix}metastrings msn ON a.name_id = msn.id
-		JOIN {$db_prefix}metastrings msv ON a.value_id = msv.id
-		JOIN {$db_prefix}entities e ON a.entity_guid = e.guid
-		WHERE msn.string IN ('generic_comment', 'group_topic_post')
-			AND ($search_where)
-			AND $e_access
-			AND $a_access
-			$container_and
-			$site_and
-		
-		$order_by
-		LIMIT $offset, $limit
-		";
-
-	$comments = get_data($q);
-
-	// @todo if plugins are disabled causing subtypes
-	// to be invalid and there are comments on entities of those subtypes,
-	// the counts will be wrong here and results might not show up correctly,
-	// especially on the search landing page, which only pulls out two results.
-
-	// probably better to check against valid subtypes than to do what I'm doing.
-
-	// need to return actual entities
-	// add the volatile data for why these entities have been returned.
-	$entities = array();
-	foreach ($comments as $comment) {
-		$entity = get_entity($comment->entity_guid);
-
-		// hic sunt dracones
-		if (!$entity) {
-			//continue;
-			$entity = new ElggObject();
-			$entity->setVolatileData('search_unavailable_entity', TRUE);
-		}
-
-		$comment_str = search_get_highlighted_relevant_substrings($comment->comment, $query);
-		$entity->setVolatileData('search_match_annotation_id', $comment->id);
-		$entity->setVolatileData('search_matched_comment', $comment_str);
-		$entity->setVolatileData('search_matched_comment_owner_guid', $comment->owner_guid);
-		$entity->setVolatileData('search_matched_comment_time_created', $comment->time_created);
-		$entities[] = $entity;
 	}
 
 	return array(

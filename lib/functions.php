@@ -8,20 +8,15 @@
  * 
  * @return void
  */
-function search_advanced_unregister_default_search_hooks(){
+function search_advanced_unregister_default_search_hooks() {
 	// register some default search hooks
 	elgg_unregister_plugin_hook_handler('search', 'object', 'search_objects_hook');
 	elgg_unregister_plugin_hook_handler('search', 'user', 'search_users_hook');
 	elgg_unregister_plugin_hook_handler('search', 'group', 'search_groups_hook');
 	
-	// tags and comments are a bit different.
-	// register a search types and a hooks for them.
+	// tags are no longer a custom type but integrated with the entity searches
 	elgg_unregister_plugin_hook_handler('search_advanced_types', 'get_types', 'search_custom_types_tags_hook');
-	elgg_unregister_plugin_hook_handler('search', 'tags', 'search_tags_hook');
-	
-	elgg_unregister_plugin_hook_handler('search_advanced_types', 'get_types', 'search_custom_types_comments_hook');
-	elgg_unregister_plugin_hook_handler('search', 'comments', 'search_comments_hook');
-	
+	elgg_unregister_plugin_hook_handler('search', 'tags', 'search_tags_hook');	
 	elgg_unregister_plugin_hook_handler('search_types', 'get_types', 'search_custom_types_tags_hook');
 }
 
@@ -30,19 +25,11 @@ function search_advanced_unregister_default_search_hooks(){
  * 
  * @return void
  */
-function search_advanced_register_search_hooks(){
+function search_advanced_register_search_hooks() {
 	// register some default search hooks
 	elgg_register_plugin_hook_handler('search', 'object', 'search_advanced_objects_hook');
 	elgg_register_plugin_hook_handler('search', 'user', 'search_advanced_users_hook');
 	elgg_register_plugin_hook_handler('search', 'group', 'search_advanced_groups_hook');
-	
-	// tags and comments are a bit different.
-	// register a search types and a hooks for them.
-// 	elgg_register_plugin_hook_handler('search_advanced_types', 'get_types', 'search_advanced_custom_types_tags_hook');
-//  	elgg_register_plugin_hook_handler('search', 'tags', 'search_advanced_tags_hook');
-	
-// 	elgg_register_plugin_hook_handler('search_advanced_types', 'get_types', 'search_advanced_custom_types_comments_hook');
-	elgg_register_plugin_hook_handler('search', 'comments', 'search_advanced_comments_hook');
 }
 
 /**
@@ -58,7 +45,6 @@ function search_advanced_register_search_hooks(){
 * @return string
 */
 function search_advanced_get_where_sql($table, $fields, $params, $use_fulltext = TRUE) {
-	global $CONFIG;
 	$query = elgg_extract("query", $params, "");
 
 	if (elgg_get_plugin_setting("enable_multi_tag", "search_advanced") == "yes") {
@@ -99,7 +85,7 @@ function search_advanced_get_where_sql($table, $fields, $params, $use_fulltext =
 	}
 	$likes_str = implode(' OR ', $likes);
 	$where = "($likes_str)";
-	
+
 	return $where;
 }
 
@@ -108,7 +94,7 @@ function search_advanced_get_where_sql($table, $fields, $params, $use_fulltext =
  * 
  * @return array
  */
-function search_advanced_get_keywords(){
+function search_advanced_get_keywords() {
 	$result = array();
 	
 	$plugin_entity = elgg_get_plugin_from_id("search_advanced");
@@ -173,10 +159,9 @@ function search_advanced_get_keywords(){
  * 
  * @return void
  */
-function search_advanced_clear_keywords_cache(){
+function search_advanced_clear_keywords_cache() {
 	$plugin_entity = elgg_get_plugin_from_id("search_advanced");
 	if ($plugin_entity) {
-		
 		// check if cachefile exists, if exists delete it
 		$file = new ElggFile();
 		$file->owner_guid = $plugin_entity->getGUID();
