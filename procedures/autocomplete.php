@@ -24,12 +24,21 @@ if (!empty($q)) {
 	
 	$logged_in_user = elgg_get_logged_in_user_entity();
 	
+	$q_parts = explode(" ", $q);
+	if (count($q_parts) > 1) {
+		$where_string = "(ue.name like '%" . implode("%' AND ue.name like '%", $q_parts) . "%')";
+	} else {
+		$where_string = "ue.name like '%" . $q . "%'";
+	} 
+	
+	$where_string .= " OR ue.username like '%" . $q . "%'";
+
 	// look for users
 	$options = array(
 		"type" => "user",
 		"limit" => $limit,
 		"joins" => array("JOIN " . elgg_get_config("dbprefix") . "users_entity ue ON e.guid = ue.guid"),
-		"wheres" => array("(ue.name like '%" . $q . "%' OR ue.username like '%" . $q . "%')")
+		"wheres" => array("(" . $where_string .")")
 	);
 	
 	if ($logged_in_user) {
