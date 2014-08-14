@@ -33,14 +33,13 @@ function search_advanced_objects_hook($hook, $type, $value, $params) {
 		}
 	}
 	
+	$params["joins"] = elgg_extract("joins", $params, array());
+	
 	if ($tag_name_ids) {
-		$params['joins'] = array(
-			"JOIN {$db_prefix}objects_entity oe ON e.guid = oe.guid",
-			"LEFT OUTER JOIN {$db_prefix}metadata md on e.guid = md.entity_guid"
-		);
+		$params["joins"][] = "JOIN {$db_prefix}objects_entity oe ON e.guid = oe.guid";
+		$params["joins"][] = "JOIN {$db_prefix}metadata md on e.guid = md.entity_guid";
 	} else {
-		$join = "JOIN {$db_prefix}objects_entity oe ON e.guid = oe.guid";
-		$params['joins'] = array($join);
+		$params["joins"][] = "JOIN {$db_prefix}objects_entity oe ON e.guid = oe.guid";
 	}
 	
 	$fields = array('title', 'description');
@@ -55,6 +54,8 @@ function search_advanced_objects_hook($hook, $type, $value, $params) {
 	
 	$where = search_advanced_get_where_sql('oe', $fields, $params, FALSE);
 
+	$params["wheres"] = elgg_extract("wheres", $params, array());
+	
 	if ($tag_name_ids) {
 		// look up value ids to save a join
 		$value_ids = array();
@@ -85,9 +86,9 @@ function search_advanced_objects_hook($hook, $type, $value, $params) {
 // 		$params['joins'] = array_merge($clauses['joins'], $params['joins']);
 		$md_where = "((md.name_id IN (" . implode(",", $tag_name_ids) . ")) AND md.value_id IN (" . implode(",", $value_ids) . "))";
 	
-		$params['wheres'] = array("(($where) OR ($md_where))");
+		$params['wheres'][] = "(($where) OR ($md_where))";
 	} else {
-		$params['wheres'] = array($where);
+		$params['wheres'][] = $where;
 	}
 	
 	$params['count'] = TRUE;
