@@ -357,6 +357,10 @@ if ($search_type != 'entities' || $search_type == 'all' || $search_type == 'tags
 					));
 				}
 			}
+			
+			if (isset($results["content"])) {
+				$results_html .= $results["content"];
+			}
 		}
 	}
 }
