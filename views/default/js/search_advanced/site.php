@@ -47,7 +47,7 @@ elgg.search_advanced.init = function() {
 				}
 				return false;
 			},
-			autoFocus: true,
+			autoFocus: false,
 			messages: {
 				noResults: '',
 				results: function() {}
