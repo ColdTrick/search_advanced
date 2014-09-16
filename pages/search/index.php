@@ -248,9 +248,13 @@ if ($search_type == 'all' || $search_type == 'entities') {
 			$results = elgg_trigger_plugin_hook('search', $type, $current_params, array());
 			if (is_array($results['entities']) && $results['count']) {
 				if ($view = search_get_search_view($current_params, 'list')) {
+					
+					// reset count to 0 to remove the "view more" url
+					$results['count'] = 0;
+					
 					$results_html .= elgg_view($view, array(
-							'results' => $results,
-							'params' => $current_params,
+						'results' => $results,
+						'params' => $current_params,
 					));
 				}
 			}
