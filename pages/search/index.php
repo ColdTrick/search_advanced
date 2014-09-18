@@ -415,23 +415,27 @@ foreach ($types as $type => $subtypes) {
 			
 			$count = "";
 			if(array_key_exists($label, $search_result_counters)){
-				$count = " <span class='elgg-quiet'>[" . $search_result_counters[$label] . "]</span>";
+				$total = $search_result_counters[$label];
+				if ($total > 0) {
+					$count = " <span class='elgg-quiet'>[" . $total . "]</span>";
+				}
 			}
-			
-			$data = htmlspecialchars(http_build_query(array(
-				'q' => $query,
-				'entity_subtype' => $subtype,
-				'entity_type' => $type,
-				'owner_guid' => $owner_guid,
-				'container_guid' => $container_guid,
-				'search_type' => 'entities',
-				'friends' => $friends
-			)));
-
-			$url = elgg_get_site_url()."search?$data";
-			$menu_item = new ElggMenuItem($label, elgg_echo($label) . $count, $url);
-			$menu_item->setSection($type);
-			elgg_register_menu_item('page', $menu_item);
+			if (!empty($count)) {
+				$data = htmlspecialchars(http_build_query(array(
+					'q' => $query,
+					'entity_subtype' => $subtype,
+					'entity_type' => $type,
+					'owner_guid' => $owner_guid,
+					'container_guid' => $container_guid,
+					'search_type' => 'entities',
+					'friends' => $friends
+				)));
+	
+				$url = elgg_get_site_url()."search?$data";
+				$menu_item = new ElggMenuItem($label, elgg_echo($label) . $count, $url);
+				$menu_item->setSection($type);
+				elgg_register_menu_item('page', $menu_item);
+			}
 		}
 	} else {
 		$label = "item:$type";
