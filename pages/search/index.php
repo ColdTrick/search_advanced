@@ -123,21 +123,6 @@ $custom_types = elgg_trigger_plugin_hook('search_types', 'get_types', $params, a
 
 $search_result_counters = array();
 
-// add sidebar for custom searches
-// foreach ($custom_types as $type) {
-// 	$label = "search_types:$type";
-
-// 	$data = htmlspecialchars(http_build_query(array(
-// 		'q' => $query,
-// 		'search_type' => $type,
-// 	)));
-
-// 	$url = elgg_get_site_url()."search?$data";
-
-// 	$menu_item = new ElggMenuItem($label, elgg_echo($label), $url);
-// 	elgg_register_menu_item('page', $menu_item);
-// }
-
 // start the actual search
 $results_html = '';
 if(array_key_exists("object", $types)){
@@ -232,7 +217,6 @@ if ($search_type == 'all' || $search_type == 'entities') {
 			}
 		}
 	}
-	
 	
 	// add the combined content search results
 	if ($combine_search_results && ($search_type == 'all')) {
@@ -385,18 +369,12 @@ if (!$results_html) {
 	$body .= $results_html;
 }
 
+// add sidebar items for all and native types
 // moved to bottom so we can use search result count in labels
 
-// add sidebar items for all and native types
-// @todo should these maintain any existing type / subtype filters or reset?
-// JD: yeah they should
 $data = htmlspecialchars(http_build_query(array(
 	'q' => $query,
-// 	'entity_subtype' => $entity_subtype,
-// 	'entity_type' => $entity_type,
-// 	'owner_guid' => $owner_guid,
 	'search_type' => 'all',
-//'friends' => $friends
 )));
 $url = elgg_get_site_url() . "search?$data";
 $menu_item = new ElggMenuItem('all', elgg_echo('all'), $url);
@@ -490,7 +468,6 @@ foreach ($custom_types as $type) {
 // this is passed the original params because we don't care what actually
 // matched (which is out of date now anyway).
 // we want to know what search type it is.
-
 
 if(elgg_is_xhr()){
 	echo $body;
