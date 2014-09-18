@@ -21,68 +21,18 @@ if (!empty($q)) {
 			}
 		}
 	}
-	
-	$logged_in_user = elgg_get_logged_in_user_entity();
-	
-	$q_parts = explode(" ", $q);
-	if (count($q_parts) > 1) {
-		$where_string = "(ue.name like '%" . implode("%' AND ue.name like '%", $q_parts) . "%')";
-	} else {
-		$where_string = "ue.name like '%" . $q . "%'";
-	} 
-	
-	$where_string .= " OR ue.username like '%" . $q . "%'";
 
 	// look for users
-	$options = array(
-		"type" => "user",
-		"limit" => $limit,
-		"joins" => array("JOIN " . elgg_get_config("dbprefix") . "users_entity ue ON e.guid = ue.guid"),
-		"wheres" => array("(" . $where_string .")")
-	);
+	$options = array();
+	$options['query'] = $q;
+	$options['type'] = "user";
+	$options['limit'] = $limit;
 	
-	if ($logged_in_user) {
-		// look only in friends
-		$options["relationship"] = "friend";
-		$options["relationship_guid"] = $logged_in_user->getGUID();
-		
-		$users = elgg_get_entities_from_relationship($options);
-		
-		
-	}
+	$results = elgg_trigger_plugin_hook('search', 'user', $options, array());
+	$user_count = $results['count'];
+	$users = $results['entities'];
 	
-	if (!$users || (count($users) < $limit)) {
-		// no friends or logged out or fill up to limit
-		if ($users) {
-			// exclude already found users
-			$options["limit"] = $limit - count($users);
-			$guids = array();
-			foreach ($users as $tmp_user) {
-				$guids[] = $tmp_user->getGUID();
-			}
-			$options["wheres"][] = "e.guid NOT IN (" . implode(",", $guids) . ")";
-		}
-		$options["relationship"] = "member_of_site";
-		$options["relationship_guid"] = elgg_get_site_entity()->getGUID();
-		$options["inverse_relationship"] = true;
-		
-		if ($site_users = elgg_get_entities_from_relationship($options)) {
-			if ($users) {
-				$users = array_merge($users, $site_users);
-			} else {
-				$users = $site_users;
-			}
-		}
-	}
-	
-	if (count($users) >= $limit) {
-		$options["count"] = true;
-		$user_count = elgg_get_entities_from_relationship($options);
-	} else {
-		$user_count = count($users);
-	}
-	
-	if ($users) {
+	if ($user_count > 0) {
 		$result[] = array(
 			"type" => "placeholder",
 			"content" => "<label>" . elgg_echo("item:user") . " [" . $user_count . "]</label>",
@@ -99,52 +49,16 @@ if (!empty($q)) {
 	}
 	
 	// search for groups
-	$options = array(
-		"type" => "group",
-		"limit" => $limit,
-		"joins" => array("JOIN " . elgg_get_config("dbprefix") . "groups_entity ge ON e.guid = ge.guid"),
-		"wheres" => array("ge.name like '%" . $q . "%'")
-	);
+	$options = array();
+	$options['query'] = $q;
+	$options['type'] = "group";
+	$options['limit'] = $limit;
 	
-	if ($logged_in_user) {
-		// look only in personal groups
-		$options["relationship"] = "member";
-		$options["relationship_guid"] = $logged_in_user->getGUID();
-		$groups = elgg_get_entities_from_relationship($options);
-	}
+	$results = elgg_trigger_plugin_hook('search', 'group', $options, array());
+	$group_count = $results['count'];
+	$groups = $results['entities'];
 	
-	if (!$groups || (count($groups) < $limit)) {
-		// no groups or logged out
-		if ($groups) {
-			// exclude already found groups
-			$options["limit"] = $limit - count($groups);
-			$guids = array();
-			foreach ($groups as $tmp_group) {
-				$guids[] = $tmp_group->getGUID();
-			}
-			$options["wheres"][] = "e.guid NOT IN (" . implode(",", $guids) . ")";
-		}
-		
-		unset($options["relationship"]);
-		unset($options["relationship_guid"]);
-		
-		if ($site_groups = elgg_get_entities($options)) {
-			if ($groups) {
-				$groups = array_merge($groups, $site_groups);
-			} else {
-				$groups = $site_groups;
-			}
-		}
-	}
-	
-	if (count($groups) >= $limit) {
-		$options["count"] = true;
-		$group_count = elgg_get_entities_from_relationship($options);
-	} else {
-		$group_count = count($groups);
-	}
-	
-	if ($groups) {
+	if ($group_count > 0) {
 		$result[] = array(
 			"type" => "placeholder",
 			"content" => "<label>" . elgg_echo("item:group") . " [" . $group_count . "]</label>",
