@@ -12,7 +12,7 @@ if ($vars["subtype"]) {
 	echo elgg_view("input/hidden", array("name" => "entity_subtype", "value" => $vars["subtype"]));
 }
 
-if($vars["container_guid"]){
+if ($vars["container_guid"]) {
 	echo elgg_view("input/hidden", array("name" => "container_guid", "value" => $vars["container_guid"]));
 }
 

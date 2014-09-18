@@ -10,7 +10,7 @@
  *
  * @return boolean
  */
-function search_advanced_page_handler($page){
+function search_advanced_page_handler($page) {
 	switch ($page[0]) {
 		case "autocomplete":
 			include_once(dirname(dirname(__FILE__)) . "/procedures/autocomplete.php");
@@ -27,7 +27,7 @@ function search_advanced_page_handler($page){
  *
  * @return boolean
  */
-function search_advanced_search_page_handler($page){
+function search_advanced_search_page_handler($page) {
 	// if there is no q set, we"re being called from a legacy installation
 	// it expects a search by tags.
 	// actually it doesn"t, but maybe it should.

@@ -33,30 +33,21 @@ if (!empty($entity_type)) {
 	echo elgg_view("input/hidden", array("name" => "entity_subtype", "disabled" => "disabled"));
 }
 
-?>
-<ul class="search-advanced-type-selection">
-	<li>
-		<a><?php echo $current_selected;?></a>
-		<ul class="search-advanced-type-selection-dropdown">
-			<li>
-				<a><?php echo elgg_echo("all");?></a>
-			</li>
-			<li>
-				<a rel='user'><?php echo elgg_echo("item:user");?></a>
-			</li>
-			<li>
-				<a rel='group'><?php echo elgg_echo("item:group");?></a>
-			</li>
+echo "<ul class='search-advanced-type-selection'>";
+echo "<li>";
+echo "<a>" .  $current_selected . "</a>";
+echo "<ul class='search-advanced-type-selection-dropdown'>";
+echo "<li><a>" . elgg_echo("all") . "</a></li>";
+echo "<li><a rel='user'>" . elgg_echo("item:user") . "</a></li>";
+echo "<li><a rel='group'>" . elgg_echo("item:group") . "</a></li>";
 			
-			<?php
-				foreach ($types["object"] as $subtype) {
-					if ($subtype === "page_top") {
-						// skip this one as it is merged with page objects
-						continue;
-					}
-					echo "<li><a rel='object " . $subtype . "'>" . elgg_echo("item:object:" . $subtype) . "</a></li>";
-				}
-			?>
-		</ul>
-	</li>
-</ul>
+foreach ($types["object"] as $subtype) {
+	if ($subtype === "page_top") {
+		// skip this one as it is merged with page objects
+		continue;
+	}
+	echo "<li><a rel='object " . $subtype . "'>" . elgg_echo("item:object:" . $subtype) . "</a></li>";
+}
+echo "</ul>";
+echo "</li>";
+echo "</ul>";

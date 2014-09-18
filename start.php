@@ -12,7 +12,7 @@ elgg_register_event_handler("init","system","search_advanced_init");
  *
  * @return void
  */
-function search_advanced_init(){
+function search_advanced_init() {
 	// page handler for search actions and results
 	elgg_register_page_handler("search_advanced", "search_advanced_page_handler");
 	elgg_register_page_handler("search", "search_advanced_search_page_handler");

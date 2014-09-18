@@ -18,7 +18,7 @@ foreach ($types as $type => $subtypes) {
 				continue;
 			}
 
-			if ($type == "custom"){
+			if ($type == "custom") {
 				$option = elgg_echo("search_types:$subtype");
 			} else {
 				$option = elgg_echo("item:$type:$subtype");
