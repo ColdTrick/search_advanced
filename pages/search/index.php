@@ -385,7 +385,7 @@ foreach ($types as $type => $subtypes) {
 	// @todo when using index table, can include result counts on each of these.
 	if (is_array($subtypes) && count($subtypes)) {
 		foreach ($subtypes as $subtype) {
-			if($subtype === "page_top"){
+			if ($subtype === "page_top") {
 				// skip this one as it is merged with page objects
 				continue;
 			}
