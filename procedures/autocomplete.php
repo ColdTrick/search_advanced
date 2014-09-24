@@ -35,7 +35,7 @@ if (!empty($q)) {
 	if ($user_count > 0) {
 		$result[] = array(
 			"type" => "placeholder",
-			"content" => "<label>" . elgg_echo("item:user") . " [" . $user_count . "]</label>",
+			"content" => "<label>" . elgg_echo("item:user") . " (" . $user_count . ")</label>",
 			"href" => elgg_normalize_url("search?entity_type=user&search_type=entities&q=" . $q)
 		);
 		foreach ($users as $user) {
@@ -61,7 +61,7 @@ if (!empty($q)) {
 	if ($group_count > 0) {
 		$result[] = array(
 			"type" => "placeholder",
-			"content" => "<label>" . elgg_echo("item:group") . " [" . $group_count . "]</label>",
+			"content" => "<label>" . elgg_echo("item:group") . " (" . $group_count . ")</label>",
 			"href" => elgg_normalize_url("search?entity_type=group&search_type=entities&q=" . $q)
 		);
 		foreach ($groups as $group) {

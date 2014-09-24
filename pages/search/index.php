@@ -395,7 +395,7 @@ foreach ($types as $type => $subtypes) {
 			if (array_key_exists($label, $search_result_counters)) {
 				$total = $search_result_counters[$label];
 				if ($total > 0) {
-					$count = " <span class='elgg-quiet'>[" . $total . "]</span>";
+					$count = " <span class='elgg-quiet'>(" . $total . ")</span>";
 				}
 			}
 			if (!empty($count)) {
@@ -422,7 +422,7 @@ foreach ($types as $type => $subtypes) {
 		if (array_key_exists($label, $search_result_counters)) {
 			$total = $search_result_counters[$label];
 			if ($total > 0) {
-				$count = " <span class='elgg-quiet'>[" . $total . "]</span>";
+				$count = " <span class='elgg-quiet'>(" . $total . ")</span>";
 			}
 		}
 		
@@ -451,7 +451,7 @@ foreach ($custom_types as $type) {
 
 	$count = "";
 	if (array_key_exists($label, $search_result_counters)) {
-		$count = " <span class='elgg-quiet'>[" . $search_result_counters[$label] . "]</span>";
+		$count = " <span class='elgg-quiet'>(" . $search_result_counters[$label] . ")</span>";
 	}
 
 	$data = htmlspecialchars(http_build_query(array(
