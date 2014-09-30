@@ -34,5 +34,17 @@ foreach ($types as $type => $subtypes) {
 	}
 }
 
+$submit_behaviour_options = array(
+	"show_in_widget" => elgg_echo("search_advanced:widgets:search:edit:submit_behaviour:show_in_widget"),
+	"go_to_search" => elgg_echo("search_advanced:widgets:search:edit:submit_behaviour:go_to_search"),
+);
+
+echo "<div>";
 echo elgg_echo("filter") . "&nbsp;";
 echo elgg_view("input/dropdown", array("name" => "params[types]", "value" => $widget->types, "options_values" => $options_values));
+echo "</div>";
+
+echo "<div>";
+echo elgg_echo("search_advanced:widgets:search:edit:submit_behaviour") . "&nbsp;";
+echo elgg_view("input/dropdown", array("name" => "params[submit_behaviour]", "value" => $widget->submit_behaviour, "options_values" => $submit_behaviour_options));
+echo "</div>";
