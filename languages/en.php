@@ -11,6 +11,9 @@ $english = array(
 	'search_advanced:content:title' => "Content",
 	'search_advanced:content:last_updated' => "Last updated",
 	'search_advanced:content:created' => "Created",
+	'search_advanced:widgets:search:edit:submit_behaviour' => "Submit behaviour",
+	'search_advanced:widgets:search:edit:submit_behaviour:show_in_widget' => "Show in widget",
+	'search_advanced:widgets:search:edit:submit_behaviour:go_to_search' => "Go to search",
 );
 	
 add_translation("en",$english);
