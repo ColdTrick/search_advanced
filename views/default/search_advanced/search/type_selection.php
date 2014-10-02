@@ -1,4 +1,5 @@
 <?php
+
 $types = get_registered_entity_types();
 
 $current_selected = elgg_echo("all");
@@ -33,21 +34,11 @@ if (!empty($entity_type)) {
 	echo elgg_view("input/hidden", array("name" => "entity_subtype", "disabled" => "disabled"));
 }
 
+
+
 echo "<ul class='search-advanced-type-selection'>";
 echo "<li>";
 echo "<a>" .  $current_selected . "</a>";
-echo "<ul class='search-advanced-type-selection-dropdown'>";
-echo "<li><a>" . elgg_echo("all") . "</a></li>";
-echo "<li><a rel='user'>" . elgg_echo("item:user") . "</a></li>";
-echo "<li><a rel='group'>" . elgg_echo("item:group") . "</a></li>";
-			
-foreach ($types["object"] as $subtype) {
-	if ($subtype === "page_top") {
-		// skip this one as it is merged with page objects
-		continue;
-	}
-	echo "<li><a rel='object " . $subtype . "'>" . elgg_echo("item:object:" . $subtype) . "</a></li>";
-}
-echo "</ul>";
+echo elgg_view_menu("search_type_selection", array("class" => "search-advanced-type-selection-dropdown"));
 echo "</li>";
 echo "</ul>";

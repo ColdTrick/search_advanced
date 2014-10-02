@@ -346,3 +346,46 @@ function search_advanced_users_hook($hook, $type, $value, $params) {
 		'count' => $count,
 	);
 }
+
+/**
+ * Registers menu type selection menu items
+ *
+ * @param string       $hook   name of hook
+ * @param string       $type   type of hook
+ * @param unknown_type $value  current value
+ * @param array        $params parameters
+ *
+ * @return array
+ */
+function search_advanced_register_menu_type_selection($hook, $type, $value, $params) {
+	$result = $value;
+	
+	$types = get_registered_entity_types();
+	
+	$result[]  = ElggMenuItem::factory(array(
+		"name" => "all",
+		"text" => "<a>" . elgg_echo("all") . "</a>",
+		"href" => false
+	));
+	$result[]  = ElggMenuItem::factory(array(
+		"name" => "user",
+		"text" => "<a rel='user'>" . elgg_echo("item:user") . "</a>",
+		"href" => false
+	));
+	$result[]  = ElggMenuItem::factory(array(
+		"name" => "group",
+		"text" => "<a rel='group'>" . elgg_echo("item:group") . "</a>",
+		"href" => false
+	));
+	
+	foreach ($types["object"] as $subtype) {		
+		$result[]  = ElggMenuItem::factory(array(
+			"name" => "object_" . $subtype,
+			"text" => "<a rel='object " . $subtype . "'>" . elgg_echo("item:object:" . $subtype) . "</a>",
+			"href" => false,
+			"title" => elgg_echo("quicklinks:menu:entity:title")
+		));
+	}
+	
+	return $result;
+}
