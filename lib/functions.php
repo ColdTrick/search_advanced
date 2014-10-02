@@ -47,21 +47,19 @@ function search_advanced_register_search_hooks() {
 function search_advanced_get_where_sql($table, $fields, $params, $use_fulltext = TRUE) {
 	$query = elgg_extract("query", $params, "");
 
-	if (elgg_get_plugin_setting("enable_multi_tag", "search_advanced") == "yes") {
-		$query_array = explode(",", $query);
+	$query_array = explode(" ", $query);
+	
+	if (count($query_array) > 1) {
+		$multi_query = array();
+		foreach ($query_array as $value) {
+			$temp_field = trim($value);
+			if (!empty($temp_field)) {
+				$multi_query[] = $temp_field;
+			}
+		}
 		
-		if (count($query_array) > 1) {
-			$multi_query = array();
-			foreach ($query_array as $value) {
-				$temp_field = trim($value);
-				if (!empty($temp_field)) {
-					$multi_query[] = $temp_field;
-				}
-			}
-			
-			if (count($multi_query) > 1) {
-				$query = $multi_query;
-			}
+		if (count($multi_query) > 1) {
+			$query = $multi_query;
 		}
 	}
 	
@@ -77,11 +75,14 @@ function search_advanced_get_where_sql($table, $fields, $params, $use_fulltext =
 	}
 
 	$likes = array();
-	foreach ($query as $query_part) {
-		$query_part = sanitise_string($query_part);
-		foreach ($fields as $field) {
-			$likes[] = "$field LIKE '%$query_part%'";
+	foreach ($fields as $field) {
+		$field_likes = array();
+		foreach ($query as $query_part) {
+			$query_part = sanitise_string($query_part);
+		
+			$field_likes[] = "$field LIKE '%$query_part%'";
 		}
+		$likes[] = "(" . implode(' AND ', $field_likes) . ")";
 	}
 	$likes_str = implode(' OR ', $likes);
 	$where = "($likes_str)";
