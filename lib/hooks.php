@@ -361,6 +361,7 @@ function search_advanced_register_menu_type_selection($hook, $type, $value, $par
 	$result = $value;
 	
 	$types = get_registered_entity_types();
+	$custom_types = elgg_trigger_plugin_hook("search_types", "get_types", array(), array());
 	
 	$result[]  = ElggMenuItem::factory(array(
 		"name" => "all",
@@ -368,22 +369,31 @@ function search_advanced_register_menu_type_selection($hook, $type, $value, $par
 		"href" => false
 	));
 	$result[]  = ElggMenuItem::factory(array(
-		"name" => "user",
+		"name" => "item:user",
 		"text" => "<a rel='user'>" . elgg_echo("item:user") . "</a>",
 		"href" => false
 	));
 	$result[]  = ElggMenuItem::factory(array(
-		"name" => "group",
+		"name" => "item:group",
 		"text" => "<a rel='group'>" . elgg_echo("item:group") . "</a>",
 		"href" => false
 	));
 	
 	foreach ($types["object"] as $subtype) {		
 		$result[]  = ElggMenuItem::factory(array(
-			"name" => "object_" . $subtype,
+			"name" => "item:object:$subtype",
 			"text" => "<a rel='object " . $subtype . "'>" . elgg_echo("item:object:" . $subtype) . "</a>",
 			"href" => false,
-			"title" => elgg_echo("quicklinks:menu:entity:title")
+			"title" => elgg_echo("item:object:$subtype")
+		));
+	}
+	
+	foreach ($custom_types as $type) {		
+		$result[]  = ElggMenuItem::factory(array(
+			"name" => "search_types:$type",
+			"text" => "<a rel='" . $type . "'>" . elgg_echo("search_types:$type") . "</a>",
+			"href" => false,
+			"title" => elgg_echo("search_types:$type")
 		));
 	}
 	
