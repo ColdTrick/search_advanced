@@ -46,4 +46,7 @@ function search_advanced_init() {
 	
 	// register events
 	elgg_register_event_handler("upgrade", "system", "search_advanced_clear_keywords_cache");
+	
+	// actions
+	elgg_register_action("search_advanced/settings/save", dirname(__FILE__) . "/actions/plugins/settings/save.php", "admin");
 }
