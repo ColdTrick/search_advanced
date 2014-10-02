@@ -62,7 +62,12 @@ function search_advanced_objects_hook($hook, $type, $value, $params) {
 		$query_parts = array();
 		
 		if (elgg_get_plugin_setting("enable_multi_tag", "search_advanced") == "yes") {
-			$query_array = explode(",", $query);
+			$separator = elgg_get_plugin_setting("multi_tag_separator", "search_advanced", "comma");
+			if ($separator == "comma") {
+				$query_array = explode(",", $query);
+			} else {
+				$query_array = explode(" ", $query);
+			}
 			foreach ($query_array as $query_value) {
 				$query_value = trim($query_value);
 				if (!empty($query_value)) {
@@ -182,7 +187,12 @@ function search_advanced_groups_hook($hook, $type, $value, $params) {
 		
 		$likes = array();
 		if (elgg_get_plugin_setting("enable_multi_tag", "search_advanced") == "yes") {
-			$query_array = explode(",", $query);
+			$separator = elgg_get_plugin_setting("multi_tag_separator", "search_advanced", "comma");
+			if ($separator == "comma") {
+				$query_array = explode(",", $query);
+			} else {
+				$query_array = explode(" ", $query);
+			}
 			foreach ($query_array as $query_value) {
 				$query_value = trim($query_value);
 				if (!empty($query_value)) {
@@ -286,7 +296,12 @@ function search_advanced_users_hook($hook, $type, $value, $params) {
 		
 		$likes = array();
 		if (elgg_get_plugin_setting("enable_multi_tag", "search_advanced") == "yes") {
-			$query_array = explode(",", $query);
+			$separator = elgg_get_plugin_setting("multi_tag_separator", "search_advanced", "comma");
+			if ($separator == "comma") {
+				$query_array = explode(",", $query);
+			} else {
+				$query_array = explode(" ", $query);
+			}
 			foreach ($query_array as $query_value) {
 				$query_value = trim($query_value);
 				if (!empty($query_value)) {
