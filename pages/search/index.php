@@ -149,15 +149,6 @@ if ($search_type == 'all' || $search_type == 'entities') {
 	}
 	
 	foreach ($types as $type => $subtypes) {
-		if ($search_type != 'all' && $search_type != 'tags' && $entity_type != $type) {
-			continue;
-		}
-		
-		if ($combine_search_results && ($search_type == 'all') && ($type == "object")) {
-			// combined search results are fetched after the foreach
-			continue;
-		}
-		
 		if (is_array($subtypes) && count($subtypes)) {
 			foreach ($subtypes as $subtype) {
 				if ($subtype === "page_top") {
@@ -166,9 +157,15 @@ if ($search_type == 'all' || $search_type == 'entities') {
 				}
 				// no need to search if we're not interested in these results
 				// @todo when using index table, allow search to get full count.
-				if ($search_type != 'all' && $search_type != 'tags' && $entity_subtype != $subtype) {
-					continue;
+				if ($search_type == "tags") {
+					continue;					
 				}
+				
+				if ($search_type != 'all' && $entity_subtype != $subtype) {
+					// only want count if doing specific search
+					$current_params['search_advanced_count_only'] = true;
+				}
+				
 				$current_params['subtype'] = $subtype;
 				$current_params['type'] = $type;
 				
@@ -188,12 +185,16 @@ if ($search_type == 'all' || $search_type == 'entities') {
 				if (is_array($results['entities']) && $results['count']) {
 					if ($view = search_get_search_view($current_params, 'list')) {
 						$search_result_counters["item:" . $type . ":" . $subtype] = $results['count'];
-						$results_html .= elgg_view($view, array(
-							'results' => $results,
-							'params' => $current_params,
-						));
+						if ($current_params['search_advanced_count_only'] !== true) {
+							$results_html .= elgg_view($view, array(
+								'results' => $results,
+								'params' => $current_params,
+							));
+						}
 					}
 				}
+				
+				unset($current_params["search_advanced_count_only"]);
 			}
 		}
 		
@@ -202,19 +203,27 @@ if ($search_type == 'all' || $search_type == 'entities') {
 			$current_params['type'] = $type;
 			$current_params['subtype'] = ELGG_ENTITIES_NO_VALUE;
 			
+			if ($search_type != 'all' && $entity_type != $type) {
+				// only want count if doing specific search
+				$current_params['search_advanced_count_only'] = true;
+			}
+			
 			$results = elgg_trigger_plugin_hook('search', $type, $current_params, array());
 			if ($results) {
 				// if $results = FALSE => someone is saying not to display these types in searches.
 				if (is_array($results['entities']) && $results['count']) {
 					if ($view = search_get_search_view($current_params, 'list')) {
 						$search_result_counters["item:" . $type] = $results['count'];
-						$results_html .= elgg_view($view, array(
-							'results' => $results,
-							'params' => $current_params,
-						));
+						if ($current_params['search_advanced_count_only'] !== true) {
+							$results_html .= elgg_view($view, array(
+								'results' => $results,
+								'params' => $current_params,
+							));
+						}
 					}
 				}
 			}
+			unset($current_params['search_advanced_count_only']);
 		}
 	}
 	
