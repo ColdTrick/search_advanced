@@ -14,13 +14,19 @@ $separator_options = array(
 );
 
 $profile_fields = elgg_get_config("profile_fields");
+
 $profile_field_values = $plugin->user_profile_fields;
 if (!empty($profile_field_values)) {
 	$profile_field_values = json_decode($profile_field_values, true);
+} else {
+	$profile_field_values = array();
 }
+
 $profile_field_soundex_values = $plugin->user_profile_fields_soundex;
 if (!empty($profile_field_soundex_values)) {
 	$profile_field_soundex_values = json_decode($profile_field_soundex_values, true);
+} else {
+	$profile_field_soundex_values = array();
 }
 
 echo "<label>" . elgg_echo('search_advanced:settings:combine_search_results') . "</label> ";
