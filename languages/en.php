@@ -12,7 +12,7 @@ return array(
 	'search_advanced:settings:user_profile_fields' => "Extend the user search form with the following profile fields",
 	'search_advanced:settings:user_profile_fields:field' => "Profile field",
 	'search_advanced:settings:user_profile_fields:show_on_form' => "Show on search form",
-	'search_advanced:settings:user_profile_fields:use_soundex' => "Use soundEx",
+	'search_advanced:settings:user_profile_fields:use_soundex' => "Use Soundex",
 	'search_advanced:settings:user_profile_fields:info' => "Allow users to refine their search for users based on profile fields. Currently only text based fields are supported (text, location, url, etc).",
 	'search_advanced:multisite:label' => "Search in",
 	'search_advanced:multisite:current' => "current site",
