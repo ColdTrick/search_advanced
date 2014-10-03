@@ -46,7 +46,10 @@ function search_advanced_register_search_hooks() {
 */
 function search_advanced_get_where_sql($table, $fields, $params, $use_fulltext = TRUE) {
 	$query = elgg_extract("query", $params, "");
-
+	if (empty($query)) {
+		return "";
+	}
+	
 	$query_array = explode(" ", $query);
 	
 	if (count($query_array) > 1) {

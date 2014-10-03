@@ -251,6 +251,7 @@ function search_advanced_groups_hook($hook, $type, $value, $params) {
  * @return array
  */
 function search_advanced_users_hook($hook, $type, $value, $params) {
+	
 	$db_prefix = elgg_get_config('dbprefix');
 	$query = sanitise_string($params['query']);
 
@@ -280,43 +281,87 @@ function search_advanced_users_hook($hook, $type, $value, $params) {
 		}
 	}
 	
-	$fields = array('username', 'name');
-	$where = search_advanced_get_where_sql('ue', $fields, $params, FALSE);
-	
-	// profile fields
-	$profile_fields = array_keys(elgg_get_config('profile_fields'));
-	if ($profile_fields) {
-
-		// no fulltext index, can't disable fulltext search in this function.
-		// $md_where .= " AND " . search_get_where_sql('msv', array('string'), $params, FALSE);
-		$tag_name_ids = array();
-		foreach ($profile_fields as $field) {
-			$tag_name_ids[] = elgg_get_metastring_id($field);
-		}
+	if (!empty($params["query"])) {
+		$fields = array('username', 'name');
+		$where = search_advanced_get_where_sql('ue', $fields, $params, FALSE);
 		
-		$likes = array();
-		if (elgg_get_plugin_setting("enable_multi_tag", "search_advanced") == "yes") {
-			$separator = elgg_get_plugin_setting("multi_tag_separator", "search_advanced", "comma");
-			if ($separator == "comma") {
-				$query_array = explode(",", $query);
-			} else {
-				$query_array = explode(" ", $query);
+		// profile fields
+		$profile_fields = array_keys(elgg_get_config('profile_fields'));
+		if ($profile_fields) {
+	
+			// no fulltext index, can't disable fulltext search in this function.
+			// $md_where .= " AND " . search_get_where_sql('msv', array('string'), $params, FALSE);
+			$tag_name_ids = array();
+			foreach ($profile_fields as $field) {
+				$tag_name_ids[] = elgg_get_metastring_id($field);
 			}
-			foreach ($query_array as $query_value) {
-				$query_value = trim($query_value);
-				if (!empty($query_value)) {
-					$likes[] = "msv.string LIKE '%$query_value%'";
+			
+			$likes = array();
+			if (elgg_get_plugin_setting("enable_multi_tag", "search_advanced") == "yes") {
+				$separator = elgg_get_plugin_setting("multi_tag_separator", "search_advanced", "comma");
+				if ($separator == "comma") {
+					$query_array = explode(",", $query);
+				} else {
+					$query_array = explode(" ", $query);
+				}
+				foreach ($query_array as $query_value) {
+					$query_value = trim($query_value);
+					if (!empty($query_value)) {
+						$likes[] = "msv.string LIKE '%$query_value%'";
+					}
+				}
+			} else {
+				$likes[] = "msv.string LIKE '%$query%'";
+			}
+			
+			$md_where = "((md.name_id IN (" . implode(",", $tag_name_ids) . ")) AND (" . implode(" OR ", $likes) . "))";
+				
+			$params['wheres'] = array("(($where) OR ($md_where))");
+		} else {
+			$params['wheres'] = array($where);
+		}
+	}
+	
+	$profile_fields = $params["profile_filter"];
+	if (!empty($profile_fields)) {
+		$profile_field_likes = array();
+		$profile_soundex = $params["profile_soundex"];
+		$i = 0;
+		foreach ($profile_fields as $field_name => $field_value) {
+			$field_value = trim(sanitise_string($field_value));
+			if (!empty($field_value)) {
+				$tag_name_id = elgg_get_metastring_id($field_name);
+				$i++;
+				if ($i > 1) {
+					$params["joins"][] = "JOIN {$db_prefix}metadata md$i on e.guid = md$i.entity_guid";
+					$params["joins"][] = "JOIN {$db_prefix}metastrings msv$i ON md$i.value_id = msv$i.id";
+				}
+				
+				// do a soundex match
+				if (in_array($field_name, $profile_soundex)) {
+					if ($i > 1) {
+						$profile_field_likes[] = "md$i.name_id = $tag_name_id AND soundex(CONCAT('X', msv$i.string)) = soundex(CONCAT('X','$field_value'))";
+					} else {
+						$profile_field_likes[] = "md.name_id = $tag_name_id AND soundex(CONCAT('X', msv.string)) = soundex(CONCAT('X', '$field_value'))";
+					}
+				} else {
+					if ($i > 1) {
+						$profile_field_likes[] = "md$i.name_id = $tag_name_id AND msv$i.string LIKE '%$field_value%'";
+					} else {
+						$profile_field_likes[] = "md.name_id = $tag_name_id AND msv.string LIKE '%$field_value%'";
+					}
 				}
 			}
-		} else {
-			$likes[] = "msv.string LIKE '%$query%'";
 		}
-		
-		$md_where = "((md.name_id IN (" . implode(",", $tag_name_ids) . ")) AND (" . implode(" OR ", $likes) . "))";
+		if (!empty($profile_field_likes)) {
+			$profile_field_where = "(" . implode(" AND ", $profile_field_likes) . ")";
 			
-		$params['wheres'] = array("(($where) OR ($md_where))");
-	} else {
-		$params['wheres'] = array($where);
+			if (empty($params["wheres"])) {
+				$params["wheres"] = array($profile_field_where);
+			} else {
+				$params["wheres"] = array($params["wheres"][0] . " AND " . $profile_field_where);
+			}
+		}		
 	}
 	// override subtype -- All users should be returned regardless of subtype.
 	$params['subtype'] = ELGG_ENTITIES_ANY_VALUE;

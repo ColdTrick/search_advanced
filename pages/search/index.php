@@ -11,11 +11,14 @@ $autofeed = true;
 
 // $search_type == all || entities || trigger plugin hook
 $search_type = get_input('search_type', 'all');
+$entity_type = get_input('entity_type', ELGG_ENTITIES_ANY_VALUE);
 
 // @todo there is a bug in get_input that makes variables have slashes sometimes.
 // @todo is there an example query to demonstrate ^
 // XSS protection is more important that searching for HTML.
 $query = stripslashes(get_input('q', get_input('tag', '')));
+$profile_filter = get_input('search_advanced_profile_fields');
+$profile_soundex = get_input('search_advanced_profile_fields_soundex');
 
 // @todo - create function for sanitization of strings for display in 1.8
 // encode <,>,&, quotes and characters above 127
@@ -28,7 +31,7 @@ if (function_exists('mb_convert_encoding')) {
 $display_query = htmlspecialchars($display_query, ENT_QUOTES, 'UTF-8', false);
 
 // check that we have an actual query
-if (!$query) {
+if (!$query && !((count($profile_filter) > 0) && $entity_type == "user")) {
 	$title = sprintf(elgg_echo('search:results'), "\"$display_query\"");
 	
 	$body  = elgg_view_title(elgg_echo('search:search_error'));
@@ -50,7 +53,6 @@ if (!$query) {
 $limit = ($search_type == 'all') ? 2 : get_input('limit', 10);
 $offset = ($search_type == 'all') ? 0 : get_input('offset', 0);
 
-$entity_type = get_input('entity_type', ELGG_ENTITIES_ANY_VALUE);
 $entity_subtype = get_input('entity_subtype', ELGG_ENTITIES_ANY_VALUE);
 $owner_guid = get_input('owner_guid', ELGG_ENTITIES_ANY_VALUE);
 $container_guid = get_input('container_guid', ELGG_ENTITIES_ANY_VALUE);
@@ -88,7 +90,9 @@ $params = array(
 	'owner_guid' => $owner_guid,
 	'container_guid' => $container_guid,
 //	'friends' => $friends
-	'pagination' => ($search_type == 'all') ? FALSE : TRUE
+	'pagination' => ($search_type == 'all') ? FALSE : TRUE,
+	'profile_filter' => $profile_filter,
+	'profile_soundex' => $profile_soundex
 );
 
 // check for multisite possibilities
@@ -149,7 +153,7 @@ if ($search_type == 'all' || $search_type == 'entities') {
 	}
 	
 	foreach ($types as $type => $subtypes) {
-		if (is_array($subtypes) && count($subtypes)) {
+		if (is_array($subtypes) && count($subtypes) && !empty($params["query"])) {
 			foreach ($subtypes as $subtype) {
 				if ($subtype === "page_top") {
 					// skip this one as it is merged with page objects
@@ -199,6 +203,13 @@ if ($search_type == 'all' || $search_type == 'entities') {
 		}
 		
 		if ($type !== "object") {
+			if ($type !== "user" && empty($params["query"])) {
+				continue;
+			}
+			
+			if ($type == "user" && empty($params["query"]) && empty($profile_filter)) {
+				continue;
+			}
 			// pull in default type entities with no subtypes
 			$current_params['type'] = $type;
 			$current_params['subtype'] = ELGG_ENTITIES_NO_VALUE;
@@ -228,7 +239,7 @@ if ($search_type == 'all' || $search_type == 'entities') {
 	}
 	
 	// add the combined content search results
-	if ($combine_search_results && ($search_type == 'all')) {
+	if ($combine_search_results && ($search_type == 'all') && !empty($params["query"])) {
 		$current_params = $params;
 		$current_params['search_type'] = 'entities';
 		$current_params['type'] = "object";
@@ -329,7 +340,7 @@ if ($search_type == 'all' || $search_type == 'entities') {
 
 // call custom searches
 if ($search_type != 'entities' || $search_type == 'all' || $search_type == 'tags') {
-	if (is_array($custom_types)) {
+	if (is_array($custom_types) && !empty($params["query"])) {
 		foreach ($custom_types as $type) {
 			if ($search_type != 'all' && $search_type != 'tags' && $search_type != $type) {
 				continue;

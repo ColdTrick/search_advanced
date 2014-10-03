@@ -41,7 +41,7 @@ if (elgg_extract("type", $vars, false) === "user") {
 	
 	$submit_values = (array) get_input("search_advanced_profile_fields");
 	$profile_field_values = json_decode($profile_field_values, true);
-	$profile_field_soundex_submit_values = (array) get_input("search_advanced_profile_fields");
+	$profile_field_soundex_submit_values = (array) get_input("search_advanced_profile_fields_soundex");
 	$profile_field_soundex_values = json_decode($profile_field_soundex_values, true);
 	$output = array();
 	
@@ -90,5 +90,6 @@ if (elgg_extract("type", $vars, false) === "user") {
 			echo "</tr>";
 		}
 		echo "</table>";
+		echo elgg_view("input/submit", array("value" => elgg_echo("search")));
 	}
 }
