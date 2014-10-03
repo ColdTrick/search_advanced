@@ -275,7 +275,7 @@ if ($search_type == 'all' || $search_type == 'entities') {
 			if ($valid_tag_names = elgg_get_registered_tag_metadata_names()) {
 				$tag_name_ids = array();
 				foreach ($valid_tag_names as $tag_name) {
-					$tag_name_ids[] = add_metastring($tag_name);
+					$tag_name_ids[] = elgg_get_metastring_id($tag_name);
 				}
 				
 				$count_query .= " JOIN {$db_prefix}metadata md on e.guid = md.entity_guid";
