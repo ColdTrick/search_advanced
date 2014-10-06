@@ -138,201 +138,199 @@ if (array_key_exists("object", $types)) {
 	$types["object"] = $orig_types["object"];
 }
 
-if ($search_type == 'all' || $search_type == 'entities') {
-	// to pass the correct current search type to the views
-	$current_params = $params;
-	$current_params['search_type'] = 'entities';
-	// foreach through types.
-	// if a plugin returns FALSE for subtype ignore it.
-	// if a plugin returns NULL or '' for subtype, pass to generic type search function.
-	// if still NULL or '' or empty(array()) no results found. (== don't show??)
-	
-	$combine_search_results = false;
-	if (elgg_get_plugin_setting("combine_search_results", "search_advanced") == "yes") {
-		$combine_search_results = true;
-	}
-	
-	foreach ($types as $type => $subtypes) {
-		if (is_array($subtypes) && count($subtypes) && !empty($params["query"])) {
-			foreach ($subtypes as $subtype) {
-				if ($subtype === "page_top") {
-					// skip this one as it is merged with page objects
-					continue;
-				}
-				// no need to search if we're not interested in these results
-				// @todo when using index table, allow search to get full count.
-				if ($search_type == "tags") {
-					continue;					
-				}
-				
-				if ($search_type != 'all' && $entity_subtype != $subtype) {
-					// only want count if doing specific search
-					$current_params['search_advanced_count_only'] = true;
-				}
-				
-				$current_params['subtype'] = $subtype;
-				$current_params['type'] = $type;
-				
-				$results = elgg_trigger_plugin_hook('search', "$type:$subtype", $current_params, NULL);
-				if ($results === FALSE) {
-					// someone is saying not to display these types in searches.
-					continue;
-				} elseif (is_array($results) && !count($results)) {
-					// no results, but results searched in hook.
-				} elseif (!$results) {
-					// no results and not hooked.  use default type search.
-					// don't change the params here, since it's really a different subtype.
-					// Will be passed to elgg_get_entities().
-					$results = elgg_trigger_plugin_hook('search', $type, $current_params, array());
-				}
+// to pass the correct current search type to the views
+$current_params = $params;
+$current_params['search_type'] = 'entities';
+// foreach through types.
+// if a plugin returns FALSE for subtype ignore it.
+// if a plugin returns NULL or '' for subtype, pass to generic type search function.
+// if still NULL or '' or empty(array()) no results found. (== don't show??)
 
-				if (is_array($results['entities']) && $results['count']) {
-					if ($view = search_get_search_view($current_params, 'list')) {
-						$search_result_counters["item:" . $type . ":" . $subtype] = $results['count'];
-						if ($current_params['search_advanced_count_only'] !== true) {
-							$results_html["item:" . $type . ":" . $subtype] = elgg_view($view, array(
-								'results' => $results,
-								'params' => $current_params,
-							));
-						}
-					}
-				}
-				
-				unset($current_params["search_advanced_count_only"]);
-			}
-		}
-		
-		if ($type !== "object") {
-			if ($type !== "user" && empty($params["query"])) {
+$combine_search_results = false;
+if (elgg_get_plugin_setting("combine_search_results", "search_advanced") == "yes") {
+	$combine_search_results = true;
+}
+
+foreach ($types as $type => $subtypes) {
+	if (is_array($subtypes) && count($subtypes) && !empty($params["query"])) {
+		foreach ($subtypes as $subtype) {
+			if ($subtype === "page_top") {
+				// skip this one as it is merged with page objects
 				continue;
 			}
-			
-			if ($type == "user" && empty($params["query"]) && empty($profile_filter)) {
-				continue;
+			// no need to search if we're not interested in these results
+			// @todo when using index table, allow search to get full count.
+			if ($search_type == "tags") {
+				continue;					
 			}
-			// pull in default type entities with no subtypes
-			$current_params['type'] = $type;
-			$current_params['subtype'] = ELGG_ENTITIES_NO_VALUE;
 			
-			if ($search_type != 'all' && $entity_type != $type) {
+			if ($search_type != 'all' && $entity_subtype != $subtype) {
 				// only want count if doing specific search
 				$current_params['search_advanced_count_only'] = true;
 			}
 			
-			$results = elgg_trigger_plugin_hook('search', $type, $current_params, array());
-			if ($results) {
-				// if $results = FALSE => someone is saying not to display these types in searches.
-				if (is_array($results['entities']) && $results['count']) {
-					if ($view = search_get_search_view($current_params, 'list')) {
-						$search_result_counters["item:" . $type] = $results['count'];
-						if ($current_params['search_advanced_count_only'] !== true) {
-							$results_html["item:" . $type] = elgg_view($view, array(
-								'results' => $results,
-								'params' => $current_params,
-							));
-						}
+			$current_params['subtype'] = $subtype;
+			$current_params['type'] = $type;
+			
+			$results = elgg_trigger_plugin_hook('search', "$type:$subtype", $current_params, NULL);
+			if ($results === FALSE) {
+				// someone is saying not to display these types in searches.
+				continue;
+			} elseif (is_array($results) && !count($results)) {
+				// no results, but results searched in hook.
+			} elseif (!$results) {
+				// no results and not hooked.  use default type search.
+				// don't change the params here, since it's really a different subtype.
+				// Will be passed to elgg_get_entities().
+				$results = elgg_trigger_plugin_hook('search', $type, $current_params, array());
+			}
+
+			if (is_array($results['entities']) && $results['count']) {
+				if ($view = search_get_search_view($current_params, 'list')) {
+					$search_result_counters["item:" . $type . ":" . $subtype] = $results['count'];
+					if ($current_params['search_advanced_count_only'] !== true) {
+						$results_html["item:" . $type . ":" . $subtype] = elgg_view($view, array(
+							'results' => $results,
+							'params' => $current_params,
+						));
 					}
 				}
 			}
-			unset($current_params['search_advanced_count_only']);
+			
+			unset($current_params["search_advanced_count_only"]);
 		}
 	}
 	
-	// add the combined content search results
-	if ($combine_search_results && ($search_type == 'all') && !empty($params["query"])) {
-		$current_params = $params;
-		$current_params['search_type'] = 'entities';
-		$current_params['type'] = "object";
-		$current_params['limit'] = 20;
-		if (array_key_exists("object", $types)) {
-			$current_params['subtype'] = $types["object"];
-			$results = elgg_trigger_plugin_hook('search', $type, $current_params, array());
+	if ($type !== "object") {
+		if ($type !== "user" && empty($params["query"])) {
+			continue;
+		}
+		
+		if ($type == "user" && empty($params["query"]) && empty($profile_filter)) {
+			continue;
+		}
+		// pull in default type entities with no subtypes
+		$current_params['type'] = $type;
+		$current_params['subtype'] = ELGG_ENTITIES_NO_VALUE;
+		
+		if ($search_type != 'all' && $entity_type != $type) {
+			// only want count if doing specific search
+			$current_params['search_advanced_count_only'] = true;
+		}
+		
+		$results = elgg_trigger_plugin_hook('search', $type, $current_params, array());
+		if ($results) {
+			// if $results = FALSE => someone is saying not to display these types in searches.
 			if (is_array($results['entities']) && $results['count']) {
 				if ($view = search_get_search_view($current_params, 'list')) {
-					
-					// reset count to 0 to remove the "view more" url
-					$results['count'] = 0;
-					
-					$results_html["all:combined"] = elgg_view($view, array(
-						'results' => $results,
-						'params' => $current_params,
-					));
-				}
-			}
-			
-			// determine menu counters
-			$db_prefix = elgg_get_config('dbprefix');
-						
-			$count_query  = "SELECT es.subtype, count(distinct e.guid) as total";
-			$count_query .= " FROM {$db_prefix}entities e";
-			$count_query .= " JOIN {$db_prefix}objects_entity oe ON e.guid = oe.guid";
-			$count_query .= " JOIN {$db_prefix}entity_subtypes es ON e.subtype = es.id";
-
-			$fields = array('title', 'description');
-			$where = search_advanced_get_where_sql('oe', $fields, $params);
-			
-			// add tags search
-			if ($valid_tag_names = elgg_get_registered_tag_metadata_names()) {
-				$tag_name_ids = array();
-				foreach ($valid_tag_names as $tag_name) {
-					$tag_name_ids[] = elgg_get_metastring_id($tag_name);
-				}
-				
-				$count_query .= " JOIN {$db_prefix}metadata md on e.guid = md.entity_guid";
-				$count_query .= " JOIN {$db_prefix}metastrings msv ON md.value_id = msv.id";
-				
-				$md_where = "((md.name_id IN (" . implode(",", $tag_name_ids) . ")) AND msv.string = '" . sanitise_string($params["query"]) . "')";
-			}
-			
-			
-			// add wheres
-			$count_query .= " WHERE e.type = 'object' AND es.subtype IN ('" . implode("', '", $current_params['subtype']) . "') AND ";
-			if ($container_guid) {
-				$count_query .= "e.container_guid = " . $container_guid . " AND ";
-			}
-			
-			if (isset($md_where)) {
-				$count_query .= "((" . $where . ") OR (" . $md_where . "))";
-			} else {
-				$count_query .= $where;
-			}
-			
-			$count_query .= " AND ";
-			
-			if ($search_multisite) {
-				$site_options = array(
-						"type" => "site",
-						"relationship" => "member_of_site",
-						"relationship_guid" => $user->getGUID(),
-						"limit" => false,
-						"site_guids" => false
-						// custom callback for guids only
-				);
-				
-				if ($sites = elgg_get_entities_from_relationship($site_options)) {
-					$site_guids = array();
-					foreach ($sites as $row) {
-						$site_guids[] = $row->guid;
+					$search_result_counters["item:" . $type] = $results['count'];
+					if ($current_params['search_advanced_count_only'] !== true) {
+						$results_html["item:" . $type] = elgg_view($view, array(
+							'results' => $results,
+							'params' => $current_params,
+						));
 					}
-					$count_query .= "e.site_guid IN (" . implode(", ", $site_guids) . ") ";
-				} else {
-					$count_query .= "e.site_guid = " . elgg_get_site_entity()->getGUID() . " ";
 				}
+			}
+		}
+		unset($current_params['search_advanced_count_only']);
+	}
+}
+
+// add the combined content search results
+if ($combine_search_results && ($search_type == 'all') && !empty($params["query"])) {
+	$current_params = $params;
+	$current_params['search_type'] = 'entities';
+	$current_params['type'] = "object";
+	$current_params['limit'] = 20;
+	if (array_key_exists("object", $types)) {
+		$current_params['subtype'] = $types["object"];
+		$results = elgg_trigger_plugin_hook('search', $type, $current_params, array());
+		if (is_array($results['entities']) && $results['count']) {
+			if ($view = search_get_search_view($current_params, 'list')) {
+				
+				// reset count to 0 to remove the "view more" url
+				$results['count'] = 0;
+				
+				$results_html["all:combined"] = elgg_view($view, array(
+					'results' => $results,
+					'params' => $current_params,
+				));
+			}
+		}
+		
+		// determine menu counters
+		$db_prefix = elgg_get_config('dbprefix');
+					
+		$count_query  = "SELECT es.subtype, count(distinct e.guid) as total";
+		$count_query .= " FROM {$db_prefix}entities e";
+		$count_query .= " JOIN {$db_prefix}objects_entity oe ON e.guid = oe.guid";
+		$count_query .= " JOIN {$db_prefix}entity_subtypes es ON e.subtype = es.id";
+
+		$fields = array('title', 'description');
+		$where = search_advanced_get_where_sql('oe', $fields, $params);
+		
+		// add tags search
+		if ($valid_tag_names = elgg_get_registered_tag_metadata_names()) {
+			$tag_name_ids = array();
+			foreach ($valid_tag_names as $tag_name) {
+				$tag_name_ids[] = elgg_get_metastring_id($tag_name);
+			}
+			
+			$count_query .= " JOIN {$db_prefix}metadata md on e.guid = md.entity_guid";
+			$count_query .= " JOIN {$db_prefix}metastrings msv ON md.value_id = msv.id";
+			
+			$md_where = "((md.name_id IN (" . implode(",", $tag_name_ids) . ")) AND msv.string = '" . sanitise_string($params["query"]) . "')";
+		}
+		
+		
+		// add wheres
+		$count_query .= " WHERE e.type = 'object' AND es.subtype IN ('" . implode("', '", $current_params['subtype']) . "') AND ";
+		if ($container_guid) {
+			$count_query .= "e.container_guid = " . $container_guid . " AND ";
+		}
+		
+		if (isset($md_where)) {
+			$count_query .= "((" . $where . ") OR (" . $md_where . "))";
+		} else {
+			$count_query .= $where;
+		}
+		
+		$count_query .= " AND ";
+		
+		if ($search_multisite) {
+			$site_options = array(
+					"type" => "site",
+					"relationship" => "member_of_site",
+					"relationship_guid" => $user->getGUID(),
+					"limit" => false,
+					"site_guids" => false
+					// custom callback for guids only
+			);
+			
+			if ($sites = elgg_get_entities_from_relationship($site_options)) {
+				$site_guids = array();
+				foreach ($sites as $row) {
+					$site_guids[] = $row->guid;
+				}
+				$count_query .= "e.site_guid IN (" . implode(", ", $site_guids) . ") ";
 			} else {
 				$count_query .= "e.site_guid = " . elgg_get_site_entity()->getGUID() . " ";
 			}
-			
-			$count_query .= " AND ";
-			
-			// Add access controls
-			$count_query .= get_access_sql_suffix('e');
-			
-			$count_query .= " GROUP BY e.subtype";
-			$totals = get_data($count_query);
-			if ($totals) {
-				foreach ($totals as $row) {
-					$search_result_counters["item:object:" . $row->subtype] = $row->total;
-				}
+		} else {
+			$count_query .= "e.site_guid = " . elgg_get_site_entity()->getGUID() . " ";
+		}
+		
+		$count_query .= " AND ";
+		
+		// Add access controls
+		$count_query .= get_access_sql_suffix('e');
+		
+		$count_query .= " GROUP BY e.subtype";
+		$totals = get_data($count_query);
+		if ($totals) {
+			foreach ($totals as $row) {
+				$search_result_counters["item:object:" . $row->subtype] = $row->total;
 			}
 		}
 	}
@@ -351,7 +349,7 @@ if (is_array($custom_types) && !empty($params["query"])) {
 			continue;
 		}
 		
-		if ($search_type != 'all' && $entity_type != $type) {
+		if ($search_type != 'all' && $search_type != $type) {
 			// only want count if doing specific search
 			$current_params['search_advanced_count_only'] = true;
 		}
