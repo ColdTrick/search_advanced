@@ -339,36 +339,44 @@ if ($search_type == 'all' || $search_type == 'entities') {
 }
 
 // call custom searches
-if ($search_type != 'entities' || $search_type == 'all' || $search_type == 'tags') {
-	if (is_array($custom_types) && !empty($params["query"])) {
-		foreach ($custom_types as $type) {
-			if ($search_type != 'all' && $search_type != 'tags' && $search_type != $type) {
-				continue;
-			}
+if (is_array($custom_types) && !empty($params["query"])) {
+	foreach ($custom_types as $type) {
 
-			$current_params = $params;
-			$current_params['search_type'] = $type;
+		$current_params = $params;
+		$current_params['search_type'] = $type;
 
-			$results = elgg_trigger_plugin_hook('search', $type, $current_params, array());
+		// no need to search if we're not interested in these results
+		// @todo when using index table, allow search to get full count.
+		if ($search_type == "tags") {
+			continue;
+		}
+		
+		if ($search_type != 'all' && $entity_type != $type) {
+			// only want count if doing specific search
+			$current_params['search_advanced_count_only'] = true;
+		}
+		
+		$results = elgg_trigger_plugin_hook('search', $type, $current_params, array());
 
-			if ($results === FALSE) {
-				// someone is saying not to display these types in searches.
-				continue;
-			}
-			
-			if (isset($results['entities']) && is_array($results['entities']) && $results['count']) {
-				if ($view = search_get_search_view($current_params, 'list')) {
-					$search_result_counters["search_types:" . $type] = $results['count'];
+		if ($results === FALSE) {
+			// someone is saying not to display these types in searches.
+			continue;
+		}
+		
+		if (isset($results['entities']) && is_array($results['entities']) && $results['count']) {
+			if ($view = search_get_search_view($current_params, 'list')) {
+				$search_result_counters["search_types:" . $type] = $results['count'];
+				if ($current_params['search_advanced_count_only'] !== true) {
 					$results_html["search_types:" . $type] = elgg_view($view, array(
 						'results' => $results,
 						'params' => $current_params,
 					));
 				}
 			}
-			
-			if (isset($results["content"])) {
-				$results_html["search_types:" . $type] = $results["content"];
-			}
+		}
+		
+		if (isset($results["content"])) {
+			$results_html["search_types:" . $type] = $results["content"];
 		}
 	}
 }
