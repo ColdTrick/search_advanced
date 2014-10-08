@@ -1,19 +1,19 @@
 <?php
 /**
  * This file was created by Translation Editor v2.0
- * On 2014-10-08 17:38
+ * On 2014-10-03 09:59
  */
 
 return array (
-  'search_advanced:settings:user_profile_fields' => 'Breidt het gebruikers zoekformulier uit met de volgende profiel velden',
+  'search_advanced:settings:user_profile_fields' => 'Breidt het gebruiker zoeken scherm uit met de volgende profielvelden',
   'search_advanced:settings:user_profile_fields:field' => 'Profiel veld',
-  'search_advanced:settings:user_profile_fields:show_on_form' => 'Toon op zoekformulier',
-  'search_advanced:settings:user_profile_fields:use_soundex' => 'Gebruik soundEx',
-  'search_advanced:settings:user_profile_fields:info' => 'Gebruikers kunnen hun zoekopdrachten verfijnen op basis van profielvelden. Op dit moment worden alleen tekst gebaseerde velden ondersteund (tekst, locatie, url, etc).',
-  'search_advanced:users:profile_field:soundex' => 'Gebruik klinkt als',
-  'search_advanced:widgets:search:edit:submit_behaviour' => 'Verstuur gedracht',
+  'search_advanced:settings:user_profile_fields:show_on_form' => 'Toon op zoek formulier',
+  'search_advanced:settings:user_profile_fields:use_soundex' => 'Gebruik Soundex',
+  'search_advanced:settings:user_profile_fields:info' => 'Breidt het zoeken naar gebruikers uit met het zoeken in specifieke profielvelden. Op dit moment werkt dit alleen goed bij tekstvelden (tekst, locatie, url, etc).',
+  'search_advanced:users:profile_field:soundex' => 'Klinkt als',
+  'search_advanced:widgets:search:edit:submit_behaviour' => 'Zoekresultaat',
   'search_advanced:widgets:search:edit:submit_behaviour:show_in_widget' => 'Toon in widget',
-  'search_advanced:widgets:search:edit:submit_behaviour:go_to_search' => 'Ga naar zoeken',
+  'search_advanced:widgets:search:edit:submit_behaviour:go_to_search' => 'Ga naar zoekpagina',
   'search_advanced:searchbox' => 'Zoeken',
   'search_advanced:autocomplete:all' => 'Doorzoek alle content',
   'search_advanced:settings:combine_search_results' => 'Combineer zoekresultaten',
