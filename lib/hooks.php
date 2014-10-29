@@ -79,7 +79,11 @@ function search_advanced_objects_hook($hook, $type, $value, $params) {
 		}
 		
 		foreach ($query_parts as $query_part) {
-			$value_ids[] = elgg_get_metastring_id($query_part);
+			$metastring_ids = elgg_get_metastring_id($query_part, false);
+			if (!is_array($metastring_ids)) {
+				$metastring_ids = array($metastring_ids);
+			}
+			$value_ids = array_merge($value_ids, $metastring_ids); 
 		}
 
 		$md_where = "((md.name_id IN (" . implode(",", $tag_name_ids) . ")) AND md.value_id IN (" . implode(",", $value_ids) . "))";
