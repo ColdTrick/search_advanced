@@ -16,6 +16,7 @@
 function search_advanced_objects_hook($hook, $type, $value, $params) {
 
 	static $tag_name_ids;
+	static $tag_value_ids;
 	static $valid_tag_names;
 	
 	$db_prefix = elgg_get_config('dbprefix');
@@ -57,8 +58,6 @@ function search_advanced_objects_hook($hook, $type, $value, $params) {
 	$params["wheres"] = elgg_extract("wheres", $params, array());
 	
 	if ($tag_name_ids) {
-		// look up value ids to save a join
-		$value_ids = array();
 		$query_parts = array();
 		
 		if (elgg_get_plugin_setting("enable_multi_tag", "search_advanced") == "yes") {
@@ -78,15 +77,20 @@ function search_advanced_objects_hook($hook, $type, $value, $params) {
 			$query_parts[] = $query;
 		}
 		
-		foreach ($query_parts as $query_part) {
-			$metastring_ids = elgg_get_metastring_id($query_part, false);
-			if (!is_array($metastring_ids)) {
-				$metastring_ids = array($metastring_ids);
+		// look up value ids to save a join
+		if (!isset($tag_value_ids)) {
+			$tag_value_ids = array();
+			
+			foreach ($query_parts as $query_part) {
+				$metastring_ids = elgg_get_metastring_id($query_part, false);
+				if (!is_array($metastring_ids)) {
+					$metastring_ids = array($metastring_ids);
+				}
+				$tag_value_ids = array_merge($tag_value_ids, $metastring_ids);
 			}
-			$value_ids = array_merge($value_ids, $metastring_ids); 
 		}
 
-		$md_where = "((md.name_id IN (" . implode(",", $tag_name_ids) . ")) AND md.value_id IN (" . implode(",", $value_ids) . "))";
+		$md_where = "((md.name_id IN (" . implode(",", $tag_name_ids) . ")) AND md.value_id IN (" . implode(",", $tag_value_ids) . "))";
 	
 		$params['wheres'][] = "(($where) OR ($md_where))";
 	} else {
