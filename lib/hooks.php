@@ -193,11 +193,18 @@ function search_advanced_groups_hook($hook, $type, $value, $params) {
 
 	if ($profile_fields) {
 
+		$profile_field_metadata_search_values = elgg_get_plugin_setting("group_profile_fields_metadata_search", "search_advanced", array());
+		if (!empty($profile_field_metadata_search_values)) {
+			$profile_field_metadata_search_values = json_decode($profile_field_metadata_search_values, true);
+		}
+			
 		$tag_name_ids = array();
 		foreach ($profile_fields as $field) {
-			$tag_name_ids[] = elgg_get_metastring_id($field);
+			if (!in_array($field, $profile_field_metadata_search_values)) {
+				$tag_name_ids[] = elgg_get_metastring_id($field);
+			}
 		}
-		
+				
 		$likes = array();
 		if (elgg_get_plugin_setting("enable_multi_tag", "search_advanced") == "yes") {
 			$separator = elgg_get_plugin_setting("multi_tag_separator", "search_advanced", "comma");
@@ -301,12 +308,17 @@ function search_advanced_users_hook($hook, $type, $value, $params) {
 		// profile fields
 		$profile_fields = array_keys(elgg_get_config('profile_fields'));
 		if ($profile_fields) {
-	
-			// no fulltext index, can't disable fulltext search in this function.
-			// $md_where .= " AND " . search_get_where_sql('msv', array('string'), $params, FALSE);
+			
+			$profile_field_metadata_search_values = elgg_get_plugin_setting("user_profile_fields_metadata_search", "search_advanced", array());
+			if (!empty($profile_field_metadata_search_values)) {
+				$profile_field_metadata_search_values = json_decode($profile_field_metadata_search_values, true);
+			}
+			
 			$tag_name_ids = array();
 			foreach ($profile_fields as $field) {
-				$tag_name_ids[] = elgg_get_metastring_id($field);
+				if (!in_array($field, $profile_field_metadata_search_values)) {
+					$tag_name_ids[] = elgg_get_metastring_id($field);
+				}				
 			}
 			
 			$likes = array();
