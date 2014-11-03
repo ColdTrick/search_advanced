@@ -89,7 +89,12 @@ function search_advanced_objects_hook($hook, $type, $value, $params) {
 				$tag_value_ids = array_merge($tag_value_ids, $metastring_ids);
 			}
 		}
-
+		
+		if (empty($tag_value_ids)) {
+			// no values match, so return fast
+			return array('entities' => array(), 'count' => 0);
+		}
+		
 		$md_where = "((md.name_id IN (" . implode(",", $tag_name_ids) . ")) AND md.value_id IN (" . implode(",", $tag_value_ids) . "))";
 	
 		$params['wheres'][] = "(($where) OR ($md_where))";
