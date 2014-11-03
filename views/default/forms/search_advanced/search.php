@@ -33,8 +33,8 @@ if (($user = elgg_get_logged_in_user_entity()) && elgg_trigger_plugin_hook("sear
 
 if (elgg_extract("type", $vars, false) === "user") {
 	$profile_fields = elgg_get_config("profile_fields");
-	$profile_field_values = elgg_get_plugin_setting("user_profile_fields", "search_advanced");
-	$profile_field_soundex_values = elgg_get_plugin_setting("user_profile_fields_soundex", "search_advanced");
+	$profile_field_values = elgg_get_plugin_setting("user_profile_fields_search_form", "search_advanced");
+	$profile_field_soundex_values = elgg_get_plugin_setting("user_profile_fields_search_form_soundex", "search_advanced");
 	if (empty($profile_field_values) || empty($profile_fields)) {
 		return;
 	}

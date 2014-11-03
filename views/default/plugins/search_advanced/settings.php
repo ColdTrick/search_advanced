@@ -13,22 +13,6 @@ $separator_options = array(
 	"space" => elgg_echo("search_advanced:settings:multi_tag_separator:space"),
 );
 
-$profile_fields = elgg_get_config("profile_fields");
-
-$profile_field_values = $plugin->user_profile_fields;
-if (!empty($profile_field_values)) {
-	$profile_field_values = json_decode($profile_field_values, true);
-} else {
-	$profile_field_values = array();
-}
-
-$profile_field_soundex_values = $plugin->user_profile_fields_soundex;
-if (!empty($profile_field_soundex_values)) {
-	$profile_field_soundex_values = json_decode($profile_field_soundex_values, true);
-} else {
-	$profile_field_soundex_values = array();
-}
-
 echo "<label>" . elgg_echo('search_advanced:settings:combine_search_results') . "</label> ";
 echo elgg_view("input/dropdown", array("name" => "params[combine_search_results]", "options_values" => $noyes_options, "value" => $plugin->combine_search_results));
 echo "<div class='elgg-subtext'>" . elgg_echo('search_advanced:settings:combine_search_results:info') . "</div>";
@@ -41,45 +25,48 @@ echo "<label>" . elgg_echo('search_advanced:settings:multi_tag_separator') . "</
 echo elgg_view("input/dropdown", array("name" => "params[multi_tag_separator]", "options_values" => $separator_options, "value" => $plugin->multi_tag_separator));
 echo "<div class='elgg-subtext'>" . elgg_echo('search_advanced:settings:multi_tag_separator:info') . "</div>";
 
-echo "<label>" . elgg_echo('search_advanced:settings:user_profile_fields') . "</label> ";
-echo "<table class='elgg-table-alt'>";
-echo "<tr>";
-echo "<th>" . elgg_echo("search_advanced:settings:user_profile_fields:field") . "</th>";
-echo "<th class='center'>" . elgg_echo("search_advanced:settings:user_profile_fields:show_on_form");
-echo elgg_view("input/hidden", array("name" => "params[user_profile_fields]", "value" => 0)) . "</th>";
-echo "<th class='center'>" . elgg_echo("search_advanced:settings:user_profile_fields:use_soundex") . "</th>";
-echo "</tr>";
-foreach ($profile_fields as $metadata_name => $type) {
-	$lan_key = "profile:" . $metadata_name;
-	$name = $metadata_name;
-	if (elgg_echo($lan_key) !== $lan_key) {
-		$name = elgg_echo($lan_key);
-	}
-	
-	$name .= " (" . $type . ")";
-	
-	$show_field_options = array(
-		"name" => "params[user_profile_fields][]",
-		"value" => $metadata_name
-	);
-	if (in_array($metadata_name, $profile_field_values)) {
-		$show_field_options["checked"] = "checked";
-	}
-	$soundex_field_options = array(
-		"name" => "params[user_profile_fields_soundex][]",
-		"value" => $metadata_name
-	);
-	if (in_array($metadata_name, $profile_field_soundex_values)) {
-		$soundex_field_options["checked"] = "checked";
-	}
-	
-	echo "<tr>";
-	echo "<td><label>" . $name . "</label></td>";
-	echo "<td class='center'>" . elgg_view("input/checkbox", $show_field_options) . "</td>";
-	echo "<td class='center'>" . elgg_view("input/checkbox", $soundex_field_options) . "</td>";
-	echo "</tr>";
-	
-}
-echo "</table>";
+$title = elgg_echo('search_advanced:settings:profile_fields');
+$body = "";
 
-echo "<div class='elgg-subtext'>" . elgg_echo('search_advanced:settings:user_profile_fields:info') . "</div>";
+if (elgg_is_active_plugin("groups")) {
+	$tabs = array( 
+		"tabs" => array(
+			array(
+				"text" => elgg_echo("search_advanced:settings:profile_fields:user"),
+				"href" => "#",
+				"selected" => true
+			),
+			array(
+				"text" => elgg_echo("search_advanced:settings:profile_fields:group"),
+				"href" => "#",
+			),
+		),
+		"class" => "search-advanced-settings-tabs"	
+	);
+
+	$body .= elgg_view("navigation/tabs", $tabs);
+}
+
+$body .= "<div class='search-advanced-settings-profile-fields'>";
+$body .= elgg_view("search_advanced/settings/user_profile_fields", $vars);
+$body .= "</div>";
+
+if (elgg_is_active_plugin("groups")) {
+	$body .= "<div class='search-advanced-settings-profile-fields hidden'>";
+	$body .= elgg_view("search_advanced/settings/group_profile_fields", $vars);
+	$body .= "</div>";
+}
+
+echo elgg_view_module("inline", $title, $body);
+
+?>
+<script type="text/javascript">
+	$(document).ready(function() {
+		$(".search-advanced-settings-tabs li").click(function() {
+			if (!$(this).hasClass("elgg-state-selected")) {
+				$(".search-advanced-settings-tabs li").toggleClass("elgg-state-selected");
+				$(".search-advanced-settings-profile-fields").toggleClass("hidden");
+			}
+		});
+	});
+</script>
