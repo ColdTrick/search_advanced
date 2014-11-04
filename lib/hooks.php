@@ -318,7 +318,7 @@ function search_advanced_users_hook($hook, $type, $value, $params) {
 			foreach ($profile_fields as $field) {
 				if (!in_array($field, $profile_field_metadata_search_values)) {
 					$tag_name_ids[] = elgg_get_metastring_id($field);
-				}				
+				}
 			}
 			
 			$likes = array();
@@ -386,8 +386,13 @@ function search_advanced_users_hook($hook, $type, $value, $params) {
 			} else {
 				$params["wheres"] = array($params["wheres"][0] . " AND " . $profile_field_where);
 			}
-		}		
+		}
 	}
+	
+	$wheres = (array) elgg_extract("wheres", $params);
+	$wheres[] = "ue.banned = 'no'";
+	$params["wheres"] = $wheres;
+	
 	// override subtype -- All users should be returned regardless of subtype.
 	$params['subtype'] = ELGG_ENTITIES_ANY_VALUE;
 
@@ -449,7 +454,7 @@ function search_advanced_register_menu_type_selection($hook, $type, $value, $par
 		"href" => false
 	));
 	
-	foreach ($types["object"] as $subtype) {		
+	foreach ($types["object"] as $subtype) {
 		$result[]  = ElggMenuItem::factory(array(
 			"name" => "item:object:$subtype",
 			"text" => "<a rel='object " . $subtype . "'>" . elgg_echo("item:object:" . $subtype) . "</a>",
@@ -458,7 +463,7 @@ function search_advanced_register_menu_type_selection($hook, $type, $value, $par
 		));
 	}
 	
-	foreach ($custom_types as $type) {		
+	foreach ($custom_types as $type) {
 		$result[]  = ElggMenuItem::factory(array(
 			"name" => "search_types:$type",
 			"text" => "<a rel='" . $type . "'>" . elgg_echo("search_types:$type") . "</a>",
