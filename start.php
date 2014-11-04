@@ -21,6 +21,9 @@ function search_advanced_init() {
 	search_advanced_unregister_default_search_hooks();
 	search_advanced_register_search_hooks();
 	
+	// unregister object:page from search
+	elgg_unregister_entity_type("object", "page");
+	
 	// views
 	elgg_extend_view("css/elgg", "css/search_advanced/site");
 	elgg_extend_view("js/elgg", "js/search_advanced/site");
