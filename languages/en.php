@@ -29,4 +29,7 @@ return array(
 	'search_advanced:widgets:search:edit:submit_behaviour' => "Submit behaviour",
 	'search_advanced:widgets:search:edit:submit_behaviour:show_in_widget' => "Show in widget",
 	'search_advanced:widgets:search:edit:submit_behaviour:go_to_search' => "Go to search",
+	'search_advanced:widgets:search_user:title' => "User Search Form",
+	'search_advanced:widgets:search_user:description' => "Search users with the dedicated profile metadata search fields",
+	'search_advanced:widgets:search_user:no_results' => "This widget can not be used, because there are no profile fields configured for user search.",
 );
