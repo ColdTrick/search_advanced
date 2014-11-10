@@ -321,30 +321,32 @@ function search_advanced_users_hook($hook, $type, $value, $params) {
 				}
 			}
 			
-			$likes = array();
-			if (elgg_get_plugin_setting("enable_multi_tag", "search_advanced") == "yes") {
-				$separator = elgg_get_plugin_setting("multi_tag_separator", "search_advanced", "comma");
-				if ($separator == "comma") {
-					$query_array = explode(",", $query);
-				} else {
-					$query_array = explode(" ", $query);
-				}
-				foreach ($query_array as $query_value) {
-					$query_value = trim($query_value);
-					if (!empty($query_value)) {
-						$likes[] = "msv.string LIKE '%$query_value%'";
+			if (!empty($tag_name_ids)) {
+				$likes = array();
+				if (elgg_get_plugin_setting("enable_multi_tag", "search_advanced") == "yes") {
+					$separator = elgg_get_plugin_setting("multi_tag_separator", "search_advanced", "comma");
+					if ($separator == "comma") {
+						$query_array = explode(",", $query);
+					} else {
+						$query_array = explode(" ", $query);
 					}
+					foreach ($query_array as $query_value) {
+						$query_value = trim($query_value);
+						if (!empty($query_value)) {
+							$likes[] = "msv.string LIKE '%$query_value%'";
+						}
+					}
+				} else {
+					$likes[] = "msv.string LIKE '%$query%'";
 				}
-			} else {
-				$likes[] = "msv.string LIKE '%$query%'";
-			}
-			
-			$md_where = "((md.name_id IN (" . implode(",", $tag_name_ids) . ")) AND (" . implode(" OR ", $likes) . "))";
 				
-			$params['wheres'] = array("(($where) OR ($md_where))");
-		} else {
-			$params['wheres'] = array($where);
+				$md_where = "((md.name_id IN (" . implode(",", $tag_name_ids) . ")) AND (" . implode(" OR ", $likes) . "))";
+					
+				$where = "(($where) OR ($md_where))";
+			}
 		}
+		
+		$params['wheres'] = array($where);
 	}
 	
 	$profile_fields = $params["profile_filter"];
