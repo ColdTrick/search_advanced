@@ -31,6 +31,7 @@ $query = http_build_query(
 		'offset' => $vars['params']['offset'],
 		'search_type' => $vars['params']['search_type'],
 		'search_advanced_profile_fields' => $vars['params']['profile_filter'],
+		'search_advanced_profile_fields_soundex' => $vars['params']['profile_soundex'],
 	//@todo include vars for sorting, order, and friend-only.
 	)
 );
