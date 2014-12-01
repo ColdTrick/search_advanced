@@ -9,6 +9,8 @@ return array(
 	'search_advanced:settings:multi_tag_separator:info' => "Select the separator to be used to determine multiple search queries.",
 	'search_advanced:settings:multi_tag_separator:comma' => "Comma",
 	'search_advanced:settings:multi_tag_separator:space' => "Space",
+	'search_advanced:settings:search_with_loader' => "Use delayed search",
+	'search_advanced:settings:search_with_loader:info' => "Directly show a loader on the search page and get the results AJAX loaded.",
 	'search_advanced:settings:profile_fields' => "Configure profile field specific settings",
 	'search_advanced:settings:profile_fields:user' => "User Profile Fields",
 	'search_advanced:settings:profile_fields:group' => "Group Profile Fields",
