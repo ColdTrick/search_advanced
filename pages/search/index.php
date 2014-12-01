@@ -532,7 +532,7 @@ if (elgg_is_xhr() && !$loader) {
 } elseif (elgg_is_xhr() && $loader) {
 
 	$layout_view = search_get_search_view($params, 'layout');
-	$layout = elgg_view($layout_view, array('params' => $params, 'body' => $body, 'title' => $title));
+	$layout = elgg_view($layout_view, array('params' => $params, 'body' => $body));
 
 	echo $layout;
 } else {
