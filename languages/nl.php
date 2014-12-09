@@ -1,12 +1,20 @@
 <?php
 /**
  * This file was created by Translation Editor v2.0
- * On 2014-10-03 09:59
+ * On 2014-12-01 11:34
  */
 
 return array (
-  'search_advanced:settings:user_profile_fields' => 'Breidt het gebruiker zoeken scherm uit met de volgende profielvelden',
-  'search_advanced:settings:user_profile_fields:field' => 'Profiel veld',
+  'search_advanced:settings:search_with_loader' => 'Maak gebruik van vertraagd zoeken',
+  'search_advanced:settings:search_with_loader:info' => 'Toon direct een laad scherm en de zoekresultaten worden via AJAX geladen',
+  'search_advanced:settings:profile_fields' => 'Configureer specifieke instellingen voor profiel velden',
+  'search_advanced:settings:profile_fields:user' => 'Gebruikers profiel velden',
+  'search_advanced:settings:profile_fields:group' => 'Groep profiel velden',
+  'search_advanced:settings:profile_fields:metadata_search' => 'Niet gebruiken in metadata zoekopdracht',
+  'search_advanced:settings:profile_fields:field' => 'Profiel veld',
+  'search_advanced:widgets:search_user:title' => 'Gebruikers zoekformulier',
+  'search_advanced:widgets:search_user:description' => 'Zoek gebruikers op basis van profiel metadata velden',
+  'search_advanced:widgets:search_user:no_results' => 'Deze widget kan niet worden gebruikt omdat er geen profiel velden zijn geconfigureerd.',
   'search_advanced:settings:user_profile_fields:show_on_form' => 'Toon op zoek formulier',
   'search_advanced:settings:user_profile_fields:use_soundex' => 'Gebruik Soundex',
   'search_advanced:settings:user_profile_fields:info' => 'Breidt het zoeken naar gebruikers uit met het zoeken in specifieke profielvelden. Op dit moment werkt dit alleen goed bij tekstvelden (tekst, locatie, url, etc).',

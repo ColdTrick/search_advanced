@@ -30,12 +30,35 @@ if (function_exists('mb_convert_encoding')) {
 }
 $display_query = htmlspecialchars($display_query, ENT_QUOTES, 'UTF-8', false);
 
+
+// show loader or direct page
+$loader = (int) get_input("loader", 0);
+
+$search_with_loader = false;
+$plugin_setting = elgg_get_plugin_setting("search_with_loader", "search_advanced");
+if ($plugin_setting == "yes") {
+	$search_with_loader = true;
+}
+
+if ($search_with_loader && !elgg_is_xhr()) {
+	// show loader
+	$title = elgg_echo('search:results', array("\"$display_query\""));
+
+	$page_data = elgg_view_layout("one_column", array(
+		"content" => elgg_view("search_advanced/loader")
+	));
+
+	echo elgg_view_page($title, $page_data);
+	return;
+}
+
+
 // check that we have an actual query
 if (!$query && !((count($profile_filter) > 0) && $entity_type == "user")) {
 	$title = sprintf(elgg_echo('search:results'), "\"$display_query\"");
 	
 	$body  = elgg_view_title(elgg_echo('search:search_error'));
-	if (!elgg_is_xhr()) {
+	if (!elgg_is_xhr() || ($search_with_loader && $loader)) {
 		$body .= elgg_view_form("search_advanced/search", array("action" => "search", "method" => "GET", "disable_security" => true), array());
 	}
 	
@@ -43,6 +66,8 @@ if (!$query && !((count($profile_filter) > 0) && $entity_type == "user")) {
 	if (!elgg_is_xhr()) {
 		$layout = elgg_view_layout('one_sidebar', array('content' => $body));
 		$body = elgg_view_page($title, $layout);
+	} elseif (elgg_is_xhr() && $loader) {
+		$body = elgg_view_layout('one_sidebar', array('content' => $body));
 	}
 	echo $body;
 	return;
@@ -161,7 +186,7 @@ foreach ($types as $type => $subtypes) {
 			// no need to search if we're not interested in these results
 			// @todo when using index table, allow search to get full count.
 			if ($search_type == "tags") {
-				continue;					
+				continue;
 			}
 			
 			if ($search_type != 'all' && $entity_subtype != $subtype) {
@@ -386,7 +411,7 @@ $highlighted_query = search_highlight_words($searched_words, $display_query);
 $body = elgg_view_title(elgg_echo('search:results', array("\"$highlighted_query\"")));
 
 // add search form
-if (!elgg_is_xhr()) {
+if (!elgg_is_xhr() || ($search_with_loader && $loader)) {
 	$body .= elgg_view_form("search_advanced/search",array("action" => "search", "method" => "GET", "disable_security" => true), $params);
 }
 
@@ -502,14 +527,19 @@ foreach ($custom_types as $type) {
 // this is passed the original params because we don't care what actually
 // matched (which is out of date now anyway).
 // we want to know what search type it is.
-
-if (elgg_is_xhr()) {
+if (elgg_is_xhr() && !$loader) {
 	echo $body;
+} elseif (elgg_is_xhr() && $loader) {
+
+	$layout_view = search_get_search_view($params, 'layout');
+	$layout = elgg_view($layout_view, array('params' => $params, 'body' => $body));
+
+	echo $layout;
 } else {
 	$layout_view = search_get_search_view($params, 'layout');
 	$layout = elgg_view($layout_view, array('params' => $params, 'body' => $body));
-	
+
 	$title = elgg_echo('search:results', array("\"$display_query\""));
-	
+
 	echo elgg_view_page($title, $layout);
 }

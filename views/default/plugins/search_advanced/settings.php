@@ -25,11 +25,15 @@ echo "<label>" . elgg_echo('search_advanced:settings:multi_tag_separator') . "</
 echo elgg_view("input/dropdown", array("name" => "params[multi_tag_separator]", "options_values" => $separator_options, "value" => $plugin->multi_tag_separator));
 echo "<div class='elgg-subtext'>" . elgg_echo('search_advanced:settings:multi_tag_separator:info') . "</div>";
 
+echo "<label>" . elgg_echo('search_advanced:settings:search_with_loader') . "</label> ";
+echo elgg_view("input/dropdown", array("name" => "params[search_with_loader]", "options_values" => $noyes_options, "value" => $plugin->search_with_loader));
+echo "<div class='elgg-subtext'>" . elgg_echo('search_advanced:settings:search_with_loader:info') . "</div>";
+
 $title = elgg_echo('search_advanced:settings:profile_fields');
 $body = "";
 
 if (elgg_is_active_plugin("groups")) {
-	$tabs = array( 
+	$tabs = array(
 		"tabs" => array(
 			array(
 				"text" => elgg_echo("search_advanced:settings:profile_fields:user"),
@@ -41,7 +45,7 @@ if (elgg_is_active_plugin("groups")) {
 				"href" => "#",
 			),
 		),
-		"class" => "search-advanced-settings-tabs"	
+		"class" => "search-advanced-settings-tabs"
 	);
 
 	$body .= elgg_view("navigation/tabs", $tabs);
