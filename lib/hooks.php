@@ -365,7 +365,7 @@ function search_advanced_users_hook($hook, $type, $value, $params) {
 				}
 				
 				// do a soundex match
-				if (in_array($field_name, $profile_soundex)) {
+				if (is_array($profile_soundex) && in_array($field_name, $profile_soundex)) {
 					if ($i > 1) {
 						$profile_field_likes[] = "md$i.name_id = $tag_name_id AND soundex(CONCAT('X', msv$i.string)) = soundex(CONCAT('X','$field_value'))";
 					} else {
