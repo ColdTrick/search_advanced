@@ -1,9 +1,33 @@
 Version history
 ===============
 
-1.0:
+1.0 (2014-12-12):
 
-- changes for Elgg 1.9
+- added: site categories to be also searched
+- added: multitag search by splitting query based on comma or space
+- added: hook to influence autocomplete results
+- added: ability to return content instead of entities in search hooks
+- added: only show search menu items if result count > 0
+- added: search widget setting to show result in search page
+- added: user profile search
+- added: sounds like feature for profile fields
+- added: hook to sort listing results
+- added: option to exclude metadata from the global search
+- added: widget to search for users with the designated user search fields
+- added: search-list-more class to more link for styling purposes
+- added: plugin setting to use delayed ajax based search
+- changed: type selection is now a hook
+- changed: updated for Elgg 1.9
+- changed: autocomplete now uses generic search hooks
+- changed: use () instead of [] for counters
+- fixed: correctly sort comments
+- fixed: all entities should use the correct entity view in combined listing
+- fixed: hide more link on normal entity listing
+- fixed: keep container_guid intact when moving through results
+- fixed: do not show x more link on combined listing
+- fixed: always show result menu item count on all pages
+- fixed: allow case insensitive object metadata search
+- fixed: do not search for banned users
 
 0.6 (2013-06-27):
 
