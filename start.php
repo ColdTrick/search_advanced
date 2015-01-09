@@ -22,7 +22,7 @@ function search_advanced_init() {
 	search_advanced_register_search_hooks();
 	
 	// unregister object:page from search
-	elgg_unregister_entity_type("object", "page");
+	elgg_unregister_entity_type("object", "page_top");
 	
 	// views
 	elgg_extend_view("css/elgg", "css/search_advanced/site");
