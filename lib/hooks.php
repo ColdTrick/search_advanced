@@ -38,7 +38,6 @@ function search_advanced_objects_hook($hook, $type, $value, $params) {
 	
 	if ($tag_name_ids) {
 		$params["joins"][] = "JOIN {$db_prefix}objects_entity oe ON e.guid = oe.guid";
-		$params["joins"][] = "JOIN {$db_prefix}metadata md on e.guid = md.entity_guid";
 	} else {
 		$params["joins"][] = "JOIN {$db_prefix}objects_entity oe ON e.guid = oe.guid";
 	}
@@ -91,13 +90,13 @@ function search_advanced_objects_hook($hook, $type, $value, $params) {
 		}
 		
 		if (empty($tag_value_ids)) {
-			// no values match, so return fast
-			return array('entities' => array(), 'count' => 0);
+			$params['wheres'][] = $where;
+		} else {
+			$params["joins"][] = "LEFT OUTER JOIN {$db_prefix}metadata md on e.guid = md.entity_guid";
+			
+			$md_where = "((md.name_id IN (" . implode(",", $tag_name_ids) . ")) AND md.value_id IN (" . implode(",", $tag_value_ids) . "))";
+			$params['wheres'][] = "(($where) OR ($md_where))";
 		}
-		
-		$md_where = "((md.name_id IN (" . implode(",", $tag_name_ids) . ")) AND md.value_id IN (" . implode(",", $tag_value_ids) . "))";
-	
-		$params['wheres'][] = "(($where) OR ($md_where))";
 	} else {
 		$params['wheres'][] = $where;
 	}
