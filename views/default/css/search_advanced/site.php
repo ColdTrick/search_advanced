@@ -35,7 +35,7 @@
 	height: 20px;
 	line-height: 20px;
 	background: #71B9F7;
-	
+	white-space: nowrap;
 	color: white;
 	font-weight: bold;
 }

@@ -6,11 +6,11 @@
  * @uses $vars["class"] Additional class
  */
 
-if (array_key_exists("value", $vars)) {
-	$value = $vars["value"];
-} elseif ($value = get_input("q", get_input("tag", NULL))) {
-	$value = $value;
-}
+$placeholder = elgg_extract('placeholder', $vars, elgg_echo('search_advanced:searchbox'));
+$container_entity = elgg_extract('container_entity', $vars);
+
+$value = elgg_extract('value', $vars, get_input("q", get_input("tag", NULL)));
+
 
 $class = "elgg-search ui-front";
 if (isset($vars["class"])) {
@@ -29,13 +29,39 @@ if (function_exists("mb_convert_encoding")) {
 	$display_query = preg_replace("/[^\x01-\x7F]/", "", $value);
 }
 $display_query = htmlspecialchars($display_query, ENT_QUOTES, "UTF-8", false);
-$type_selection = elgg_view("search_advanced/search/type_selection");
 
-?>
-<form class="<?php echo $class; ?>" action="<?php echo elgg_get_site_url(); ?>search" method="get">
-	<fieldset>
-		<?php echo $type_selection;?>
-		<input type="text" class="search-input" size="21" name="q" value="<?php echo $display_query; ?>" placeholder="<?php echo elgg_echo("search_advanced:searchbox"); ?>" />
-		<input type="submit" value="<?php echo elgg_echo("search:go"); ?>" class="search-submit-button" />
-	</fieldset>
-</form>
+$form_body = '<table><tr>';
+if (elgg_extract('show_type_selection', $vars, true)) {
+	$form_body .= '<td>' . elgg_view("search_advanced/search/type_selection") . '</td>';
+}
+$form_body .= '<td style="width: 100%">';
+$form_body .= elgg_view('input/text', [
+	'class' => 'search-input',
+	'size' => '21',
+	'name' => 'q',
+	'value' => $display_query,
+	'placeholder' => $placeholder,
+	'required' => true
+]);
+$form_body .= elgg_view('input/button', [
+	'type' => 'submit',
+	'value' => elgg_echo("search:go"),
+	'class' => 'search-submit-button'
+]);
+$form_body .= '</td>';
+$form_body .= '</tr></table>';
+
+if (elgg_instanceof($container_entity, 'group')) {
+	$form_body .= elgg_view('input/hidden', array(
+		'name' => 'container_guid',
+		'value' => $container_entity->guid
+	));
+}
+		
+echo elgg_view('input/form', [
+	'class' => $class,
+	'action' => 'search',
+	'method' => 'GET',
+	'disable_security' => true,
+	'body' => $form_body,
+]);
