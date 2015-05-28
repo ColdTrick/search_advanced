@@ -29,6 +29,9 @@ function search_advanced_init(){
 		add_translation(get_current_language(), array("tag_names:universal_categories" => elgg_echo("categories")));
 		elgg_register_tag_metadata_name("universal_categories");
 	}
+	
+	// actions
+	elgg_register_action("search_advanced/settings/save", dirname(__FILE__) . "/actions/plugins/settings/save.php", "admin");
 }
 
 /**

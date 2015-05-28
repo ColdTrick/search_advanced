@@ -16,6 +16,8 @@ $search_type = get_input('search_type', 'all');
 // @todo is there an example query to demonstrate ^
 // XSS protection is more important that searching for HTML.
 $query = stripslashes(get_input('q', get_input('tag', '')));
+$profile_filter = get_input('search_advanced_profile_fields');
+$entity_type = get_input('entity_type', ELGG_ENTITIES_ANY_VALUE);
 
 // @todo - create function for sanitization of strings for display in 1.8
 // encode <,>,&, quotes and characters above 127
@@ -28,7 +30,7 @@ if (function_exists('mb_convert_encoding')) {
 $display_query = htmlspecialchars($display_query, ENT_QUOTES, 'UTF-8', false);
 
 // check that we have an actual query
-if (!$query) {
+if (!$query && !((count($profile_filter) > 0) && $entity_type == "user")) {
 	$title = sprintf(elgg_echo('search:results'), "\"$display_query\"");
 	
 	$body  = elgg_view_title(elgg_echo('search:search_error'));
@@ -50,7 +52,7 @@ if (!$query) {
 $limit = ($search_type == 'all') ? 2 : get_input('limit', 10);
 $offset = ($search_type == 'all') ? 0 : get_input('offset', 0);
 
-$entity_type = get_input('entity_type', ELGG_ENTITIES_ANY_VALUE);
+
 $entity_subtype = get_input('entity_subtype', ELGG_ENTITIES_ANY_VALUE);
 $owner_guid = get_input('owner_guid', ELGG_ENTITIES_ANY_VALUE);
 $container_guid = get_input('container_guid', ELGG_ENTITIES_ANY_VALUE);
@@ -88,7 +90,8 @@ $params = array(
 	'owner_guid' => $owner_guid,
 	'container_guid' => $container_guid,
 //	'friends' => $friends
-	'pagination' => ($search_type == 'all') ? FALSE : TRUE
+	'pagination' => ($search_type == 'all') ? FALSE : TRUE,
+	'profile_filter' => $profile_filter,
 );
 
 // check for multisite possibilities
