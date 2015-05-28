@@ -1,0 +1,17 @@
+{
+	"name": "coldtrick/search_advanced",
+	"description": "This plugin provides additional search features",
+	"type": "elgg-plugin",
+	"keywords": ["elgg", "plugin", "search"],
+	"license": "GPL-2.0",
+	"support": {
+		"source": "https://github.com/ColdTrick/search_advanced",
+		"issues": "https://github.com/ColdTrick/search_advanced/issues"
+	},
+	"require": {
+		"composer/installers": "^1.0.8"
+	},
+	"require-dev": {
+		"coldtrick/sniffs": "dev-master"
+	}
+}
