@@ -5,7 +5,7 @@
 
 /**
  * Unregisters the default search hook
- * 
+ *
  * @return void
  */
 function search_advanced_unregister_default_search_hooks() {
@@ -16,13 +16,13 @@ function search_advanced_unregister_default_search_hooks() {
 	
 	// tags are no longer a custom type but integrated with the entity searches
 	elgg_unregister_plugin_hook_handler('search_advanced_types', 'get_types', 'search_custom_types_tags_hook');
-	elgg_unregister_plugin_hook_handler('search', 'tags', 'search_tags_hook');	
+	elgg_unregister_plugin_hook_handler('search', 'tags', 'search_tags_hook');
 	elgg_unregister_plugin_hook_handler('search_types', 'get_types', 'search_custom_types_tags_hook');
 }
 
 /**
  * Registers the new search hooks
- * 
+ *
  * @return void
  */
 function search_advanced_register_search_hooks() {
@@ -41,7 +41,7 @@ function search_advanced_register_search_hooks() {
 * @param array   $fields       Fields to match against
 * @param array   $params       Original search params
 * @param boolean $use_fulltext Toggle the use of full text search
-* 
+*
 * @return string
 */
 function search_advanced_get_where_sql($table, $fields, $params, $use_fulltext = TRUE) {
@@ -91,87 +91,4 @@ function search_advanced_get_where_sql($table, $fields, $params, $use_fulltext =
 	$where = "($likes_str)";
 
 	return $where;
-}
-
-/**
- * Returns keywords that will autocomplete in the searchbox
- * 
- * @return array
- */
-function search_advanced_get_keywords() {
-	$result = array();
-	
-	$plugin_entity = elgg_get_plugin_from_id("search_advanced");
-	if ($plugin_entity) {
-
-		// check if cachefile exists, if not create
-		$file = new ElggFile();
-		$file->owner_guid = $plugin_entity->getGUID();
-		$file->setFilename("search_advanced_keywords_cache.json");
-		if (!$file->exists()) {
-			
-			// create new cache
-			$keywords = array();
-			
-			// check global tags plugin
-			if (elgg_is_active_plugin("global_tags")) {
-				if ($setting = elgg_get_plugin_setting("global_tags", "global_tags")) {
-					$tags = string_to_tag_array($setting);
-					if (!empty($tags)) {
-						$keywords = array_merge($keywords, $tags);
-					}
-				}
-			}
-			
-			// check categories plugin
-			if (elgg_is_active_plugin("categories")) {
-				
-				$categories = elgg_get_site_entity()->categories;
-				if (!is_array($categories)) {
-					$categories = array($categories);
-				}
-				
-				if (!empty($categories)) {
-					$keywords = array_merge($keywords, $categories);
-				}
-			}
-			// remove duplicates
-			$keywords = array_unique($keywords);
-			
-			// sort naturally
-			natcasesort($keywords);
-			
-			// save as json
-			$data = json_encode($keywords);
-			$file->open("write");
-			$file->write($data);
-			$file->close();
-		}
-		
-		// read from cachefile
-		if ($file->open("read")) {
-			if ($file_contents = $file->grabFile()) {
-				$result = json_decode($file_contents);
-			}
-		}
-	}
-	return $result;
-}
-
-/**
- * Removes the file cache for keywords
- * 
- * @return void
- */
-function search_advanced_clear_keywords_cache() {
-	$plugin_entity = elgg_get_plugin_from_id("search_advanced");
-	if ($plugin_entity) {
-		// check if cachefile exists, if exists delete it
-		$file = new ElggFile();
-		$file->owner_guid = $plugin_entity->getGUID();
-		$file->setFilename("search_advanced_keywords_cache.json");
-		if ($file->exists()) {
-			$file->delete();
-		}
-	}
 }

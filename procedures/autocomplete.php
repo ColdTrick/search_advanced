@@ -6,22 +6,6 @@ $page_owner_guid = (int) get_input("page_owner_guid");
 
 $result = array();
 if (!empty($q)) {
-	
-	// keywords (tags, categories)
-	$keywords = search_advanced_get_keywords();
-	if (!empty($keywords)) {
-		foreach ($keywords as $content) {
-			if (stristr($content, $q)) {
-				$result[] = array(
-					"type" => "tag",
-					"content" => search_highlight_words(array($q), $content),
-					"value" => $content,
-					"href" => elgg_normalize_url("search?q=" . urlencode($content)
-				));
-			}
-		}
-	}
-
 	// look for users
 	$options = array();
 	$options['query'] = $q;

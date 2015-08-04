@@ -31,25 +31,9 @@ function search_advanced_init() {
 	// widgets
 	elgg_register_widget_type("search", elgg_echo("search"), elgg_echo("search"), array("profile", "dashboard", "index", "groups"), true);
 	elgg_register_widget_type("search_user", elgg_echo("search_advanced:widgets:search_user:title"), elgg_echo("search_advanced:widgets:search_user:description"), array("dashboard", "index"));
-	
-	if (elgg_is_active_plugin("categories")) {
-		// make universal categories searchable
-		add_translation(get_current_language(), array("tag_names:universal_categories" => elgg_echo("categories")));
-		elgg_register_tag_metadata_name("universal_categories");
-	}
-	
-	// hooks and events to clear cache
+		
 	// register hooks
-	elgg_register_plugin_hook_handler("action", "admin/plugins/activate", "search_advanced_clear_keywords_cache");
-	elgg_register_plugin_hook_handler("action", "admin/plugins/deactivate", "search_advanced_clear_keywords_cache");
-	elgg_register_plugin_hook_handler("action", "admin/plugins/activate_all", "search_advanced_clear_keywords_cache");
-	elgg_register_plugin_hook_handler("action", "admin/plugins/deactivate_all", "search_advanced_clear_keywords_cache");
-	elgg_register_plugin_hook_handler("action", "plugins/settings/save", "search_advanced_clear_keywords_cache");
-
 	elgg_register_plugin_hook_handler("register", "menu:search_type_selection", "search_advanced_register_menu_type_selection");
-	
-	// register events
-	elgg_register_event_handler("upgrade", "system", "search_advanced_clear_keywords_cache");
 	
 	// actions
 	elgg_register_action("search_advanced/settings/save", dirname(__FILE__) . "/actions/plugins/settings/save.php", "admin");

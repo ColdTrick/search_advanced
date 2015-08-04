@@ -9,5 +9,5 @@ Features
 - adds search widget
 - extends fulltext with wildcards
 - adds counters to search menu items
-- autocompletes users and groups and global site categories/tags
+- autocompletes users and groups
 - direct filter menu for direct content search (or all)
