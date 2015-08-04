@@ -1,6 +1,14 @@
 Version history
 ===============
 
+1.1 (2015-08-04):
+
+- added: composer support
+- fixed: remove the correct pages subtype for search
+- fixed: custom search types do not show up in type selection
+- fixed: layout issues of searchbox and added more control vars to the view
+- fixed: comments do not show up in the results
+
 1.0 (2014-12-12):
 
 - added: site categories to be also searched
