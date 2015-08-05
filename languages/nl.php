@@ -35,7 +35,4 @@ return array (
   'search_advanced:content:title' => 'Content',
   'search_advanced:content:last_updated' => 'Laatst geüpdate',
   'search_advanced:content:created' => 'Aangemaakt',
-  'search_advanced:multisite:label' => 'Zoeken in',
-  'search_advanced:multisite:current' => 'huidige site',
-  'search_advanced:multisite:mine' => 'al mijn sites',
 );

@@ -293,11 +293,9 @@ function search_advanced_users_hook($hook, $type, $value, $params) {
 		unset($params["container_guid"]);
 	} else {
 		// check for site relation ship
-		if (empty($_SESSION["search_advanced:multisite"])) {
-			$params["relationship"] = "member_of_site";
-			$params["relationship_guid"] = elgg_get_site_entity()->getGUID();
-			$params["inverse_relationship"] = TRUE;
-		}
+		$params["relationship"] = "member_of_site";
+		$params["relationship_guid"] = elgg_get_site_entity()->getGUID();
+		$params["inverse_relationship"] = TRUE;
 	}
 	
 	if (!empty($params["query"])) {

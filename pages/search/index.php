@@ -120,33 +120,6 @@ $params = array(
 	'profile_soundex' => $profile_soundex
 );
 
-// check for multisite possibilities
-
-$search_multisite = null;
-
-if (($user = elgg_get_logged_in_user_entity()) && elgg_trigger_plugin_hook("search_multisite", "search", array("user" => $user), false)) {
-	// get and store search preference
-	$search_multisite = (int) get_input("multisite", $_SESSION["search_advanced:multisite"]);
-	$_SESSION["search_advanced:multisite"] = $search_multisite;
-	
-	if ($search_multisite) {
-		$site_options = array(
-			"type" => "site",
-			"relationship" => "member_of_site",
-			"relationship_guid" => $user->getGUID(),
-			"limit" => false,
-			"site_guids" => false
-			// custom callback for guids only
-		);
-		if ($sites = elgg_get_entities_from_relationship($site_options)) {
-			$params["site_guids"] = array();
-			foreach ($sites as $row) {
-				$params["site_guids"][] = $row->guid;
-			}
-		}
-	}
-}
-
 $types = get_registered_entity_types();
 $custom_types = elgg_trigger_plugin_hook('search_types', 'get_types', $params, array());
 
@@ -321,32 +294,7 @@ if ($combine_search_results && ($search_type == 'all') && !empty($params["query"
 			$count_query .= $where;
 		}
 		
-		$count_query .= " AND ";
-		
-		if ($search_multisite) {
-			$site_options = array(
-					"type" => "site",
-					"relationship" => "member_of_site",
-					"relationship_guid" => $user->getGUID(),
-					"limit" => false,
-					"site_guids" => false
-					// custom callback for guids only
-			);
-			
-			if ($sites = elgg_get_entities_from_relationship($site_options)) {
-				$site_guids = array();
-				foreach ($sites as $row) {
-					$site_guids[] = $row->guid;
-				}
-				$count_query .= "e.site_guid IN (" . implode(", ", $site_guids) . ") ";
-			} else {
-				$count_query .= "e.site_guid = " . elgg_get_site_entity()->getGUID() . " ";
-			}
-		} else {
-			$count_query .= "e.site_guid = " . elgg_get_site_entity()->getGUID() . " ";
-		}
-		
-		$count_query .= " AND ";
+		$count_query .= " AND e.site_guid = " . elgg_get_site_entity()->getGUID() . " AND ";
 		
 		// Add access controls
 		$count_query .= get_access_sql_suffix('e');
