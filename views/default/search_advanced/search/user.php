@@ -18,10 +18,9 @@ foreach ($profile_field_values as $profile_field) {
 		continue;
 	}
 
-	$lan_key = "profile:" . $profile_field;
 	$name = $profile_field;
-	if (elgg_echo($lan_key) !== $lan_key) {
-		$name = elgg_echo($lan_key);
+	if (elgg_language_key_exists("profile:{$profile_field}")) {
+		$name = elgg_echo("profile:{$profile_field}");
 	}
 
 	$row = new stdClass();
