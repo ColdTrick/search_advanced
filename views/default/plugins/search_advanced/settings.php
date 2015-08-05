@@ -1,76 +1,80 @@
 <?php
 
-$plugin = elgg_extract("entity", $vars);
+$plugin = elgg_extract('entity', $vars);
 
-$yesno_options = array(
-	"yes" => elgg_echo("option:yes"),
-	"no" => elgg_echo("option:no")
-);
+$yesno_options = [
+	'yes' => elgg_echo('option:yes'),
+	'no' => elgg_echo('option:no')
+];
 $noyes_options = array_reverse($yesno_options);
 
-$separator_options = array(
-	"comma" => elgg_echo("search_advanced:settings:multi_tag_separator:comma"),
-	"space" => elgg_echo("search_advanced:settings:multi_tag_separator:space"),
-);
+$separator_options = [
+	'comma' => elgg_echo('search_advanced:settings:multi_tag_separator:comma'),
+	'space' => elgg_echo('search_advanced:settings:multi_tag_separator:space'),
+];
 
-echo "<label>" . elgg_echo('search_advanced:settings:combine_search_results') . "</label> ";
-echo elgg_view("input/dropdown", array("name" => "params[combine_search_results]", "options_values" => $noyes_options, "value" => $plugin->combine_search_results));
-echo "<div class='elgg-subtext'>" . elgg_echo('search_advanced:settings:combine_search_results:info') . "</div>";
+echo elgg_format_element('label', [], elgg_echo('search_advanced:settings:combine_search_results'));
+echo elgg_view('input/dropdown', [
+	'name' => 'params[combine_search_results]',
+	'options_values' => $noyes_options,
+	'value' => $plugin->combine_search_results,
+	'class' => 'mls'
+]);
+echo elgg_format_element('div', ['class'=> 'elgg-subtext'], elgg_echo('search_advanced:settings:combine_search_results:info'));
 
-echo "<label>" . elgg_echo('search_advanced:settings:enable_multi_tag') . "</label> ";
-echo elgg_view("input/dropdown", array("name" => "params[enable_multi_tag]", "options_values" => $noyes_options, "value" => $plugin->enable_multi_tag));
-echo "<div class='elgg-subtext'>" . elgg_echo('search_advanced:settings:enable_multi_tag:info') . "</div>";
+echo elgg_format_element('label', [], elgg_echo('search_advanced:settings:enable_multi_tag'));
+echo elgg_view('input/dropdown', [
+	'name' => 'params[enable_multi_tag]',
+	'options_values' => $noyes_options,
+	'value' => $plugin->enable_multi_tag,
+	'class' => 'mls'
+]);
+echo elgg_format_element('div', ['class'=> 'elgg-subtext'], elgg_echo('search_advanced:settings:enable_multi_tag:info'));
 
-echo "<label>" . elgg_echo('search_advanced:settings:multi_tag_separator') . "</label> ";
-echo elgg_view("input/dropdown", array("name" => "params[multi_tag_separator]", "options_values" => $separator_options, "value" => $plugin->multi_tag_separator));
-echo "<div class='elgg-subtext'>" . elgg_echo('search_advanced:settings:multi_tag_separator:info') . "</div>";
+echo elgg_format_element('label', [], elgg_echo('search_advanced:settings:multi_tag_separator'));
+echo elgg_view('input/dropdown', [
+	'name' => 'params[multi_tag_separator]',
+	'options_values' => $separator_options,
+	'value' => $plugin->multi_tag_separator,
+	'class' => 'mls'
+]);
+echo elgg_format_element('div', ['class'=> 'elgg-subtext'], elgg_echo('search_advanced:settings:multi_tag_separator:info'));
 
-echo "<label>" . elgg_echo('search_advanced:settings:search_with_loader') . "</label> ";
-echo elgg_view("input/dropdown", array("name" => "params[search_with_loader]", "options_values" => $noyes_options, "value" => $plugin->search_with_loader));
-echo "<div class='elgg-subtext'>" . elgg_echo('search_advanced:settings:search_with_loader:info') . "</div>";
+echo elgg_format_element('label', [], elgg_echo('search_advanced:settings:search_with_loader'));
+echo elgg_view('input/dropdown', [
+	'name' => 'params[search_with_loader]',
+	'options_values' => $noyes_options,
+	'value' => $plugin->search_with_loader,
+	'class' => 'mls'
+]);
+echo elgg_format_element('div', ['class'=> 'elgg-subtext'], elgg_echo('search_advanced:settings:search_with_loader:info'));
 
-$title = elgg_echo('search_advanced:settings:profile_fields');
-$body = "";
+$body = '';
 
-if (elgg_is_active_plugin("groups")) {
+if (elgg_is_active_plugin('groups')) {
+	elgg_require_js('search_advanced/settings');
 	$tabs = array(
-		"tabs" => array(
+		'tabs' => array(
 			array(
-				"text" => elgg_echo("search_advanced:settings:profile_fields:user"),
-				"href" => "#",
-				"selected" => true
+				'text' => elgg_echo('search_advanced:settings:profile_fields:user'),
+				'href' => '#',
+				'selected' => true
 			),
 			array(
-				"text" => elgg_echo("search_advanced:settings:profile_fields:group"),
-				"href" => "#",
+				'text' => elgg_echo('search_advanced:settings:profile_fields:group'),
+				'href' => '#',
 			),
 		),
-		"class" => "search-advanced-settings-tabs"
+		'class' => 'search-advanced-settings-tabs'
 	);
 
-	$body .= elgg_view("navigation/tabs", $tabs);
+	$body .= elgg_view('navigation/tabs', $tabs);
 }
 
-$body .= "<div class='search-advanced-settings-profile-fields'>";
-$body .= elgg_view("search_advanced/settings/user_profile_fields", $vars);
-$body .= "</div>";
+$body .= elgg_format_element('div', ['class'=> 'search-advanced-settings-profile-fields'], elgg_view('search_advanced/settings/user_profile_fields', $vars));
 
-if (elgg_is_active_plugin("groups")) {
-	$body .= "<div class='search-advanced-settings-profile-fields hidden'>";
-	$body .= elgg_view("search_advanced/settings/group_profile_fields", $vars);
-	$body .= "</div>";
+if (elgg_is_active_plugin('groups')) {
+	$body .= elgg_format_element('div', ['class'=> 'search-advanced-settings-profile-fields hidden'], elgg_view('search_advanced/settings/group_profile_fields', $vars));
 }
 
-echo elgg_view_module("inline", $title, $body);
-
-?>
-<script type="text/javascript">
-	$(document).ready(function() {
-		$(".search-advanced-settings-tabs li").click(function() {
-			if (!$(this).hasClass("elgg-state-selected")) {
-				$(".search-advanced-settings-tabs li").toggleClass("elgg-state-selected");
-				$(".search-advanced-settings-profile-fields").toggleClass("hidden");
-			}
-		});
-	});
-</script>
+echo elgg_view_module('inline', elgg_echo('search_advanced:settings:profile_fields'), $body);
