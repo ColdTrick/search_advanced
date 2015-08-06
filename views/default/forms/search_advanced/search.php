@@ -22,7 +22,7 @@ if ($container_guid) {
 	echo elgg_view("input/hidden", ["name" => "container_guid", "value" => $container_guid]);
 }
 
-echo elgg_view("input/text", ["name" => "q", "value" => $query , "class" => "ui-front"]);
+echo elgg_view("input/text", ["name" => "q", "value" => $query , "class" => "ui-front mbs"]);
 echo elgg_view("input/submit", ["value" => elgg_echo("submit"), "class" => "hidden"]);
 
 if ($type === 'user') {

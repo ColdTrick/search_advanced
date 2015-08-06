@@ -1,5 +1,9 @@
 <?php
-$form_body = elgg_view('search_advanced/search/user', $vars);
+$params = $vars;
+$params['show_placeholder'] = true;
+$params['show_label'] = false;
+
+$form_body = elgg_view('search_advanced/search/user', $params);
 if ($form_body) {
 	
 	$form_body .= elgg_view('input/hidden', ['name' => 'search_type', 'value' => 'entities']);
@@ -9,7 +13,8 @@ if ($form_body) {
 		'action' => 'search',
 		'method' => 'GET',
 		'disable_security' => true,
-		'body' => $form_body
+		'body' => $form_body,
+		'class' => 'search-advanced-user-search'
 	]);
 } else {
 	echo elgg_echo('search_advanced:widgets:search_user:no_results');

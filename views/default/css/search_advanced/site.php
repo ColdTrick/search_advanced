@@ -85,3 +85,18 @@ form.elgg-search {
 	position: relative;
 	vertical-align: top;
 }
+
+.elgg-form-search-advanced-search fieldset > div,
+.search-advanced-user-search fieldset > div {
+	margin-bottom: 5px;
+}
+
+.elgg-form-search-advanced-search > fieldset > div label {
+	min-width: 130px;
+	display: inline-block;
+}
+
+.elgg-form-search-advanced-search > fieldset > div .elgg-input-text {
+	width: 100px;
+	margin: 0 10px;
+}

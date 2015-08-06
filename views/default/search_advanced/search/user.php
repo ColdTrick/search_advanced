@@ -56,39 +56,26 @@ $show_button = (bool) elgg_extract('show_button', $vars, true);
 $show_label = (bool) elgg_extract('show_label', $vars, true);
 $soundex_newline = (bool) elgg_extract('soundex_newline', $vars, elgg_in_context('widgets'));
 
-$table_rows = [];
 foreach ($output as $row) {
-	
-	$cells = [];
+	$result = '';
 	
 	if ($show_label) {
-		$cells[] = elgg_format_element('label', [], $row->label);
+		$result .= elgg_format_element('label', [], $row->label);
 	}
 	
-	if ($soundex_newline) {
-		$cell = $row->input;
-		
-		if ($row->soundex) {
-			$cell .= "<br />" . $row->soundex;
-		}
-		
-		$cells[] = $cell;
-	} else {
-		$cells[] = $row->input;
-		
-		if ($row->soundex) {
-			$cells[] = $row->soundex;
-		} else {
-			$cells[] = "&nbsp;";
-		}
-		
-	}
+	$result .= $row->input;
 	
-	$table_rows[] = '<td>' . implode('</td><td>', $cells) . '</td>';
+	if ($row->soundex) {
+		if ($soundex_newline) {
+			$result .= '<br />';
+		}
+
+		$result .= $row->soundex;
+	}
+		
+	echo elgg_format_element('div', [], $result);
 }
 
-echo elgg_format_element('table', ['class' => 'search-advanced-user-profile-table mtm'], '<tr>' . implode('</tr><tr>', $table_rows) . '</tr>');
-
 if ($show_button) {
-	echo elgg_view("input/submit", array("value" => elgg_echo("search")));
+	echo elgg_format_element('div', [], elgg_view("input/submit", ["value" => elgg_echo("search")]));
 }
