@@ -25,6 +25,12 @@
 		<priority>after</priority>
 	</requires>
 	
+	<requires>
+		<type>priority</type>
+		<plugin>members</plugin>
+		<priority>after</priority>
+	</requires>
+	
 	<suggests>
 		<type>plugin</type>
 		<name>profile_manager</name>

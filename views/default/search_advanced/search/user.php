@@ -11,8 +11,10 @@ $submit_values = (array) get_input("search_advanced_profile_fields");
 $profile_field_values = json_decode($profile_field_values, true);
 $profile_field_soundex_submit_values = (array) get_input("search_advanced_profile_fields_soundex");
 $profile_field_soundex_values = json_decode($profile_field_soundex_values, true);
-$output = array();
 
+$show_placeholder = (bool) elgg_extract('show_placeholder', $vars, false);
+
+$output = array();
 foreach ($profile_field_values as $profile_field) {
 	if (!isset($profile_fields[$profile_field])) {
 		continue;
@@ -27,7 +29,8 @@ foreach ($profile_field_values as $profile_field) {
 	$row->label = $name;
 	$row->input = elgg_view("input/text", array(
 		"name" => "search_advanced_profile_fields[" . $profile_field . "]",
-		"value" => elgg_extract($profile_field, $submit_values)
+		"value" => elgg_extract($profile_field, $submit_values),
+		"placeholder" => $show_placeholder ? $name : '',
 	));
 	if (in_array($profile_field, $profile_field_soundex_values)) {
 		$soundex_options = array(
@@ -45,28 +48,47 @@ foreach ($profile_field_values as $profile_field) {
 	$output[] = $row;
 }
 
-if (!empty($output)) {
-	echo "<table class='search-advanced-user-profile-table mtm'>";
-	foreach ($output as $row) {
-		echo "<tr>";
-		echo "<td><label>" . $row->label . "</label></td>";
-		if (elgg_in_context("widgets")) {
-			echo "<td>" . $row->input;
-			if ($row->soundex) {
-				echo "<br />" . $row->soundex;
-			}
-			echo "</td>";
-		} else {
-			echo "<td>" . $row->input . "</td><td>";
-			if ($row->soundex) {
-				echo $row->soundex;
-			} else {
-				echo "&nbsp;";
-			}
-			echo "</td>";
-		}
-		echo "</tr>";
+if (empty($output)) {
+	return;
+}
+
+$show_button = (bool) elgg_extract('show_button', $vars, true);
+$show_label = (bool) elgg_extract('show_label', $vars, true);
+$soundex_newline = (bool) elgg_extract('soundex_newline', $vars, elgg_in_context('widgets'));
+
+$table_rows = [];
+foreach ($output as $row) {
+	
+	$cells = [];
+	
+	if ($show_label) {
+		$cells[] = elgg_format_element('label', [], $row->label);
 	}
-	echo "</table>";
+	
+	if ($soundex_newline) {
+		$cell = $row->input;
+		
+		if ($row->soundex) {
+			$cell .= "<br />" . $row->soundex;
+		}
+		
+		$cells[] = $cell;
+	} else {
+		$cells[] = $row->input;
+		
+		if ($row->soundex) {
+			$cells[] = $row->soundex;
+		} else {
+			$cells[] = "&nbsp;";
+		}
+		
+	}
+	
+	$table_rows[] = '<td>' . implode('</td><td>', $cells) . '</td>';
+}
+
+echo elgg_format_element('table', ['class' => 'search-advanced-user-profile-table mtm'], '<tr>' . implode('</tr><tr>', $table_rows) . '</tr>');
+
+if ($show_button) {
 	echo elgg_view("input/submit", array("value" => elgg_echo("search")));
 }
