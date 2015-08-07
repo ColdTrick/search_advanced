@@ -124,10 +124,6 @@ if (elgg_get_plugin_setting('combine_search_results', 'search_advanced') == 'yes
 foreach ($types as $type => $subtypes) {
 	if (is_array($subtypes) && count($subtypes) && !empty($params["query"])) {
 		foreach ($subtypes as $subtype) {
-			if ($subtype === 'page_top') {
-				// skip this one as it is merged with page objects
-				continue;
-			}
 			// no need to search if we're not interested in these results
 			if ($search_type == 'tags') {
 				continue;
@@ -361,10 +357,6 @@ elgg_register_menu_item('page', [
 foreach ($types as $type => $subtypes) {
 	if (is_array($subtypes) && count($subtypes)) {
 		foreach ($subtypes as $subtype) {
-			if ($subtype === "page_top") {
-				// skip this one as it is merged with page objects
-				continue;
-			}
 			$label = "item:$type:$subtype";
 			
 			$total = (int) elgg_extract($label, $search_result_counters, 0);
