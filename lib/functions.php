@@ -63,3 +63,60 @@ function search_advanced_get_where_sql($table, $fields, $params, $use_fulltext =
 
 	return $where;
 }
+
+/**
+ * Function to register menu items on the search result page
+ * 
+ * @param array $params parameters to be used in this function
+ * 
+ * @return void
+ */
+function search_advanced_register_menu_items($params) {
+	$types = elgg_extract('types', $params, []);
+	$custom_types = elgg_extract('custom_types', $params, []);
+	$search_params = elgg_extract('search_params', $params, []);
+	$search_result_counters = elgg_extract('search_result_counters', $params, []);
+	
+	$query_parts = [
+		'q' => $search_params['query'],
+		'search_type' => 'all',
+	];
+	
+	$query_data = htmlspecialchars(http_build_query($query_parts));
+	
+	elgg_register_menu_item('page', [
+		'name' => 'all',
+		'text' => elgg_echo('all'),
+		'href' => "search?$query_data"
+	]);
+	
+	$query_parts['owner_guid'] = $search_params['owner_guid'];
+	$query_parts['container_guid'] = $search_params['container_guid'];
+	
+	foreach ($search_result_counters as $type_subtype => $count) {
+		$label = $type_subtype;
+		
+		list($item, $type, $subtype) = explode(':', $type_subtype);
+		if ($item == 'item') {
+			// entities search
+			$query_parts['entity_subtype'] = $subtype;
+			$query_parts['entity_type'] = $type;
+			$query_parts['search_type'] = 'entities';
+			
+		} else {
+			// custom searches
+			$query_parts['search_type'] = $type;
+		}
+		
+		$text = elgg_echo($label) . ' ' . elgg_format_element('span', ['class' => 'elgg-quiet'], "({$count})");
+		
+		$data = htmlspecialchars(http_build_query($query_parts));
+			
+		elgg_register_menu_item('page', [
+			'name' => $label,
+			'text' => $text,
+			'href' => "search?$data",
+			'section' => ($type == 'object') ? $type : 'default'
+		]);	
+	}
+}

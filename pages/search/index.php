@@ -321,102 +321,19 @@ if (empty($results_html)) {
 	$body .= implode('', $results_html);
 }
 
-// add sidebar items for all and native types
-// moved to bottom so we can use search result count in labels
-$data = htmlspecialchars(http_build_query([
-	'q' => $query,
-	'search_type' => 'all',
-]));
+$menu_items_params = [
+	'types' => $types,
+	'custom_types' => $custom_types,
+	'search_params' => $params,
+	'search_result_counters' => $search_result_counters
+];
 
-elgg_register_menu_item('page', [
-	'name' => 'all',
-	'text' => elgg_echo('all'),
-	'href' => "search?$data"
-]);
-
-foreach ($types as $type => $subtypes) {
-	if (is_array($subtypes) && count($subtypes)) {
-		foreach ($subtypes as $subtype) {
-			$label = "item:$type:$subtype";
-			
-			$total = (int) elgg_extract($label, $search_result_counters, 0);
-			if (empty($total)) {
-				continue;
-			}
-			
-			$count = elgg_format_element('span', ['class' => 'elgg-quiet'], "({$total})");
-			
-			$data = htmlspecialchars(http_build_query([
-				'q' => $query,
-				'entity_subtype' => $subtype,
-				'entity_type' => $type,
-				'owner_guid' => $params['owner_guid'],
-				'container_guid' => $params['container_guid'],
-				'search_type' => 'entities',
-			]));
-			
-			elgg_register_menu_item('page', [
-				'name' => $label,
-				'text' => elgg_echo($label) . ' ' . $count,
-				'href' => "search?$data",
-				'section' => $type
-			]);
-		}
-	} else {
-		$label = "item:$type";
-
-		$total = (int) elgg_extract($label, $search_result_counters, 0);
-		if (empty($total)) {
-			continue;
-		}
-			
-		$count = elgg_format_element('span', ['class' => 'elgg-quiet'], "({$total})");
-			
-		$data = htmlspecialchars(http_build_query([
-			'q' => $query,
-			'entity_type' => $type,
-			'owner_guid' => $params['owner_guid'],
-			'container_guid' => $params['container_guid'],
-			'search_type' => 'entities',
-		]));
-			
-		elgg_register_menu_item('page', [
-			'name' => $label,
-			'text' => elgg_echo($label) . ' ' . $count,
-			'href' => "search?$data"
-		]);
-	}
-}
-
-// add sidebar for custom searches
-foreach ($custom_types as $type) {
-	
-	$label = "search_types:$type";
-	
-	$total = (int) elgg_extract($label, $search_result_counters, 0);
-	if (empty($total)) {
-		continue;
-	}
-	
-	$count = elgg_format_element('span', ['class' => 'elgg-quiet'], "({$total})");
-		
-	$data = htmlspecialchars(http_build_query([
-		'q' => $query,
-		'search_type' => $type,
-		'container_guid' => $params['container_guid'],
-	]));
-
-	elgg_register_menu_item('page', [
-		'name' => $label,
-		'text' => elgg_echo($label) . ' ' . $count,
-		'href' => "search?$data"		
-	]);
-}
+// register menu items
+search_advanced_register_menu_items($menu_items_params);
 
 if (elgg_is_xhr() && !$loader) {
 	echo $body;
 } elseif (elgg_is_xhr() && $loader) {
-
 	$layout_view = search_get_search_view($params, 'layout');
 	echo elgg_view($layout_view, array('params' => $params, 'body' => $body));
 } else {
