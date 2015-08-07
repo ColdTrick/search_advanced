@@ -3,7 +3,7 @@
 $widget = $vars['entity'];
 $container_entity = $widget->getContainerEntity();
 
-$form_body = elgg_view('input/text', ['name' => 'q']);
+$form_body = elgg_view('input/text', ['name' => 'q', 'required' => true]);
 
 $type = '';
 $types = $widget->types;
@@ -21,11 +21,11 @@ if (!empty($type)) {
 
 $form_body .= elgg_view('input/submit', ['value' => elgg_echo('search'), 'class' => 'hidden']);
 
-$form_options = array(
+$form_options = [
 	'body' => $form_body,
 	'action' => '/search',
 	'disable_security' => true
-);
+];
 
 if ($container_entity instanceof ElggGroup) {
 	$form_options['action'] .= '?container_guid=' . $container_entity->getGUID();
