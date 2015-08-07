@@ -11,7 +11,7 @@ $autofeed = true;
 
 // $search_type == all || entities || trigger plugin hook
 $search_type = get_input('search_type', 'all');
-$entity_type = get_input('entity_type', ELGG_ENTITIES_ANY_VALUE);
+$entity_type = get_input('entity_type');
 
 // @todo there is a bug in get_input that makes variables have slashes sometimes.
 // @todo is there an example query to demonstrate ^
@@ -71,17 +71,17 @@ if (!$query && !((count($profile_filter) > 0) && $entity_type == "user")) {
 	return;
 }
 
-$entity_subtype = get_input('entity_subtype', ELGG_ENTITIES_ANY_VALUE);
-$owner_guid = get_input('owner_guid', ELGG_ENTITIES_ANY_VALUE);
-$container_guid = get_input('container_guid', ELGG_ENTITIES_ANY_VALUE);
+$entity_subtype = get_input('entity_subtype');
+$owner_guid = get_input('owner_guid');
+$container_guid = get_input('container_guid');
 
 // set up search params
 $params = array(
 	'query' => $query,
 	'offset' => ($search_type == 'all') ? 0 : get_input('offset', 0),
 	'limit' => ($search_type == 'all') ? 2 : get_input('limit', 10),
-	'sort' => 'relevance',
-	'order' => 'desc',
+	'sort' => get_input('sort', 'relevance'),
+	'order' => get_input('order', 'desc'),
 	'search_type' => $search_type,
 	'type' => $entity_type,
 	'subtype' => $entity_subtype,
@@ -91,6 +91,8 @@ $params = array(
 	'profile_filter' => $profile_filter,
 	'profile_soundex' => $profile_soundex
 );
+
+$params = elgg_trigger_plugin_hook('search_params', 'search', $params, $params);
 
 $types = get_registered_entity_types();
 $custom_types = elgg_trigger_plugin_hook('search_types', 'get_types', $params, array());
