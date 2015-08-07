@@ -28,93 +28,65 @@ if (function_exists('mb_convert_encoding')) {
 	// if no mbstring extension, we just strip characters
 	$display_query = preg_replace("/[^\x01-\x7F]/", "", $query);
 }
+
 $display_query = htmlspecialchars($display_query, ENT_QUOTES, 'UTF-8', false);
 
+$page_title = elgg_echo('search:results', array("\"$display_query\""));
 
 // show loader or direct page
-$loader = (int) get_input("loader", 0);
+$loader = (int) get_input('loader', 0);
 
 $search_with_loader = false;
-$plugin_setting = elgg_get_plugin_setting("search_with_loader", "search_advanced");
-if ($plugin_setting == "yes") {
+if (elgg_get_plugin_setting('search_with_loader', 'search_advanced') == 'yes') {
 	$search_with_loader = true;
 }
 
 if ($search_with_loader && !elgg_is_xhr()) {
 	// show loader
-	$title = elgg_echo('search:results', array("\"$display_query\""));
-
-	$page_data = elgg_view_layout("one_column", array(
-		"content" => elgg_view("search_advanced/loader")
-	));
-
-	echo elgg_view_page($title, $page_data);
+	$page_data = elgg_view_layout('one_column', ['content' => elgg_view('search_advanced/loader')]);
+	
+	echo elgg_view_page($page_title, $page_data);
 	return;
 }
 
-
 // check that we have an actual query
 if (!$query && !((count($profile_filter) > 0) && $entity_type == "user")) {
-	$title = sprintf(elgg_echo('search:results'), "\"$display_query\"");
-	
 	$body  = elgg_view_title(elgg_echo('search:search_error'));
 	if (!elgg_is_xhr() || ($search_with_loader && $loader)) {
-		$body .= elgg_view_form("search_advanced/search", array("action" => "search", "method" => "GET", "disable_security" => true), array());
+		$body .= elgg_view_form('search_advanced/search', [
+			'action' => 'search', 
+			'method' => 'GET', 
+			'disable_security' => true
+		]);
 	}
 	
 	$body .= elgg_echo('search:no_query');
 	if (!elgg_is_xhr()) {
-		$layout = elgg_view_layout('one_sidebar', array('content' => $body));
-		$body = elgg_view_page($title, $layout);
+		$layout = elgg_view_layout('one_sidebar', ['content' => $body]);
+		$body = elgg_view_page($page_title, $layout);
 	} elseif (elgg_is_xhr() && $loader) {
-		$body = elgg_view_layout('one_sidebar', array('content' => $body));
+		$body = elgg_view_layout('one_sidebar', ['content' => $body]);
 	}
 	echo $body;
 	return;
 }
 
-// get limit and offset.  override if on search dashboard, where only 2
-// of each most recent entity types will be shown.
-$limit = ($search_type == 'all') ? 2 : get_input('limit', 10);
-$offset = ($search_type == 'all') ? 0 : get_input('offset', 0);
-
 $entity_subtype = get_input('entity_subtype', ELGG_ENTITIES_ANY_VALUE);
 $owner_guid = get_input('owner_guid', ELGG_ENTITIES_ANY_VALUE);
 $container_guid = get_input('container_guid', ELGG_ENTITIES_ANY_VALUE);
-$friends = get_input('friends', ELGG_ENTITIES_ANY_VALUE);
-$sort = get_input('sort');
-switch ($sort) {
-	case 'relevance':
-	case 'created':
-	case 'updated':
-	case 'action_on':
-	case 'alpha':
-		break;
-
-	default:
-		$sort = 'relevance';
-		break;
-}
-
-$order = get_input('sort', 'desc');
-if ($order != 'asc' && $order != 'desc') {
-	$order = 'desc';
-}
 
 // set up search params
 $params = array(
 	'query' => $query,
-	'offset' => $offset,
-	'limit' => $limit,
-	'sort' => $sort,
-	'order' => $order,
+	'offset' => ($search_type == 'all') ? 0 : get_input('offset', 0),
+	'limit' => ($search_type == 'all') ? 2 : get_input('limit', 10),
+	'sort' => 'relevance',
+	'order' => 'desc',
 	'search_type' => $search_type,
 	'type' => $entity_type,
 	'subtype' => $entity_subtype,
-//	'tag_type' => $tag_type,
 	'owner_guid' => $owner_guid,
 	'container_guid' => $container_guid,
-//	'friends' => $friends
 	'pagination' => ($search_type == 'all') ? FALSE : TRUE,
 	'profile_filter' => $profile_filter,
 	'profile_soundex' => $profile_soundex
@@ -123,17 +95,15 @@ $params = array(
 $types = get_registered_entity_types();
 $custom_types = elgg_trigger_plugin_hook('search_types', 'get_types', $params, array());
 
-$search_result_counters = array();
+$search_result_counters = [];
 
 // start the actual search
 $results_html = array();
-if (array_key_exists("object", $types)) {
-	
+if (array_key_exists('object', $types)) {
 	// let order reflect menu order
-	
 	$orig_types = $types;
-	unset($types["object"]);
-	$types["object"] = $orig_types["object"];
+	unset($types['object']);
+	$types['object'] = $orig_types['object'];
 }
 
 // to pass the correct current search type to the views
@@ -145,20 +115,19 @@ $current_params['search_type'] = 'entities';
 // if still NULL or '' or empty(array()) no results found. (== don't show??)
 
 $combine_search_results = false;
-if (elgg_get_plugin_setting("combine_search_results", "search_advanced") == "yes") {
+if (elgg_get_plugin_setting('combine_search_results', 'search_advanced') == 'yes') {
 	$combine_search_results = true;
 }
 
 foreach ($types as $type => $subtypes) {
 	if (is_array($subtypes) && count($subtypes) && !empty($params["query"])) {
 		foreach ($subtypes as $subtype) {
-			if ($subtype === "page_top") {
+			if ($subtype === 'page_top') {
 				// skip this one as it is merged with page objects
 				continue;
 			}
 			// no need to search if we're not interested in these results
-			// @todo when using index table, allow search to get full count.
-			if ($search_type == "tags") {
+			if ($search_type == 'tags') {
 				continue;
 			}
 			
@@ -239,10 +208,10 @@ foreach ($types as $type => $subtypes) {
 if ($combine_search_results && ($search_type == 'all') && !empty($params["query"])) {
 	$current_params = $params;
 	$current_params['search_type'] = 'entities';
-	$current_params['type'] = "object";
+	$current_params['type'] = 'object';
 	$current_params['limit'] = 20;
-	if (array_key_exists("object", $types)) {
-		$current_params['subtype'] = $types["object"];
+	if (array_key_exists('object', $types)) {
+		$current_params['subtype'] = $types['object'];
 		$results = elgg_trigger_plugin_hook('search', $type, $current_params, array());
 		if (is_array($results['entities']) && $results['count']) {
 			if ($view = search_get_search_view($current_params, 'list')) {
@@ -250,7 +219,7 @@ if ($combine_search_results && ($search_type == 'all') && !empty($params["query"
 				// reset count to 0 to remove the "view more" url
 				$results['count'] = 0;
 				
-				$results_html["all:combined"] = elgg_view($view, array(
+				$results_html['all:combined'] = elgg_view($view, array(
 					'results' => $results,
 					'params' => $current_params,
 				));
@@ -265,7 +234,7 @@ if ($combine_search_results && ($search_type == 'all') && !empty($params["query"
 		$count_query .= " JOIN {$db_prefix}objects_entity oe ON e.guid = oe.guid";
 		$count_query .= " JOIN {$db_prefix}entity_subtypes es ON e.subtype = es.id";
 
-		$fields = array('title', 'description');
+		$fields = ['title', 'description'];
 		$where = search_advanced_get_where_sql('oe', $fields, $params);
 		
 		// add tags search
@@ -280,7 +249,6 @@ if ($combine_search_results && ($search_type == 'all') && !empty($params["query"
 			
 			$md_where = "((md.name_id IN (" . implode(",", $tag_name_ids) . ")) AND msv.string = '" . sanitise_string($params["query"]) . "')";
 		}
-		
 		
 		// add wheres
 		$count_query .= " WHERE e.type = 'object' AND es.subtype IN ('" . implode("', '", $current_params['subtype']) . "') AND ";
@@ -298,12 +266,12 @@ if ($combine_search_results && ($search_type == 'all') && !empty($params["query"
 		
 		// Add access controls
 		$count_query .= get_access_sql_suffix('e');
-		
 		$count_query .= " GROUP BY e.subtype";
+		
 		$totals = get_data($count_query);
 		if ($totals) {
 			foreach ($totals as $row) {
-				$search_result_counters["item:object:" . $row->subtype] = $row->total;
+				$search_result_counters["item:object:{$row->subtype}"] = $row->total;
 			}
 		}
 	}
@@ -338,7 +306,7 @@ if (is_array($custom_types) && !empty($params["query"])) {
 			if ($view = search_get_search_view($current_params, 'list')) {
 				$search_result_counters["search_types:" . $type] = $results['count'];
 				if ($current_params['search_advanced_count_only'] !== true) {
-					$results_html["search_types:" . $type] = elgg_view($view, array(
+					$results_html["search_types:$type"] = elgg_view($view, array(
 						'results' => $results,
 						'params' => $current_params,
 					));
@@ -347,7 +315,7 @@ if (is_array($custom_types) && !empty($params["query"])) {
 		}
 		
 		if (isset($results["content"])) {
-			$results_html["search_types:" . $type] = $results["content"];
+			$results_html["search_types:$type"] = $results["content"];
 		}
 	}
 }
@@ -360,30 +328,35 @@ $body = elgg_view_title(elgg_echo('search:results', array("\"$highlighted_query\
 
 // add search form
 if (!elgg_is_xhr() || ($search_with_loader && $loader)) {
-	$body .= elgg_view_form("search_advanced/search",array("action" => "search", "method" => "GET", "disable_security" => true), $params);
+	$body .= elgg_view_form('search_advanced/search', [
+		'action' => 'search', 
+		'method' => 'GET', 
+		'disable_security' => true
+	], $params);
 }
 
-$results_html = elgg_trigger_plugin_hook("search_results", "search", array("orig_results" => $results_html), $results_html);
+$results_html = elgg_trigger_plugin_hook('search_results', 'search', ['orig_results' => $results_html], $results_html);
 
 if (empty($results_html)) {
 	$body .= elgg_view('search/no_results');
 } else {
-	$body .= implode("", $results_html);
+	$body .= implode('', $results_html);
 }
 
 // add sidebar items for all and native types
 // moved to bottom so we can use search result count in labels
-
-$data = htmlspecialchars(http_build_query(array(
+$data = htmlspecialchars(http_build_query([
 	'q' => $query,
 	'search_type' => 'all',
-)));
-$url = "search?$data";
-$menu_item = new ElggMenuItem('all', elgg_echo('all'), $url);
-elgg_register_menu_item('page', $menu_item);
+]));
+
+elgg_register_menu_item('page', [
+	'name' => 'all',
+	'text' => elgg_echo('all'),
+	'href' => "search?$data"
+]);
 
 foreach ($types as $type => $subtypes) {
-	// @todo when using index table, can include result counts on each of these.
 	if (is_array($subtypes) && count($subtypes)) {
 		foreach ($subtypes as $subtype) {
 			if ($subtype === "page_top") {
@@ -392,56 +365,52 @@ foreach ($types as $type => $subtypes) {
 			}
 			$label = "item:$type:$subtype";
 			
-			$count = "";
-			if (array_key_exists($label, $search_result_counters)) {
-				$total = $search_result_counters[$label];
-				if ($total > 0) {
-					$count = " <span class='elgg-quiet'>(" . $total . ")</span>";
-				}
+			$total = (int) elgg_extract($label, $search_result_counters, 0);
+			if (empty($total)) {
+				continue;
 			}
-			if (!empty($count)) {
-				$data = htmlspecialchars(http_build_query(array(
-					'q' => $query,
-					'entity_subtype' => $subtype,
-					'entity_type' => $type,
-					'owner_guid' => $owner_guid,
-					'container_guid' => $container_guid,
-					'search_type' => 'entities',
-					'friends' => $friends
-				)));
-	
-				$url = "search?$data";
-				$menu_item = new ElggMenuItem($label, elgg_echo($label) . $count, $url);
-				$menu_item->setSection($type);
-				elgg_register_menu_item('page', $menu_item);
-			}
-		}
-	} else {
-		$label = "item:$type";
-
-		$count = "";
-		if (array_key_exists($label, $search_result_counters)) {
-			$total = $search_result_counters[$label];
-			if ($total > 0) {
-				$count = " <span class='elgg-quiet'>(" . $total . ")</span>";
-			}
-		}
-		
-		if (!empty($count)) {
-			$data = htmlspecialchars(http_build_query(array(
+			
+			$count = elgg_format_element('span', ['class' => 'elgg-quiet'], "({$total})");
+			
+			$data = htmlspecialchars(http_build_query([
 				'q' => $query,
+				'entity_subtype' => $subtype,
 				'entity_type' => $type,
 				'owner_guid' => $owner_guid,
 				'container_guid' => $container_guid,
 				'search_type' => 'entities',
-				'friends' => $friends
-			)));
-	
-			$url = elgg_get_site_url() . "search?$data";
-	
-			$menu_item = new ElggMenuItem($label, elgg_echo($label) . $count, $url);
-			elgg_register_menu_item('page', $menu_item);
+			]));
+			
+			elgg_register_menu_item('page', [
+				'name' => $label,
+				'text' => elgg_echo($label) . ' ' . $count,
+				'href' => "search?$data",
+				'section' => $type
+			]);
 		}
+	} else {
+		$label = "item:$type";
+
+		$total = (int) elgg_extract($label, $search_result_counters, 0);
+		if (empty($total)) {
+			continue;
+		}
+			
+		$count = elgg_format_element('span', ['class' => 'elgg-quiet'], "({$total})");
+			
+		$data = htmlspecialchars(http_build_query([
+			'q' => $query,
+			'entity_type' => $type,
+			'owner_guid' => $owner_guid,
+			'container_guid' => $container_guid,
+			'search_type' => 'entities',
+		]));
+			
+		elgg_register_menu_item('page', [
+			'name' => $label,
+			'text' => elgg_echo($label) . ' ' . $count,
+			'href' => "search?$data"
+		]);
 	}
 }
 
@@ -449,45 +418,36 @@ foreach ($types as $type => $subtypes) {
 foreach ($custom_types as $type) {
 	
 	$label = "search_types:$type";
-
-	$count = "";
-	if (array_key_exists($label, $search_result_counters)) {
-		$total = $search_result_counters[$label];
-		if ($total > 0) {
-			$count = " <span class='elgg-quiet'>(" . $total . ")</span>";
-		}
-	}
-
-	if (!empty($count)) {
-		$data = htmlspecialchars(http_build_query(array(
-			'q' => $query,
-			'search_type' => $type,
-			'container_guid' => $container_guid,
-		)));
 	
-		$url = "search?$data";
-	
-		$menu_item = new ElggMenuItem($label, elgg_echo($label) . $count, $url);
-		elgg_register_menu_item('page', $menu_item);
+	$total = (int) elgg_extract($label, $search_result_counters, 0);
+	if (empty($total)) {
+		continue;
 	}
+	
+	$count = elgg_format_element('span', ['class' => 'elgg-quiet'], "({$total})");
+		
+	$data = htmlspecialchars(http_build_query([
+		'q' => $query,
+		'search_type' => $type,
+		'container_guid' => $container_guid,
+	]));
+
+	elgg_register_menu_item('page', [
+		'name' => $label,
+		'text' => elgg_echo($label) . ' ' . $count,
+		'href' => "search?$data"		
+	]);
 }
 
-// this is passed the original params because we don't care what actually
-// matched (which is out of date now anyway).
-// we want to know what search type it is.
 if (elgg_is_xhr() && !$loader) {
 	echo $body;
 } elseif (elgg_is_xhr() && $loader) {
 
 	$layout_view = search_get_search_view($params, 'layout');
-	$layout = elgg_view($layout_view, array('params' => $params, 'body' => $body));
-
-	echo $layout;
+	echo elgg_view($layout_view, array('params' => $params, 'body' => $body));
 } else {
 	$layout_view = search_get_search_view($params, 'layout');
 	$layout = elgg_view($layout_view, array('params' => $params, 'body' => $body));
 
-	$title = elgg_echo('search:results', array("\"$display_query\""));
-
-	echo elgg_view_page($title, $layout);
+	echo elgg_view_page($page_title, $layout);
 }
