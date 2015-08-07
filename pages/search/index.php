@@ -33,6 +33,8 @@ $display_query = htmlspecialchars($display_query, ENT_QUOTES, 'UTF-8', false);
 
 $page_title = elgg_echo('search:results', ["\"$display_query\""]);
 
+$vars['page_title'] = $page_title;
+
 // show loader or direct page
 $loader = (int) get_input('loader', 0);
 
@@ -49,25 +51,10 @@ if ($search_with_loader && !elgg_is_xhr()) {
 	return;
 }
 
-// check that we have an actual query
-if (!$query && !((count($profile_filter) > 0) && $entity_type == "user")) {
-	$body  = elgg_view_title(elgg_echo('search:search_error'));
-	if (!elgg_is_xhr() || ($search_with_loader && $loader)) {
-		$body .= elgg_view_form('search_advanced/search', [
-			'action' => 'search', 
-			'method' => 'GET', 
-			'disable_security' => true
-		]);
-	}
-	
-	$body .= elgg_echo('search:no_query');
-	if (!elgg_is_xhr()) {
-		$layout = elgg_view_layout('one_sidebar', ['content' => $body]);
-		$body = elgg_view_page($page_title, $layout);
-	} elseif (elgg_is_xhr() && $loader) {
-		$body = elgg_view_layout('one_sidebar', ['content' => $body]);
-	}
-	echo $body;
+// check and show error page
+$error_output = elgg_view('search_advanced/error', $vars);
+if ($error_output) {
+	echo $error_output;
 	return;
 }
 
