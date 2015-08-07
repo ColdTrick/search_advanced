@@ -34,7 +34,6 @@ function search_advanced_init() {
 	
 	// views
 	elgg_extend_view('css/elgg', 'css/search_advanced/site');
-	elgg_extend_view('js/elgg', 'js/search_advanced/site');
 	
 	// widgets
 	elgg_register_widget_type('search', elgg_echo('search'), elgg_echo('search'), ['profile', 'dashboard', 'index', 'groups'], true);

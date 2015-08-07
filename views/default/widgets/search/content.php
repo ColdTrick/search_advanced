@@ -32,6 +32,11 @@ if ($container_entity instanceof ElggGroup) {
 }
 
 if ($widget->submit_behaviour !== 'go_to_search') {
+	if (elgg_is_xhr()) {
+		echo elgg_format_element('script', [], 'require(["search_advanced/widgets/search"]);');	
+	} else {
+		elgg_require_js('search_advanced/widgets/search');
+	}
 	$form_options['class'] = 'search-advanced-widget-search-form';
 }
 
