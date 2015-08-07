@@ -10,6 +10,10 @@ if (elgg_extract('search_autocomplete', $vars, true)) {
 	elgg_require_js('search_advanced/autocomplete');
 }
 
+if (elgg_get_plugin_setting('search_with_loader', 'search_advanced') == 'yes') {
+	elgg_require_js('search_advanced/ajax_submit');
+}
+
 $placeholder = elgg_extract('placeholder', $vars, elgg_echo('search_advanced:searchbox'));
 $container_entity = elgg_extract('container_entity', $vars);
 
