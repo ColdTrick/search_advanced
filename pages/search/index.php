@@ -31,7 +31,7 @@ if (function_exists('mb_convert_encoding')) {
 
 $display_query = htmlspecialchars($display_query, ENT_QUOTES, 'UTF-8', false);
 
-$page_title = elgg_echo('search:results', array("\"$display_query\""));
+$page_title = elgg_echo('search:results', ["\"$display_query\""]);
 
 // show loader or direct page
 $loader = (int) get_input('loader', 0);
@@ -71,10 +71,6 @@ if (!$query && !((count($profile_filter) > 0) && $entity_type == "user")) {
 	return;
 }
 
-$entity_subtype = get_input('entity_subtype');
-$owner_guid = get_input('owner_guid');
-$container_guid = get_input('container_guid');
-
 // set up search params
 $params = array(
 	'query' => $query,
@@ -84,10 +80,10 @@ $params = array(
 	'order' => get_input('order', 'desc'),
 	'search_type' => $search_type,
 	'type' => $entity_type,
-	'subtype' => $entity_subtype,
-	'owner_guid' => $owner_guid,
-	'container_guid' => $container_guid,
-	'pagination' => ($search_type == 'all') ? FALSE : TRUE,
+	'subtype' => get_input('entity_subtype'),
+	'owner_guid' => get_input('owner_guid'),
+	'container_guid' => get_input('container_guid'),
+	'pagination' => ($search_type == 'all') ? false : true,
 	'profile_filter' => $profile_filter,
 	'profile_soundex' => $profile_soundex
 );
@@ -97,15 +93,13 @@ $params = elgg_trigger_plugin_hook('search_params', 'search', $params, $params);
 $types = get_registered_entity_types();
 $custom_types = elgg_trigger_plugin_hook('search_types', 'get_types', $params, array());
 
-$search_result_counters = [];
-
-// start the actual search
-$results_html = array();
-if (array_key_exists('object', $types)) {
-	// let order reflect menu order
-	$orig_types = $types;
+$object_types = elgg_extract('object', $types);
+if ($object_types) {
+	// the sidebar menu shows objects below other entity types
+	// by moving the object types to the end of the array this will also 
+	// make sure that on the search index page they are also listed last
 	unset($types['object']);
-	$types['object'] = $orig_types['object'];
+	$types['object'] = $object_types;
 }
 
 // to pass the correct current search type to the views
@@ -121,15 +115,14 @@ if (elgg_get_plugin_setting('combine_search_results', 'search_advanced') == 'yes
 	$combine_search_results = true;
 }
 
+// start the actual search
+$search_result_counters = [];
+$results_html = [];
+
 foreach ($types as $type => $subtypes) {
-	if (is_array($subtypes) && count($subtypes) && !empty($params["query"])) {
+	if (is_array($subtypes) && count($subtypes) && !empty($params['query'])) {
 		foreach ($subtypes as $subtype) {
-			// no need to search if we're not interested in these results
-			if ($search_type == 'tags') {
-				continue;
-			}
-			
-			if ($search_type != 'all' && $entity_subtype != $subtype) {
+			if ($search_type != 'all' && $params['subtype'] != $subtype) {
 				// only want count if doing specific search
 				$current_params['search_advanced_count_only'] = true;
 			}
@@ -250,8 +243,8 @@ if ($combine_search_results && ($search_type == 'all') && !empty($params["query"
 		
 		// add wheres
 		$count_query .= " WHERE e.type = 'object' AND es.subtype IN ('" . implode("', '", $current_params['subtype']) . "') AND ";
-		if ($container_guid) {
-			$count_query .= "e.container_guid = " . $container_guid . " AND ";
+		if ($params['container_guid']) {
+			$count_query .= "e.container_guid = " . $params['container_guid'] . " AND ";
 		}
 		
 		if (isset($md_where)) {
@@ -370,8 +363,8 @@ foreach ($types as $type => $subtypes) {
 				'q' => $query,
 				'entity_subtype' => $subtype,
 				'entity_type' => $type,
-				'owner_guid' => $owner_guid,
-				'container_guid' => $container_guid,
+				'owner_guid' => $params['owner_guid'],
+				'container_guid' => $params['container_guid'],
 				'search_type' => 'entities',
 			]));
 			
@@ -395,8 +388,8 @@ foreach ($types as $type => $subtypes) {
 		$data = htmlspecialchars(http_build_query([
 			'q' => $query,
 			'entity_type' => $type,
-			'owner_guid' => $owner_guid,
-			'container_guid' => $container_guid,
+			'owner_guid' => $params['owner_guid'],
+			'container_guid' => $params['container_guid'],
 			'search_type' => 'entities',
 		]));
 			
@@ -423,7 +416,7 @@ foreach ($custom_types as $type) {
 	$data = htmlspecialchars(http_build_query([
 		'q' => $query,
 		'search_type' => $type,
-		'container_guid' => $container_guid,
+		'container_guid' => $params['container_guid'],
 	]));
 
 	elgg_register_menu_item('page', [

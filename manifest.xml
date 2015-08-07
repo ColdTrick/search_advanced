@@ -27,6 +27,12 @@
 	
 	<requires>
 		<type>priority</type>
+		<plugin>pages</plugin>
+		<priority>after</priority>
+	</requires>
+
+	<requires>
+		<type>priority</type>
 		<plugin>members</plugin>
 		<priority>after</priority>
 	</requires>

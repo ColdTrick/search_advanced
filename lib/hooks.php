@@ -4,6 +4,30 @@
  */
 
 /**
+ * Adjust the custom types used in search
+ *
+ * @param string       $hook   name of hook
+ * @param string       $type   type of hook
+ * @param unknown_type $value  current value
+ * @param array        $params parameters
+ *
+ * @return array
+ */
+function search_advanced_custom_types_hook($hook, $type, $value, $params) {
+	if (!is_array($value)) {
+		return;
+	}
+	
+	$tags_key = array_search('tags', $value); 
+	if ($tags_key === false) {
+		return;
+	}
+	
+	unset($value[$tags_key]);
+	return $value;
+}
+
+/**
  * Return default results for searches on objects.
  *
  * @param string       $hook   name of hook
