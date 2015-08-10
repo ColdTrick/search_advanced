@@ -22,17 +22,23 @@ if (!is_array($entities) || !count($entities)) {
 	return FALSE;
 }
 
-$query = http_build_query(
-	array(
-		'q' => $vars['params']['query'],
-		'entity_type' => $vars['params']['type'],
-		'entity_subtype' => $vars['params']['subtype'],
-		'limit' => $vars['params']['limit'],
-		'offset' => $vars['params']['offset'],
-		'search_type' => $vars['params']['search_type'],
-	//@todo include vars for sorting, order, and friend-only.
-	)
-);
+$default_params = [
+	'q' => $vars['params']['query'],
+	'entity_type' => $vars['params']['type'],
+	'entity_subtype' => $vars['params']['subtype'],
+	'limit' => $vars['params']['limit'],
+	'offset' => $vars['params']['offset'],
+	'search_type' => $vars['params']['search_type'],
+	'sort' => $vars['params']['sort'],
+	'order' => $vars['params']['order'],
+	'container_guid' => $vars['params']['container_guid'],
+	'owner_guid' => $vars['params']['owner_guid'],
+];
+
+$query_params = (array) elgg_extract('query_params', $vars, []);
+$query_params = array_merge($default_params, $query_params);
+
+$query = http_build_query($query_params);
 
 $url = elgg_get_site_url() . "search?$query";
 
@@ -54,60 +60,63 @@ if (array_key_exists('pagination', $vars['params']) && $vars['params']['paginati
 }
 
 // figure out what we're dealing with.
-$type_str = NULL;
+$title = elgg_echo('search:unknown_entity');
 
-if (array_key_exists('type', $vars['params']) && array_key_exists('subtype', $vars['params'])) {
-	$type_str_tmp = "item:{$vars['params']['type']}:{$vars['params']['subtype']}";
-	$type_str_echoed = elgg_echo($type_str_tmp);
-	if ($type_str_echoed != $type_str_tmp) {
-		$type_str = $type_str_echoed;
-	}
-}
+$type = elgg_extract('entity_type', $query_params);
+$subtype = elgg_extract('entity_subtype', $query_params);
+$search_type = elgg_extract('search_type', $query_params);
 
-if (!$type_str && array_key_exists('type', $vars['params'])) {
-	$type_str = elgg_echo("item:{$vars['params']['type']}");
-}
-
-if (!$type_str) {
-	$type_str = elgg_echo('search:unknown_entity');
+if (elgg_language_key_exists("item:$type:$subtype")) {
+	$title = elgg_echo("item:$type:$subtype");
+} elseif ($type == 'object') {
+	$title = elgg_echo("search_advanced:content:title");
+} elseif ($type) {
+	$title = elgg_echo("item:$type");
 }
 
 // allow overrides for titles
-$search_type_str = elgg_echo("search_types:{$vars['params']['search_type']}");
-if (array_key_exists('search_type', $vars['params'])
-	&& $search_type_str != "search_types:{$vars['params']['search_type']}") {
-
-	$type_str = $search_type_str;
+if (elgg_language_key_exists("search_types:$search_type")) {
+	$title = elgg_echo("search_types:$search_type");
 }
 
-if ($show_more) {
-	$more_str = elgg_echo('search:more', array($count, $type_str));
-	$more_url = elgg_http_remove_url_query_element($url, 'limit');
-	$more_link = "<li class='elgg-item search-list-more'><a href=\"$more_url\">$more_str</a></li>";
-} else {
-	$more_link = '';
-}
-
-$body = elgg_view_title($type_str, array(
-	'class' => 'search-heading-category',
-));
-
-$view = search_get_search_view($vars['params'], 'entity');
-if ($view) {
-	$body .= '<ul class="elgg-list search-list">';
-	foreach ($entities as $entity) {
-		$id = "elgg-{$entity->getType()}-{$entity->getGUID()}";
-		$body .= "<li id=\"$id\" class=\"elgg-item\">";
-		$body .= elgg_view($view, array(
-			'entity' => $entity,
-			'params' => $vars['params'],
-			'results' => $vars['results']
-		));
-		$body .= '</li>';
+$list_items = '';
+foreach ($entities as $entity) {
+	$view = search_get_search_view([
+		'type' => $entity->type,
+		'subtype' => $entity->getSubtype(),
+		'search_type' => $search_type
+	], 'entity');
+	
+	if (empty($view)) {
+		continue;
 	}
-	$body .= $more_link;
-	$body .= '</ul>';
+	
+	$entity_params = [
+		'entity' => $entity,
+		'params' => $vars['params'],
+		'results' => $vars['results']
+	];
+	
+	$list_item = elgg_view('search_advanced/search/floating_tag', $entity_params);
+	$list_item .= elgg_view($view, $entity_params);
+	
+	$list_items .= elgg_format_element('li', [
+		'id' => "elgg-{$entity->getType()}-{$entity->getGUID()}",
+		'class' => 'elgg-item'
+	], $list_item);
 }
 
-echo $body;
-echo $nav;
+$header = elgg_format_element('h3', [], $title);
+if ($show_more) {
+	$more_link = elgg_view('output/url', [
+		'href' => elgg_http_remove_url_query_element($url, 'limit'),
+		'text' => elgg_echo('search:more', array($count, $title)),
+		'class' => 'search-more float-alt'
+	]);
+	$header = $more_link . $header;
+}
+
+$body = elgg_format_element('ul', ['class' => 'elgg-list search-list'], $list_items);
+$body .= $nav;
+
+echo elgg_view_module('info', '', $body, ['header' => $header]);
