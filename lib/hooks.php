@@ -18,7 +18,7 @@ function search_advanced_custom_types_hook($hook, $type, $value, $params) {
 		return;
 	}
 	
-	$tags_key = array_search('tags', $value); 
+	$tags_key = array_search('tags', $value);
 	if ($tags_key === false) {
 		return;
 	}
@@ -46,6 +46,10 @@ function search_advanced_objects_hook($hook, $type, $value, $params) {
 	$db_prefix = elgg_get_config('dbprefix');
 
 	$query = sanitise_string($params['query']);
+	$query_parts = (array) search_advanced_tag_query_to_array($params['query']);
+	if (empty($query_parts)) {
+		return array('entities' => array(), 'count' => 0);
+	}
 	
 	if (!isset($tag_name_ids)) {
 		if ($valid_tag_names = elgg_get_registered_tag_metadata_names()) {
@@ -81,25 +85,6 @@ function search_advanced_objects_hook($hook, $type, $value, $params) {
 	$params["wheres"] = elgg_extract("wheres", $params, array());
 	
 	if ($tag_name_ids) {
-		$query_parts = array();
-		
-		if (elgg_get_plugin_setting("enable_multi_tag", "search_advanced") == "yes") {
-			$separator = elgg_get_plugin_setting("multi_tag_separator", "search_advanced", "comma");
-			if ($separator == "comma") {
-				$query_array = explode(",", $query);
-			} else {
-				$query_array = explode(" ", $query);
-			}
-			foreach ($query_array as $query_value) {
-				$query_value = trim($query_value);
-				if (!empty($query_value)) {
-					$query_parts[] = $query_value;
-				}
-			}
-		} else {
-			$query_parts[] = $query;
-		}
-		
 		// look up value ids to save a join
 		if (!isset($tag_value_ids)) {
 			$tag_value_ids = array();
@@ -195,7 +180,11 @@ function search_advanced_groups_hook($hook, $type, $value, $params) {
 	$db_prefix = elgg_get_config('dbprefix');
 
 	$query = sanitise_string($params['query']);
-
+	$query_parts = (array) search_advanced_tag_query_to_array($params['query']);
+	if (empty($query_parts)) {
+		return array('entities' => array(), 'count' => 0);
+	}
+	
 	$profile_fields = array_keys(elgg_get_config('group'));
 	if ($profile_fields) {
 		$params['joins'] = array(
@@ -221,31 +210,22 @@ function search_advanced_groups_hook($hook, $type, $value, $params) {
 			$profile_field_metadata_search_values = json_decode($profile_field_metadata_search_values, true);
 		}
 			
-		$tag_name_ids = array();
+		$tag_name_ids = [];
 		foreach ($profile_fields as $field) {
 			if (!in_array($field, $profile_field_metadata_search_values)) {
 				$tag_name_ids[] = elgg_get_metastring_id($field);
 			}
 		}
 				
-		$likes = array();
-		if (elgg_get_plugin_setting("enable_multi_tag", "search_advanced") == "yes") {
-			$separator = elgg_get_plugin_setting("multi_tag_separator", "search_advanced", "comma");
-			if ($separator == "comma") {
-				$query_array = explode(",", $query);
-			} else {
-				$query_array = explode(" ", $query);
+		$likes = [];
+
+		foreach ($query_parts as $query_value) {
+			$query_value = sanitise_string($query_value);
+			if (!empty($query_value)) {
+				$likes[] = "msv.string LIKE '%$query_value%'";
 			}
-			foreach ($query_array as $query_value) {
-				$query_value = trim($query_value);
-				if (!empty($query_value)) {
-					$likes[] = "msv.string LIKE '%$query_value%'";
-				}
-			}
-		} else {
-			$likes[] = "msv.string LIKE '%$query%'";
 		}
-				
+						
 		$md_where = "((md.name_id IN (" . implode(",", $tag_name_ids) . ")) AND (" . implode(" OR ", $likes) . "))";
 		$params['wheres'] = array("(($where) OR ($md_where))");
 	} else {
@@ -297,7 +277,11 @@ function search_advanced_users_hook($hook, $type, $value, $params) {
 	
 	$db_prefix = elgg_get_config('dbprefix');
 	$query = sanitise_string($params['query']);
-
+	$query_parts = (array) search_advanced_tag_query_to_array($params['query']);
+	if (empty($query_parts)) {
+		return array('entities' => array(), 'count' => 0);
+	}
+	
 	$params['joins'] = array(
 		"JOIN {$db_prefix}users_entity ue ON e.guid = ue.guid",
 		"JOIN {$db_prefix}metadata md on e.guid = md.entity_guid",
@@ -335,7 +319,7 @@ function search_advanced_users_hook($hook, $type, $value, $params) {
 				$profile_field_metadata_search_values = json_decode($profile_field_metadata_search_values, true);
 			}
 			
-			$tag_name_ids = array();
+			$tag_name_ids = [];
 			foreach ($profile_fields as $field) {
 				if (!in_array($field, $profile_field_metadata_search_values)) {
 					$tag_name_ids[] = elgg_get_metastring_id($field);
@@ -343,24 +327,15 @@ function search_advanced_users_hook($hook, $type, $value, $params) {
 			}
 			
 			if (!empty($tag_name_ids)) {
-				$likes = array();
-				if (elgg_get_plugin_setting("enable_multi_tag", "search_advanced") == "yes") {
-					$separator = elgg_get_plugin_setting("multi_tag_separator", "search_advanced", "comma");
-					if ($separator == "comma") {
-						$query_array = explode(",", $query);
-					} else {
-						$query_array = explode(" ", $query);
-					}
-					foreach ($query_array as $query_value) {
-						$query_value = trim($query_value);
-						if (!empty($query_value)) {
-							$likes[] = "msv.string LIKE '%$query_value%'";
-						}
-					}
-				} else {
-					$likes[] = "msv.string LIKE '%$query%'";
-				}
+				$likes = [];
 				
+				foreach ($query_parts as $query_value) {
+					$query_value = sanitise_string($query_value);
+					if (!empty($query_value)) {
+						$likes[] = "msv.string LIKE '%$query_value%'";
+					}
+				}
+								
 				$md_where = "((md.name_id IN (" . implode(",", $tag_name_ids) . ")) AND (" . implode(" OR ", $likes) . "))";
 					
 				$where = "(($where) OR ($md_where))";

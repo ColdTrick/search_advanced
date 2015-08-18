@@ -16,41 +16,21 @@
 * @return string
 */
 function search_advanced_get_where_sql($table, $fields, $params, $use_fulltext = TRUE) {
-	$query = elgg_extract("query", $params, "");
-	if (empty($query)) {
-		return "";
+	$query = (array) search_advanced_query_to_array(elgg_extract('query', $params, ''));
+	
+	if (empty($query) || empty($fields)) {
+		return '';
 	}
 	
-	$query_array = explode(" ", $query);
-	
-	if (count($query_array) > 1) {
-		$multi_query = array();
-		foreach ($query_array as $value) {
-			$temp_field = trim($value);
-			if (!empty($temp_field)) {
-				$multi_query[] = $temp_field;
-			}
+	$likes = [];
+	foreach ($fields as $field) {
+		
+		if ($table) {
+			// add the table prefix to the fields
+			$field = "$table.$field";
 		}
 		
-		if (count($multi_query) > 1) {
-			$query = $multi_query;
-		}
-	}
-	
-	// add the table prefix to the fields
-	if ($table) {
-		foreach ($fields as $i => $field) {
-			$fields[$i] = "$table.$field";
-		}
-	}
-	
-	if (!is_array($query)) {
-		$query = array($query);
-	}
-
-	$likes = array();
-	foreach ($fields as $field) {
-		$field_likes = array();
+		$field_likes = [];
 		foreach ($query as $query_part) {
 			$query_part = sanitise_string($query_part);
 		
@@ -66,9 +46,9 @@ function search_advanced_get_where_sql($table, $fields, $params, $use_fulltext =
 
 /**
  * Function to register menu items on the search result page
- * 
+ *
  * @param array $params parameters to be used in this function
- * 
+ *
  * @return void
  */
 function search_advanced_register_menu_items($params) {
@@ -117,15 +97,15 @@ function search_advanced_register_menu_items($params) {
 			'text' => $text,
 			'href' => "search?$data",
 			'section' => ($type == 'object') ? $type : 'default'
-		]);	
+		]);
 	}
 }
 
 /**
  * Returns an array of counters
- * 
+ *
  * @param array $params parameters
- * 
+ *
  * @return array
  */
 function search_advanced_get_combined_search_counters($params) {
@@ -177,4 +157,54 @@ function search_advanced_get_combined_search_counters($params) {
 	$totals = get_data($count_query);
 	
 	return $totals;
+}
+
+function search_advanced_query_to_array($query, $delimiter = '\s') {
+	if (empty($query)) {
+		return $query;
+	}
+	
+	$matches = [];
+	
+	$pattern = '/"+(.+?)"+|(?<![\S"])([^"' . $delimiter . ',]+)(?!["])/';
+
+	if (!preg_match_all($pattern, $query, $matches)) {
+		return $query;
+	}
+	
+	$result = $matches[0];
+	
+	foreach ($result as $key => $val) {
+		$val = trim(trim($val, "\""));
+		
+		if (empty($val)) {
+			// remove empty values
+			unset($result[$key]);
+			continue;
+		}
+		
+		$result[$key] = $val;
+	}
+	
+	// remove duplicates
+	$result = array_unique($result);
+
+	return array_values($result);
+}
+
+function search_advanced_tag_query_to_array($query) {
+	if (empty($query)) {
+		return $query;
+	}
+	
+	if (elgg_get_plugin_setting("enable_multi_tag", "search_advanced") !== "yes") {
+		return $query;
+	}
+
+	$separator = '\s';
+	if (elgg_get_plugin_setting("multi_tag_separator", "search_advanced", "comma") == 'comma') {
+		$separator = ',';
+	}
+	
+	return search_advanced_query_to_array($query, $separator);
 }
