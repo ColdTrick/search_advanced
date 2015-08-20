@@ -3,8 +3,7 @@
  * Members sidebar
  */
 
-
-$form_body = elgg_format_element('div', [], elgg_view('input/text', ['name' => 'q']));
+$form_body = elgg_format_element('div', [], elgg_view('input/text', ['name' => 'q', 'placeholder' => elgg_echo('search_advanced:members:sidebar:q:placeholder')]));
 
 $form_body .= elgg_view('search_advanced/search/user', [
 	'show_button' => false,
