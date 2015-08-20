@@ -22,6 +22,26 @@ echo elgg_view('input/dropdown', [
 ]);
 echo elgg_format_element('div', ['class'=> 'elgg-subtext'], elgg_echo('search_advanced:settings:combine_search_results:info'));
 
+echo elgg_format_element('label', [], elgg_echo('search_advanced:settings:search_with_loader'));
+echo elgg_view('input/dropdown', [
+		'name' => 'params[search_with_loader]',
+		'options_values' => $noyes_options,
+		'value' => $plugin->search_with_loader,
+		'class' => 'mls'
+		]);
+echo elgg_format_element('div', ['class'=> 'elgg-subtext'], elgg_echo('search_advanced:settings:search_with_loader:info'));
+
+// search hooks settings
+echo elgg_format_element('label', [], elgg_echo('search_advanced:settings:search_hooks_enabled'));
+echo elgg_view('input/dropdown', [
+		'name' => 'params[search_hooks_enabled]',
+		'options_values' => $yesno_options,
+		'value' => $plugin->search_hooks_enabled,
+		'class' => 'mls'
+		]);
+echo elgg_format_element('div', ['class'=> 'elgg-subtext'], elgg_echo('search_advanced:settings:search_hooks_enabled:info'));
+
+echo '<div class="mls plm mbm elgg-divide-left">';
 echo elgg_format_element('label', [], elgg_echo('search_advanced:settings:enable_multi_tag'));
 echo elgg_view('input/dropdown', [
 	'name' => 'params[enable_multi_tag]',
@@ -39,15 +59,7 @@ echo elgg_view('input/dropdown', [
 	'class' => 'mls'
 ]);
 echo elgg_format_element('div', ['class'=> 'elgg-subtext'], elgg_echo('search_advanced:settings:multi_tag_separator:info'));
-
-echo elgg_format_element('label', [], elgg_echo('search_advanced:settings:search_with_loader'));
-echo elgg_view('input/dropdown', [
-	'name' => 'params[search_with_loader]',
-	'options_values' => $noyes_options,
-	'value' => $plugin->search_with_loader,
-	'class' => 'mls'
-]);
-echo elgg_format_element('div', ['class'=> 'elgg-subtext'], elgg_echo('search_advanced:settings:search_with_loader:info'));
+echo '</div>';
 
 $body = '';
 

@@ -18,6 +18,10 @@ function search_advanced_custom_types_hook($hook, $type, $value, $params) {
 		return;
 	}
 	
+	if (elgg_get_plugin_setting('search_hooks_enabled', 'search_advanced', 'yes') == 'no') {
+		return;
+	}
+	
 	$tags_key = array_search('tags', $value);
 	if ($tags_key === false) {
 		return;
@@ -38,6 +42,13 @@ function search_advanced_custom_types_hook($hook, $type, $value, $params) {
  * @return array
  */
 function search_advanced_objects_hook($hook, $type, $value, $params) {
+	if (!empty($value)) {
+		return;
+	}
+	
+	if (elgg_get_plugin_setting('search_hooks_enabled', 'search_advanced', 'yes') == 'no') {
+		return;
+	}
 
 	static $tag_name_ids;
 	static $tag_value_ids;
@@ -177,6 +188,14 @@ function search_advanced_objects_hook($hook, $type, $value, $params) {
  * @return array
  */
 function search_advanced_groups_hook($hook, $type, $value, $params) {
+	if (!empty($value)) {
+		return;
+	}
+	
+	if (elgg_get_plugin_setting('search_hooks_enabled', 'search_advanced', 'yes') == 'no') {
+		return;
+	}
+	
 	$db_prefix = elgg_get_config('dbprefix');
 
 	$query = sanitise_string($params['query']);
@@ -274,6 +293,13 @@ function search_advanced_groups_hook($hook, $type, $value, $params) {
  * @return array
  */
 function search_advanced_users_hook($hook, $type, $value, $params) {
+	if (!empty($value)) {
+		return;
+	}
+	
+	if (elgg_get_plugin_setting('search_hooks_enabled', 'search_advanced', 'yes') == 'no') {
+		return;
+	}
 	
 	$db_prefix = elgg_get_config('dbprefix');
 	$query = sanitise_string($params['query']);
@@ -418,6 +444,35 @@ function search_advanced_users_hook($hook, $type, $value, $params) {
 		'entities' => $entities,
 		'count' => $count,
 	);
+}
+
+/**
+ * Return the data from the default search hook
+ *
+ * @param string       $hook   name of hook
+ * @param string       $type   type of hook
+ * @param unknown_type $value  current value
+ * @param array        $params parameters
+ *
+ * @return array
+ */
+function search_advanced_fallback_search_hook($hook, $type, $value, $params) {
+	if (!empty($value)) {
+		return;
+	}
+	
+	if (!in_array($type, ['object', 'user', 'group'])) {
+		return;
+	}
+	
+	switch ($type) {
+		case 'object':
+			return search_objects_hook($hook, $type, $value, $params);
+		case 'user':
+			return search_users_hook($hook, $type, $value, $params);
+		case 'group':
+			return search_groups_hook($hook, $type, $value, $params);
+	}
 }
 
 /**
