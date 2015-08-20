@@ -436,24 +436,24 @@ function search_advanced_register_menu_type_selection($hook, $type, $value, $par
 	$types = get_registered_entity_types();
 	$custom_types = elgg_trigger_plugin_hook("search_types", "get_types", array(), array());
 	
-	$result[]  = ElggMenuItem::factory(array(
+	$result[] = ElggMenuItem::factory(array(
 		"name" => "all",
 		"text" => "<a>" . elgg_echo("all") . "</a>",
 		"href" => false
 	));
-	$result[]  = ElggMenuItem::factory(array(
+	$result[] = ElggMenuItem::factory(array(
 		"name" => "item:user",
 		"text" => "<a rel='user'>" . elgg_echo("item:user") . "</a>",
 		"href" => false
 	));
-	$result[]  = ElggMenuItem::factory(array(
+	$result[] = ElggMenuItem::factory(array(
 		"name" => "item:group",
 		"text" => "<a rel='group'>" . elgg_echo("item:group") . "</a>",
 		"href" => false
 	));
 	
 	foreach ($types["object"] as $subtype) {
-		$result[]  = ElggMenuItem::factory(array(
+		$result[] = ElggMenuItem::factory(array(
 			"name" => "item:object:$subtype",
 			"text" => "<a rel='object " . $subtype . "'>" . elgg_echo("item:object:" . $subtype) . "</a>",
 			"href" => false,
@@ -462,13 +462,58 @@ function search_advanced_register_menu_type_selection($hook, $type, $value, $par
 	}
 	
 	foreach ($custom_types as $type) {
-		$result[]  = ElggMenuItem::factory(array(
+		$result[] = ElggMenuItem::factory(array(
 			"name" => "search_types:$type",
 			"text" => "<a rel='" . $type . "'>" . elgg_echo("search_types:$type") . "</a>",
 			"href" => false,
 			"title" => elgg_echo("search_types:$type")
 		));
 	}
+	
+	return $result;
+}
+
+/**
+ * Registers menu items related to search results listing
+ *
+ * @param string       $hook   name of hook
+ * @param string       $type   type of hook
+ * @param unknown_type $value  current value
+ * @param array        $params parameters
+ *
+ * @return array
+ */
+function search_advanced_register_menu_list($hook, $type, $value, $params) {
+	$result = $value;
+	
+	$url = search_advanced_get_search_url();
+	$current_list_type = search_advanced_get_list_type();
+	$title = elgg_echo('search_advanced:menu:search_list:list:title');
+	
+	$result[] = ElggMenuItem::factory([
+		'name' => 'list',
+		'text' => elgg_view_icon('list'),
+		'href' => '#',
+		'title' => $title
+	]);
+
+	$result[] = ElggMenuItem::factory([
+		'name' => 'list_entity',
+		'text' => elgg_echo('search_advanced:menu:search_list:entity'),
+		'href' => elgg_http_add_url_query_elements($url, ['list_type' => 'entity']),
+		'parent_name' => 'list',
+		'selected' => ($current_list_type === 'entity'),
+		'title' => $title
+	]);
+
+	$result[] = ElggMenuItem::factory([
+		'name' => 'list_compact',
+		'text' => elgg_echo('search_advanced:menu:search_list:compact'),
+		'href' => elgg_http_add_url_query_elements($url, ['list_type' => 'compact']),
+		'parent_name' => 'list',
+		'selected' => ($current_list_type === 'compact'),
+		'title' => $title
+	]);
 	
 	return $result;
 }

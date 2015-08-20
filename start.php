@@ -34,6 +34,7 @@ function search_advanced_init() {
 	
 	// views
 	elgg_extend_view('css/elgg', 'css/search_advanced/site');
+	elgg_extend_view('js/elgg', 'js/search_advanced/site.js');
 	
 	// widgets
 	elgg_register_widget_type('search', elgg_echo('search'), elgg_echo('search'), ['profile', 'dashboard', 'index', 'groups'], true);
@@ -41,6 +42,7 @@ function search_advanced_init() {
 		
 	// register hooks
 	elgg_register_plugin_hook_handler('register', 'menu:search_type_selection', 'search_advanced_register_menu_type_selection');
+	elgg_register_plugin_hook_handler('register', 'menu:search_list', 'search_advanced_register_menu_list');
 	
 	// actions
 	elgg_register_action('search_advanced/settings/save', dirname(__FILE__) . '/actions/plugins/settings/save.php', 'admin');

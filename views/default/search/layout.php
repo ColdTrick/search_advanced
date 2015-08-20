@@ -25,6 +25,12 @@ if (is_array($content)) {
 
 if (empty($content)) {
 	$content = elgg_view('search/no_results');
+} else {
+	$menu = elgg_view_menu('search_list', ['sort_by' => 'priority', 'class' => 'float-alt']);
+	if (!empty($menu)) {
+		$menu = '<div class="clearfix">' . $menu . '</div>';
+		$content = $menu . $content;
+	}
 }
 
 // add search form

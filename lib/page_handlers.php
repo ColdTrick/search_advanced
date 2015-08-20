@@ -42,6 +42,8 @@ function search_advanced_search_page_handler($page) {
 		set_input("search_type", "all");
 	}
 	
+	search_advanced_update_list_type();
+	
 	include_once(dirname(dirname(__FILE__)) . "/pages/search/index.php");
 	return true;
 }

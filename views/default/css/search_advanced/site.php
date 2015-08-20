@@ -100,3 +100,29 @@ form.elgg-search {
 	width: 100px;
 	margin: 0 10px;
 }
+
+.elgg-menu-search-list .elgg-child-menu {
+	display: none;
+	position: absolute;
+	right: 0;
+	background: white;
+	border: 1px solid #CCC;
+	
+	border-radius: 0 0 3px 3px;
+	box-shadow: 1px 3px 5px rgba(0, 0, 0, 0.25);
+}
+
+.elgg-menu-search-list .elgg-child-menu a {
+	padding: 5px 10px;
+	color: #444;
+	text-decoration: none;
+}
+
+.elgg-menu-search-list .elgg-child-menu li.elgg-state-selected a {
+	font-weight: bold;
+}
+.elgg-menu-search-list .elgg-child-menu a:hover {
+	background-color: #F0F0F0;
+	color: #444;
+}
+	

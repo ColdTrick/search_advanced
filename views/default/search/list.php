@@ -81,11 +81,11 @@ if (elgg_language_key_exists("search_types:$search_type")) {
 
 $list_items = '';
 foreach ($entities as $entity) {
-	$view = search_get_search_view([
+	$view = search_advanced_get_search_view([
 		'type' => $entity->type,
 		'subtype' => $entity->getSubtype(),
 		'search_type' => $search_type
-	], 'entity');
+	], search_advanced_get_list_type());
 	
 	if (empty($view)) {
 		continue;

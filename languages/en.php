@@ -31,4 +31,8 @@ return array(
 	'search_advanced:widgets:search_user:title' => "User Search Form",
 	'search_advanced:widgets:search_user:description' => "Search users with the dedicated profile metadata search fields",
 	'search_advanced:widgets:search_user:no_results' => "This widget can not be used, because there are no profile fields configured for user search.",
+
+	'search_advanced:menu:search_list:list:title' => "Change the look of the search results",
+	'search_advanced:menu:search_list:entity' => "Default",
+	'search_advanced:menu:search_list:compact' => "Compact",
 );

@@ -58,11 +58,18 @@ if ($error_output) {
 	return;
 }
 
+if (search_advanced_get_list_type() == 'compact') {
+	$limit = ($search_type == 'all') ? 5 : get_input('limit', 20);
+} else {
+	$limit = ($search_type == 'all') ? 2 : get_input('limit', 10);
+}
+
+
 // set up search params
 $params = array(
 	'query' => $query,
 	'offset' => ($search_type == 'all') ? 0 : get_input('offset', 0),
-	'limit' => ($search_type == 'all') ? 2 : get_input('limit', 10),
+	'limit' => $limit,
 	'sort' => get_input('sort', 'relevance'),
 	'order' => get_input('order', 'desc'),
 	'search_type' => $search_type,
@@ -83,7 +90,7 @@ $custom_types = elgg_trigger_plugin_hook('search_types', 'get_types', $params, a
 $object_types = elgg_extract('object', $types);
 if ($object_types) {
 	// the sidebar menu shows objects below other entity types
-	// by moving the object types to the end of the array this will also 
+	// by moving the object types to the end of the array this will also
 	// make sure that on the search index page they are also listed last
 	unset($types['object']);
 	$types['object'] = $object_types;
@@ -128,7 +135,7 @@ foreach ($types as $type => $subtypes) {
 		$results = elgg_trigger_plugin_hook('search', $type, $current_params, array());
 		if (!$results) {
 			// if $results = FALSE => someone is saying not to display these types in searches.
-			continue;	
+			continue;
 		}
 		
 		if (!is_array($results['entities']) || empty($results['count'])) {
