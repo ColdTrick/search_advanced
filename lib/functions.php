@@ -214,6 +214,30 @@ function search_advanced_query_to_array($query, $delimiter = '\s') {
 	return array_values($result);
 }
 
+function search_advanced_get_metastring_ids($strings, $case_sensitive = true) {
+	if (!is_array($strings)) {
+		return false;
+	}
+	
+	$strings = array_map('sanitise_string', $strings);
+	
+	$strings = implode("', '", $strings);
+	
+	$dbprefix = elgg_get_config('dbprefix');
+	
+	if ($case_sensitive) {
+		$query = "SELECT * FROM {$dbprefix}metastrings WHERE BINARY string IN ('{$strings}')";
+	} else {
+		$query = "SELECT * FROM {$dbprefix}metastrings WHERE string IN ('{$strings}')";
+	}
+		
+	$results = get_data($query, function($row) {
+		return $row->id;
+	});
+	
+	return $results;
+}
+
 function search_advanced_tag_query_to_array($query) {
 	if (empty($query)) {
 		return $query;

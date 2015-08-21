@@ -54,59 +54,38 @@ function search_advanced_objects_hook($hook, $type, $value, $params) {
 	static $tag_value_ids;
 	static $valid_tag_names;
 	
-	$db_prefix = elgg_get_config('dbprefix');
-
-	$query = sanitise_string($params['query']);
 	$query_parts = (array) search_advanced_tag_query_to_array($params['query']);
-	if (empty($query_parts)) {
-		return array('entities' => array(), 'count' => 0);
+	if (empty($params['query']) || empty($query_parts)) {
+		return ['entities' => [], 'count' => 0];
 	}
 	
 	if (!isset($tag_name_ids)) {
+		$tag_name_ids = false;
 		if ($valid_tag_names = elgg_get_registered_tag_metadata_names()) {
-			$tag_name_ids = array();
-			foreach ($valid_tag_names as $tag_name) {
-				$tag_name_ids[] = elgg_get_metastring_id($tag_name);
-			}
-		} else {
-			$tag_name_ids = false;
+			$tag_name_ids = search_advanced_get_metastring_ids($valid_tag_names);
 		}
 	}
 	
-	$params["joins"] = elgg_extract("joins", $params, array());
+	$params['joins'] = elgg_extract('joins', $params, []);
 	
-	if ($tag_name_ids) {
-		$params["joins"][] = "JOIN {$db_prefix}objects_entity oe ON e.guid = oe.guid";
-	} else {
-		$params["joins"][] = "JOIN {$db_prefix}objects_entity oe ON e.guid = oe.guid";
-	}
+	$db_prefix = elgg_get_config('dbprefix');
 	
-	$fields = array('title', 'description');
+	$params["joins"][] = "JOIN {$db_prefix}objects_entity oe ON e.guid = oe.guid";
 	
 	if ($params["subtype"] === "page") {
+		// @todo move this to a custom entity search hook and change params, or even move to core
 		$params["subtype"] = array("page", "page_top");
 	}
-
-	if ($params["subtype"] === "groupforumtopic") {
-		$params["subtype"] = array("groupforumtopic", "discussion_reply");
-	}
 	
-	$where = search_advanced_get_where_sql('oe', $fields, $params, FALSE);
+	$fields = ['title', 'description'];
+	$where = search_advanced_get_where_sql('oe', $fields, $params, false);
 
-	$params["wheres"] = elgg_extract("wheres", $params, array());
+	$params["wheres"] = elgg_extract("wheres", $params, []);
 	
 	if ($tag_name_ids) {
 		// look up value ids to save a join
 		if (!isset($tag_value_ids)) {
-			$tag_value_ids = array();
-			
-			foreach ($query_parts as $query_part) {
-				$metastring_ids = elgg_get_metastring_id($query_part, false);
-				if (!is_array($metastring_ids)) {
-					$metastring_ids = array($metastring_ids);
-				}
-				$tag_value_ids = array_merge($tag_value_ids, $metastring_ids);
-			}
+			$tag_value_ids = search_advanced_get_metastring_ids($query_parts);
 		}
 		
 		if (empty($tag_value_ids)) {
@@ -121,60 +100,61 @@ function search_advanced_objects_hook($hook, $type, $value, $params) {
 		$params['wheres'][] = $where;
 	}
 	
-	$params['count'] = TRUE;
+	$params['count'] = true;
 	$count = elgg_get_entities($params);
 	
 	// no need to continue if nothing here.
-	if (!$count || ($params["search_advanced_count_only"] == true)) {
-		return array('entities' => array(), 'count' => $count);
+	if (!$count || ($params['search_advanced_count_only'] == true)) {
+		return ['entities' => [], 'count' => $count];
 	}
 		
-	$params['count'] = FALSE;
+	$params['count'] = false;
 	$entities = elgg_get_entities($params);
 
 	// add the volatile data for why these entities have been returned.
 	foreach ($entities as $entity) {
-		if ($valid_tag_names) {
-			$matched_tags_strs = array();
-	
-			// get tags for each tag name requested to find which ones matched.
-			foreach ($valid_tag_names as $tag_name) {
-				$tags = $entity->getTags($tag_name);
-	
-				// @todo make one long tag string and run this through the highlight
-				// function.  This might be confusing as it could chop off
-				// the tag labels.
-				if (isset($query_parts)) {
-					foreach ($query_parts as $part) {
-						if (in_array(strtolower($part), array_map('strtolower', $tags))) {
-							if (is_array($tags)) {
-								$tag_name_str = elgg_echo("tag_names:$tag_name");
-								$matched_tags_strs[] = "$tag_name_str: " . implode(', ', $tags);
-								// only need it once for each tag
-								break;
-							}
-						}
-					}
-				}
-			}
-			
-			$tags_str = implode('. ', $matched_tags_strs);
-			$tags_str = search_get_highlighted_relevant_substrings($tags_str, $params['query']);
-	
-			$entity->setVolatileData('search_matched_extra', $tags_str);
-		}
-		
 		$title = search_get_highlighted_relevant_substrings($entity->title, $params['query']);
 		$entity->setVolatileData('search_matched_title', $title);
 
 		$desc = search_get_highlighted_relevant_substrings($entity->description, $params['query']);
 		$entity->setVolatileData('search_matched_description', $desc);
+		
+		if (empty($valid_tag_names)) {
+			continue;
+		}
+		
+		$matched_tags_strs = [];
+		
+		// get tags for each tag name requested to find which ones matched.
+		foreach ($valid_tag_names as $tag_name) {
+			$tags = $entity->getTags($tag_name);
+		
+			// @todo make one long tag string and run this through the highlight
+			// function.  This might be confusing as it could chop off
+			// the tag labels.
+		
+			foreach ($query_parts as $part) {
+				if (in_array(strtolower($part), array_map('strtolower', $tags))) {
+					if (is_array($tags)) {
+						$tag_name_str = elgg_echo("tag_names:$tag_name");
+						$matched_tags_strs[] = "$tag_name_str: " . implode(', ', $tags);
+						// only need it once for each tag
+						break;
+					}
+				}
+			}
+		}
+			
+		$tags_str = implode('. ', $matched_tags_strs);
+		$tags_str = search_get_highlighted_relevant_substrings($tags_str, $params['query']);
+		
+		$entity->setVolatileData('search_matched_extra', $tags_str);
 	}
 
-	return array(
+	return [
 		'entities' => $entities,
 		'count' => $count,
-	);
+	];
 }
 
 /**
@@ -196,13 +176,16 @@ function search_advanced_groups_hook($hook, $type, $value, $params) {
 		return;
 	}
 	
-	$db_prefix = elgg_get_config('dbprefix');
-
-	$query = sanitise_string($params['query']);
 	$query_parts = (array) search_advanced_tag_query_to_array($params['query']);
-	if (empty($query_parts)) {
-		return array('entities' => array(), 'count' => 0);
+	if (empty($params['query']) || empty($query_parts)) {
+		return ['entities' => [], 'count' => 0];
 	}
+	
+	$fields = ['name', 'description'];
+	
+	$where = search_advanced_get_where_sql('ge', $fields, $params, FALSE);
+	
+	$db_prefix = elgg_get_config('dbprefix');
 	
 	$profile_fields = array_keys(elgg_get_config('group'));
 	if ($profile_fields) {
@@ -216,12 +199,6 @@ function search_advanced_groups_hook($hook, $type, $value, $params) {
 		$params['joins'] = array($join);
 	}
 	
-	$fields = array('name', 'description');
-
-	// force into boolean mode because we've having problems with the
-	// "if > 50% match 0 sets are returns" problem.
-	$where = search_advanced_get_where_sql('ge', $fields, $params, FALSE);
-
 	if ($profile_fields) {
 
 		$profile_field_metadata_search_values = elgg_get_plugin_setting("group_profile_fields_metadata_search", "search_advanced", array());
@@ -229,24 +206,28 @@ function search_advanced_groups_hook($hook, $type, $value, $params) {
 			$profile_field_metadata_search_values = json_decode($profile_field_metadata_search_values, true);
 		}
 			
-		$tag_name_ids = [];
-		foreach ($profile_fields as $field) {
-			if (!in_array($field, $profile_field_metadata_search_values)) {
-				$tag_name_ids[] = elgg_get_metastring_id($field);
+		foreach ($profile_fields as $key => $field) {
+			if (in_array($field, $profile_field_metadata_search_values)) {
+				unset($profile_fields[$key]);
 			}
 		}
-				
-		$likes = [];
+		
+		$tag_name_ids = search_advanced_get_metastring_ids($profile_fields);
 
-		foreach ($query_parts as $query_value) {
-			$query_value = sanitise_string($query_value);
-			if (!empty($query_value)) {
-				$likes[] = "msv.string LIKE '%$query_value%'";
+		if ($tag_name_ids) {
+			$likes = [];
+			foreach ($query_parts as $query_value) {
+				$query_value = sanitise_string($query_value);
+				if (!empty($query_value)) {
+					$likes[] = "msv.string LIKE '%$query_value%'";
+				}
 			}
+							
+			$md_where = "((md.name_id IN (" . implode(",", $tag_name_ids) . ")) AND (" . implode(" OR ", $likes) . "))";
+			$params['wheres'] = array("(($where) OR ($md_where))");
+		} else {
+			$params['wheres'] = array($where);
 		}
-						
-		$md_where = "((md.name_id IN (" . implode(",", $tag_name_ids) . ")) AND (" . implode(" OR ", $likes) . "))";
-		$params['wheres'] = array("(($where) OR ($md_where))");
 	} else {
 		$params['wheres'] = array($where);
 	}
@@ -259,12 +240,14 @@ function search_advanced_groups_hook($hook, $type, $value, $params) {
 	
 	// no need to continue if nothing here.
 	if (!$count || ($params["search_advanced_count_only"] == true)) {
-		return array('entities' => array(), 'count' => $count);
+		return ['entities' => [], 'count' => $count];
 	}
 	
 	$params['count'] = FALSE;
 	$entities = elgg_get_entities($params);
 
+	$query = sanitise_string($params['query']);
+	
 	// add the volatile data for why these entities have been returned.
 	foreach ($entities as $entity) {
 		$name = search_get_highlighted_relevant_substrings($entity->name, $query);
@@ -274,10 +257,10 @@ function search_advanced_groups_hook($hook, $type, $value, $params) {
 		$entity->setVolatileData('search_matched_description', $description);
 	}
 
-	return array(
+	return [
 		'entities' => $entities,
 		'count' => $count,
-	);
+	];
 }
 
 /**
@@ -302,37 +285,36 @@ function search_advanced_users_hook($hook, $type, $value, $params) {
 	}
 	
 	$db_prefix = elgg_get_config('dbprefix');
-	$query = sanitise_string($params['query']);
-	$query_parts = (array) search_advanced_tag_query_to_array($params['query']);
-	if (empty($query_parts)) {
-		return array('entities' => array(), 'count' => 0);
-	}
-	
-	$params['joins'] = array(
+	$params['joins'] = [
 		"JOIN {$db_prefix}users_entity ue ON e.guid = ue.guid",
 		"JOIN {$db_prefix}metadata md on e.guid = md.entity_guid",
 		"JOIN {$db_prefix}metastrings msv ON md.value_id = msv.id"
-	);
+	];
 	
 	if (isset($params["container_guid"])) {
-		$entity = get_entity($params["container_guid"]);
+		$container_entity = get_entity($params["container_guid"]);
 	}
 	
-	if (isset($entity) && $entity instanceof ElggGroup) {
+	if (isset($container_entity) && $container_entity instanceof ElggGroup) {
 		// check for group membership relation
 		$params["relationship"] = "member";
 		$params["relationship_guid"] = $params["container_guid"];
-		$params["inverse_relationship"] = TRUE;
+		$params["inverse_relationship"] = false;
 		
 		unset($params["container_guid"]);
 	} else {
 		// check for site relation ship
 		$params["relationship"] = "member_of_site";
 		$params["relationship_guid"] = elgg_get_site_entity()->getGUID();
-		$params["inverse_relationship"] = TRUE;
+		$params["inverse_relationship"] = true;
 	}
 	
 	if (!empty($params["query"])) {
+		$query_parts = (array) search_advanced_tag_query_to_array($params['query']);
+		if (empty($query_parts)) {
+			return ['entities' => [], 'count' => 0];
+		}
+		
 		$fields = array('username', 'name');
 		$where = search_advanced_get_where_sql('ue', $fields, $params, FALSE);
 		
@@ -346,12 +328,15 @@ function search_advanced_users_hook($hook, $type, $value, $params) {
 			}
 			
 			$tag_name_ids = [];
-			foreach ($profile_fields as $field) {
-				if (!in_array($field, $profile_field_metadata_search_values)) {
-					$tag_name_ids[] = elgg_get_metastring_id($field);
+			
+			foreach ($profile_fields as $key => $field) {
+				if (in_array($field, $profile_field_metadata_search_values)) {
+					unset($profile_fields[$key]);
 				}
 			}
 			
+			$tag_name_ids = search_advanced_get_metastring_ids($profile_fields);
+					
 			if (!empty($tag_name_ids)) {
 				$likes = [];
 				
@@ -373,7 +358,7 @@ function search_advanced_users_hook($hook, $type, $value, $params) {
 	
 	$profile_fields = $params["profile_filter"];
 	if (!empty($profile_fields)) {
-		$profile_field_likes = array();
+		$profile_field_likes = [];
 		$profile_soundex = $params["profile_soundex"];
 		$i = 0;
 		foreach ($profile_fields as $field_name => $field_value) {
@@ -402,6 +387,7 @@ function search_advanced_users_hook($hook, $type, $value, $params) {
 				}
 			}
 		}
+		
 		if (!empty($profile_field_likes)) {
 			$profile_field_where = "(" . implode(" AND ", $profile_field_likes) . ")";
 			
@@ -420,30 +406,32 @@ function search_advanced_users_hook($hook, $type, $value, $params) {
 	// override subtype -- All users should be returned regardless of subtype.
 	$params['subtype'] = ELGG_ENTITIES_ANY_VALUE;
 
-	$params['count'] = TRUE;
+	$params['count'] = true;
 	$count = elgg_get_entities_from_relationship($params);
 
 	// no need to continue if nothing here.
 	if (!$count || ($params["search_advanced_count_only"] == true)) {
-		return array('entities' => array(), 'count' => $count);
+		return ['entities' => [], 'count' => $count];
 	}
 	
-	$params['count'] = FALSE;
+	$params['count'] = false;
 	$entities = elgg_get_entities_from_relationship($params);
 
+	$query = sanitise_string($params['query']);
+	
 	// add the volatile data for why these entities have been returned.
 	foreach ($entities as $entity) {
-		$username = search_get_highlighted_relevant_substrings($entity->username, $query);
-		$entity->setVolatileData('search_matched_title', $username);
-
 		$name = search_get_highlighted_relevant_substrings($entity->name, $query);
-		$entity->setVolatileData('search_matched_description', $name);
+		$entity->setVolatileData('search_matched_title', $name);
+		
+		$username = search_get_highlighted_relevant_substrings($entity->username, $query);
+		$entity->setVolatileData('search_matched_description', $username);
 	}
 
-	return array(
+	return [
 		'entities' => $entities,
 		'count' => $count,
-	);
+	];
 }
 
 /**
