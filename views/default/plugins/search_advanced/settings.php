@@ -63,6 +63,8 @@ echo '</div>';
 
 $body = '';
 
+$body .= elgg_format_element('div',['class' => 'elgg-admin-notices'], elgg_autop(elgg_echo('search_advanced:settings:profile_fields:disclaimer')));
+
 if (elgg_is_active_plugin('groups')) {
 	elgg_require_js('search_advanced/settings');
 	$tabs = array(
