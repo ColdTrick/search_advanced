@@ -118,6 +118,7 @@ form.elgg-search {
 	padding: 5px 10px;
 	color: #444;
 	text-decoration: none;
+	white-space: nowrap;
 }
 
 .elgg-menu-search-list .elgg-child-menu li.elgg-state-selected a {
