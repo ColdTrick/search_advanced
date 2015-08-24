@@ -108,6 +108,8 @@ form.elgg-search {
 	background: white;
 	border: 1px solid #CCC;
 	
+	z-index: 1;
+	
 	border-radius: 0 0 3px 3px;
 	box-shadow: 1px 3px 5px rgba(0, 0, 0, 0.25);
 }
