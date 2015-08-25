@@ -15,6 +15,7 @@ if (elgg_get_plugin_setting('search_with_loader', 'search_advanced') == 'yes') {
 
 $title = elgg_extract('title', $vars);
 $content = elgg_extract('body', $vars);
+$class = elgg_extract('class', $vars);
 
 // register menu items
 search_advanced_register_menu_items($vars);
@@ -47,7 +48,8 @@ if (!elgg_is_xhr() || ($search_with_loader && $loader)) {
 if (!elgg_is_xhr() || $loader) {
 	echo elgg_view_layout('one_sidebar', [
 		'title' => $title,
-		'content' => $content
+		'content' => $content,
+		'class' => $class
 	]);
 } else {
 	echo $content;
