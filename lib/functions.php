@@ -74,8 +74,6 @@ function search_advanced_get_where_sql($table, $fields, $params, $use_fulltext =
  * @return void
  */
 function search_advanced_register_menu_items($params) {
-	$types = elgg_extract('types', $params, []);
-	$custom_types = elgg_extract('custom_types', $params, []);
 	$search_params = elgg_extract('params', $params, []);
 	$search_result_counters = elgg_extract('search_result_counters', $params, []);
 	
@@ -131,8 +129,6 @@ function search_advanced_register_menu_items($params) {
  * @return array
  */
 function search_advanced_get_combined_search_counters($params) {
-	$result = [];
-	
 	$search_params = elgg_extract('search_params', $params);
 	
 	$db_prefix = elgg_get_config('dbprefix');

@@ -45,6 +45,6 @@ elgg.search_advanced.init_type_selection = function() {
 	$(document).click(function() {
 		$(".search-advanced-type-selection-dropdown").hide();
 	});
-}
+};
 
 elgg.register_hook_handler('init', 'system', elgg.search_advanced.init_type_selection);

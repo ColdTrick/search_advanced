@@ -21,6 +21,6 @@ elgg.search_advanced.init_ajax_submit = function() {
 		
 		return false;
 	});
-}
+};
 
 elgg.register_hook_handler('init', 'system', elgg.search_advanced.init_ajax_submit);

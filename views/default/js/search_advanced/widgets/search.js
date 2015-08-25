@@ -12,6 +12,6 @@ elgg.search_advanced.init_widget_search = function() {
 		$target.load($(this).attr("action"), $(this).serialize()).addClass("mtm");
 		e.preventDefault();
 	});
-}
+};
 
 elgg.register_hook_handler('init', 'system', elgg.search_advanced.init_widget_search);

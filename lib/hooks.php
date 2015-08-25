@@ -187,19 +187,15 @@ function search_advanced_groups_hook($hook, $type, $value, $params) {
 	
 	$db_prefix = elgg_get_config('dbprefix');
 	
+	$params['joins'] = ["JOIN {$db_prefix}groups_entity ge ON e.guid = ge.guid"];
+	
 	$profile_fields = array_keys(elgg_get_config('group'));
-	if ($profile_fields) {
-		$params['joins'] = array(
+	if (!empty($profile_fields)) {
+		$params['joins'] = [
 			"JOIN {$db_prefix}groups_entity ge ON e.guid = ge.guid",
 			"JOIN {$db_prefix}metadata md on e.guid = md.entity_guid",
 			"JOIN {$db_prefix}metastrings msv ON md.value_id = msv.id"
-		);
-	} else {
-		$join = "JOIN {$db_prefix}groups_entity ge ON e.guid = ge.guid";
-		$params['joins'] = array($join);
-	}
-	
-	if ($profile_fields) {
+		];
 
 		$profile_field_metadata_search_values = elgg_get_plugin_setting("group_profile_fields_metadata_search", "search_advanced", array());
 		if (!empty($profile_field_metadata_search_values)) {
@@ -320,14 +316,12 @@ function search_advanced_users_hook($hook, $type, $value, $params) {
 		
 		// profile fields
 		$profile_fields = array_keys(elgg_get_config('profile_fields'));
-		if ($profile_fields) {
+		if (!empty($profile_fields)) {
 			
 			$profile_field_metadata_search_values = elgg_get_plugin_setting("user_profile_fields_metadata_search", "search_advanced", array());
 			if (!empty($profile_field_metadata_search_values)) {
 				$profile_field_metadata_search_values = json_decode($profile_field_metadata_search_values, true);
 			}
-			
-			$tag_name_ids = [];
 			
 			foreach ($profile_fields as $key => $field) {
 				if (in_array($field, $profile_field_metadata_search_values)) {

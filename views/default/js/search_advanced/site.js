@@ -18,6 +18,6 @@ elgg.search_advanced.init = function() {
 	$(document).click(function() {
 		$('.elgg-menu-search-list .elgg-child-menu').hide();
 	});
-}
+};
 
 elgg.register_hook_handler('init', 'system', elgg.search_advanced.init);

@@ -66,6 +66,6 @@ elgg.search_advanced.init_autocomplete = function() {
 			$(this).autocomplete("destroy");
 		});
 	});
-}
+};
 
 elgg.register_hook_handler('init', 'system', elgg.search_advanced.init_autocomplete);

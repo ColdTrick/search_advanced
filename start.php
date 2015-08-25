@@ -1,4 +1,7 @@
 <?php
+/**
+ * Main file for the Search Advanced plugin
+ */
 
 require_once(dirname(__FILE__) . '/lib/functions.php');
 require_once(dirname(__FILE__) . '/lib/hooks.php');

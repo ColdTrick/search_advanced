@@ -254,7 +254,7 @@ if ($combine_search_results && ($search_type == 'all') && !empty($params["query"
 		
 		// determine menu counters
 		$totals = search_advanced_get_combined_search_counters(['search_params' => $current_params]);
-		if ($totals) {
+		if (!empty($totals)) {
 			foreach ($totals as $row) {
 				$search_result_counters["item:object:{$row->subtype}"] = $row->total;
 			}
