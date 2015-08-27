@@ -531,7 +531,8 @@ function search_advanced_register_menu_list($hook, $type, $value, $params) {
 		'name' => 'list',
 		'text' => elgg_view_icon('list'),
 		'href' => '#',
-		'title' => $title
+		'title' => $title,
+		'priority' => 999
 	]);
 
 	$result[] = ElggMenuItem::factory([
