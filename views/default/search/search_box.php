@@ -40,7 +40,7 @@ $form_body = '<table><tr>';
 if (elgg_extract('show_type_selection', $vars, true)) {
 	$form_body .= '<td>' . elgg_view("search_advanced/search/type_selection") . '</td>';
 }
-$form_body .= '<td style="width: 100%">';
+$form_body .= '<td>';
 $form_body .= elgg_view('input/text', [
 	'class' => 'search-input',
 	'size' => '21',
