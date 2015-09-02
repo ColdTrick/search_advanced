@@ -137,6 +137,9 @@ foreach ($types as $type => $subtypes) {
 			// if $results = FALSE => someone is saying not to display these types in searches.
 			continue;
 		}
+
+		// save result count
+		$search_result_counters["item:" . $type] = $results['count'];
 		
 		if (!is_array($results['entities']) || empty($results['count'])) {
 			// no results, so no need for any output
@@ -148,10 +151,7 @@ foreach ($types as $type => $subtypes) {
 			// no output view, so skip this
 			continue;
 		}
-			
-		// save result count
-		$search_result_counters["item:" . $type] = $results['count'];
-			
+					
 		if ($current_params['search_advanced_count_only'] === true) {
 			// only interested in count so skip to next
 			continue;
@@ -208,14 +208,14 @@ foreach ($types as $type => $subtypes) {
 			$results = elgg_trigger_plugin_hook('search', $type, $current_params, array());
 		}
 
+		// save result count
+		$search_result_counters["item:{$type}:{$subtype}"] = $results['count'];
+		
 		if (!is_array($results['entities']) || empty($results['count'])) {
 			// no results, so no need for any output
 			continue;
 		}
-			
-		// save result count
-		$search_result_counters["item:{$type}:{$subtype}"] = $results['count'];
-			
+
 		if ($current_params['search_advanced_count_only'] === true) {
 			// only interested in count so skip to next
 			continue;
