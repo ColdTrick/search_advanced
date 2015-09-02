@@ -304,7 +304,19 @@ if (is_array($custom_types) && !empty($params["query"])) {
 $searched_words = search_remove_ignored_words($display_query, 'array');
 $highlighted_query = search_highlight_words($searched_words, $display_query);
 
-$title = elgg_echo('search:results', array("\"$highlighted_query\""));
+
+$result_keys = array_keys($results_html);
+
+$total = 0;
+foreach ($result_keys as $key) {
+	if ($key === 'all:combined') {
+		$total = array_sum($search_result_counters);
+		break;
+	}
+	$total += $search_result_counters[$key];
+}
+
+$title = elgg_echo('search_advanced:results:title', [$total, "\"$highlighted_query\""]);
 
 $results_html = elgg_trigger_plugin_hook('search_results', 'search', ['orig_results' => $results_html], $results_html);
 
