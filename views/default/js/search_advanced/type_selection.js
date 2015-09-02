@@ -40,6 +40,12 @@ elgg.search_advanced.init_type_selection = function() {
 		}
 		
 		$(".search-advanced-type-selection-dropdown").hide();
+		
+		var $form = $(this).parents('form');
+		var q = $form.find('[name="q"]').val();
+		if (q) {
+			$form.submit();
+		}
 	});
 
 	$(document).on('click', function() {
