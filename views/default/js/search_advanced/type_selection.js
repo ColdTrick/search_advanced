@@ -1,17 +1,17 @@
 elgg.provide("elgg.search_advanced");
 
 elgg.search_advanced.init_type_selection = function() {
-	$(".search-advanced-type-selection > li > a").click(function(e) {
+	$(document).on('click', '.search-advanced-type-selection > li > a', function(e) {
 		$(this).next().show();
 		e.preventDefault();
 		e.stopPropagation();
 	});
 
-	$(".search-advanced-type-selection-dropdown").click(function(e) {
+	$(document).on('click', '.search-advanced-type-selection-dropdown', function(e) {
 		e.stopPropagation();
 	});
 
-	$(".search-advanced-type-selection-dropdown a").click(function(e) {
+	$(document).on('click', '.search-advanced-type-selection-dropdown a', function(e) {
 		$(".search-advanced-type-selection > li > a").html($(this).html());
 
 		$(".elgg-search input[name='search_type']").attr("disabled", "disabled");
@@ -42,7 +42,7 @@ elgg.search_advanced.init_type_selection = function() {
 		$(".search-advanced-type-selection-dropdown").hide();
 	});
 
-	$(document).click(function() {
+	$(document).on('click', function() {
 		$(".search-advanced-type-selection-dropdown").hide();
 	});
 };

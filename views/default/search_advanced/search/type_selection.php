@@ -1,6 +1,10 @@
 <?php
 
-elgg_require_js('search_advanced/type_selection');
+if (elgg_is_xhr()) {
+	echo elgg_format_element('script', [], 'require(["search_advanced/type_selection"]);');
+} else {
+	elgg_require_js('search_advanced/type_selection');
+}
 
 $types = get_registered_entity_types();
 $custom_types = elgg_trigger_plugin_hook('search_types', 'get_types', array(), array());

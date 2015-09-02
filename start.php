@@ -29,6 +29,8 @@ function search_advanced_init() {
 	elgg_extend_view('css/elgg', 'css/search_advanced/site');
 	elgg_extend_view('js/elgg', 'js/search_advanced/site.js');
 	
+	elgg_extend_view('page/elements/foot', 'search_advanced/foot', 400);
+		
 	// widgets
 	elgg_register_widget_type('search', elgg_echo('search'), elgg_echo('search'), ['profile', 'dashboard', 'index', 'groups'], true);
 	elgg_register_widget_type('search_user', elgg_echo('search_advanced:widgets:search_user:title'), elgg_echo('search_advanced:widgets:search_user:description'), ['dashboard', 'index']);
