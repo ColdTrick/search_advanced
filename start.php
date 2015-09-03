@@ -24,6 +24,7 @@ function search_advanced_init() {
 		
 	// unregister object:page_top from search
 	elgg_unregister_entity_type('object', 'page_top');
+	elgg_register_plugin_hook_handler('search', 'object:page', 'search_advanced_search_page');
 	
 	// views
 	elgg_extend_view('css/elgg', 'css/search_advanced/site');

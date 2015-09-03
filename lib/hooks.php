@@ -72,11 +72,6 @@ function search_advanced_objects_hook($hook, $type, $value, $params) {
 	
 	$params["joins"][] = "JOIN {$db_prefix}objects_entity oe ON e.guid = oe.guid";
 	
-	if ($params["subtype"] === "page") {
-		// @todo move this to a custom entity search hook and change params, or even move to core
-		$params["subtype"] = array("page", "page_top");
-	}
-	
 	$fields = ['title', 'description'];
 	$where = search_advanced_get_where_sql('oe', $fields, $params, false);
 
@@ -261,8 +256,6 @@ function search_advanced_groups_hook($hook, $type, $value, $params) {
 
 /**
  * Return default results for searches on users.
- *
- * @todo add profile field MD searching
  *
  * @param string       $hook   name of hook
  * @param string       $type   type of hook
@@ -554,4 +547,30 @@ function search_advanced_register_menu_list($hook, $type, $value, $params) {
 	]);
 	
 	return $result;
+}
+
+/**
+ * Search in both page and page_top entities
+ *
+ * @param string $hook   the name of the hook
+ * @param string $type   the type of the hook
+ * @param mixed  $value  the current return value
+ * @param array  $params supplied params
+ */
+function search_advanced_search_page($hook, $type, $value, $params) {
+
+	if (empty($params) || !is_array($params)) {
+		return $value;
+	}
+
+	$subtype = elgg_extract("subtype", $params);
+	if (empty($subtype) || ($subtype !== "page")) {
+		return $value;
+	}
+
+	unset($params["subtype"]);
+	$params["subtypes"] = ["page", "page_top"];
+
+	// trigger the 'normal' object search as it can handle the added options
+	return elgg_trigger_plugin_hook('search', 'object', $params, []);
 }

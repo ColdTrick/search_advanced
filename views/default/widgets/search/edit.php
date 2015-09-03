@@ -9,13 +9,8 @@ foreach ($types as $type => $subtypes) {
 		continue;
 	}
 	
-	// @todo when using index table, can include result counts on each of these.
 	if (is_array($subtypes) && count($subtypes)) {
 		foreach ($subtypes as $subtype) {
-			if ($subtype == 'page_top') {
-				continue;
-			}
-
 			if ($type == 'custom') {
 				$option = elgg_echo("search_types:$subtype");
 			} else {
