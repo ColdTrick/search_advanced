@@ -36,6 +36,8 @@ return array(
 	'search_advanced:widgets:search_user:no_results' => "This widget can not be used, because there are no profile fields configured for user search.",
 
 	'search_advanced:results:title' => "%s results for %s",
+	'search_advanced:results:container:title' => "Showing result in the group: %s",
+	'search_advanced:results:container:undo' => "Undo group filter",
 	
 	'search_advanced:members:sidebar:q:placeholder' => "Search term or name",
 	
