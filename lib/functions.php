@@ -254,8 +254,14 @@ function search_advanced_tag_query_to_array($query) {
 	return search_advanced_query_to_array($query, $separator);
 }
 
-function search_advanced_get_search_url() {
-	return current_page_url();
+function search_advanced_get_search_url($query_elements = []) {
+	$result = current_page_url();
+	
+	if (!empty($query_elements)) {
+		$result = elgg_http_add_url_query_elements($result, $query_elements);
+	}
+	
+	return $result;
 }
 
 function search_advanced_update_list_type() {

@@ -237,6 +237,8 @@ if ($combine_search_results && ($search_type == 'all') && !empty($params["query"
 	
 	if (array_key_exists('object', $types)) {
 		// combined search results only combine objects
+		elgg_push_context('combined_search');
+		
 		$current_params['subtype'] = $types['object'];
 		$results = elgg_trigger_plugin_hook('search', $type, $current_params, array());
 		if (is_array($results['entities']) && $results['count']) {
@@ -259,6 +261,8 @@ if ($combine_search_results && ($search_type == 'all') && !empty($params["query"
 				$search_result_counters["item:object:{$row->subtype}"] = $row->total;
 			}
 		}
+		
+		elgg_pop_context();
 	}
 }
 

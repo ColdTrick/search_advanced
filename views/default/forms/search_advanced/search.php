@@ -28,7 +28,7 @@ if ($container_guid) {
 			'href' => $container_entity->getURL(),
 		]);
 		
-		$undo_url = elgg_http_add_url_query_elements(search_advanced_get_search_url(), ['container_guid' => null]);
+		$undo_url = search_advanced_get_search_url(['container_guid' => null]);
 		
 		$undo_container_link = elgg_view('output/url', [
 			'text' => elgg_view_icon('delete'),
