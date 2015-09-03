@@ -94,6 +94,9 @@ function search_advanced_register_menu_items($params) {
 	$query_parts['container_guid'] = $search_params['container_guid'];
 	
 	foreach ($search_result_counters as $type_subtype => $count) {
+		if (!$count) {
+			continue;
+		}
 		$label = $type_subtype;
 		
 		list($item, $type, $subtype) = explode(':', $type_subtype);
