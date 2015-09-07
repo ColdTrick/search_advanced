@@ -15,11 +15,11 @@ $profile_field_soundex_values = json_decode($profile_field_soundex_values, true)
 $show_placeholder = (bool) elgg_extract('show_placeholder', $vars, false);
 
 $output = array();
-foreach ($profile_field_values as $profile_field) {
-	if (!isset($profile_fields[$profile_field])) {
+foreach ($profile_fields as $profile_field => $field_type) {
+	if (!in_array($profile_field, $profile_field_values)) {
 		continue;
 	}
-
+	
 	$name = $profile_field;
 	if (elgg_language_key_exists("profile:{$profile_field}")) {
 		$name = elgg_echo("profile:{$profile_field}");
