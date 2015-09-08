@@ -109,6 +109,8 @@ function search_advanced_register_menu_items($params) {
 		} else {
 			// custom searches
 			$query_parts['search_type'] = $type;
+			$query_parts['entity_subtype'] = null;
+			$query_parts['entity_type'] = null;
 		}
 		
 		$text = elgg_echo($label) . ' ' . elgg_format_element('span', ['class' => 'elgg-quiet'], "({$count})");
