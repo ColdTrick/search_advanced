@@ -31,7 +31,11 @@ if (function_exists('mb_convert_encoding')) {
 
 $display_query = htmlspecialchars($display_query, ENT_QUOTES, 'UTF-8', false);
 
-$page_title = elgg_echo('search:results', ["\"$display_query\""]);
+if (empty($display_query)) {
+	$page_title = elgg_echo('search:results', ['']);
+} else {
+	$page_title = elgg_echo('search:results', ["\"$display_query\""]);
+}
 
 $vars['page_title'] = $page_title;
 
@@ -306,7 +310,10 @@ if (is_array($custom_types) && !empty($params["query"])) {
 
 // highlight search terms
 $searched_words = search_remove_ignored_words($display_query, 'array');
-$highlighted_query = search_highlight_words($searched_words, $display_query);
+$highlighted_query = '';
+if (!empty($display_query)) {
+	$highlighted_query = search_highlight_words($searched_words, $display_query);
+}
 
 
 $result_keys = array_keys($results_html);
@@ -320,7 +327,11 @@ foreach ($result_keys as $key) {
 	$total += $search_result_counters[$key];
 }
 
-$title = elgg_echo('search_advanced:results:title', [$total, "\"$highlighted_query\""]);
+if (empty($highlighted_query)) {
+	$title = elgg_echo('search_advanced:results:title', [$total, '']);
+} else {
+	$title = elgg_echo('search_advanced:results:title', [$total, "\"$highlighted_query\""]);
+}
 
 $results_html = elgg_trigger_plugin_hook('search_results', 'search', ['orig_results' => $results_html], $results_html);
 
