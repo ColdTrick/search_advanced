@@ -25,6 +25,18 @@ echo elgg_view('input/dropdown', [
 ]);
 echo elgg_format_element('div', ['class'=> 'elgg-subtext'], elgg_echo('search_advanced:settings:filter_position:info'));
 
+echo elgg_format_element('label', [], elgg_echo('search_advanced:settings:search_types_menu_format'));
+echo elgg_view('input/dropdown', [
+	'name' => 'params[search_types_menu_format]',
+	'options_values' => [
+		'menu' => elgg_echo('search_advanced:settings:search_types_menu_format:menu'),
+		'dropdown' => elgg_echo('search_advanced:settings:search_types_menu_format:dropdown'),
+	],
+	'value' => $plugin->search_types_menu_format,
+	'class' => 'mls'
+]);
+echo elgg_format_element('div', ['class'=> 'elgg-subtext'], elgg_echo('search_advanced:settings:search_types_menu_format:info'));
+
 echo elgg_format_element('label', [], elgg_echo('search_advanced:settings:combine_search_results'));
 echo elgg_view('input/dropdown', [
 	'name' => 'params[combine_search_results]',

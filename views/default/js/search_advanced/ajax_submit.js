@@ -9,7 +9,7 @@ elgg.search_advanced.init_ajax_submit = function() {
 		event.preventDefault();
 		
 		$form = $(this);
-		var url = elgg.normalize_url('search?loader=1&' + $form.serialize());
+		var url = elgg.normalize_url('search?' + $form.serialize());
 		
 		elgg.search_advanced.ajax_load_url(url);
 		
@@ -22,17 +22,11 @@ elgg.search_advanced.init_ajax_submit = function() {
 		event.stopPropagation();
 		event.preventDefault();
 		
-		// remove existing loader
-		var href_parts = current_href.split('?');
-		var url = '/search?loader=1&' + href_parts[1];
-		
-		url = elgg.normalize_url(url);
-		
-		elgg.search_advanced.ajax_load_url(url);
+		elgg.search_advanced.ajax_load_url(current_href);
 		
 		return false;
 	});
-	
+		
 	$('.search-advanced-load-content').each(function() {
 		elgg.search_advanced.ajax_load_url($(this).attr('href'));
 	});
@@ -41,8 +35,14 @@ elgg.search_advanced.init_ajax_submit = function() {
 elgg.search_advanced.ajax_load_url = function (url) {
 	require(['elgg/spinner'], function(spinner) {
 		spinner.start();
-				
-		$('.elgg-layout').load(url, function() {
+	
+		// remove existing loader
+		
+		var href_parts = url.split('?');
+		var new_url = '/search?loader=1&' + href_parts[1];
+		new_url = elgg.normalize_url(new_url);		
+		
+		$('.elgg-layout').load(new_url, function() {
 			spinner.stop();
 		});
 	});

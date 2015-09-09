@@ -3,6 +3,10 @@
 return array(
 	'search_advanced:settings:search_hooks_enabled' => "Search Advanced should control the search results",
 	'search_advanced:settings:search_hooks_enabled:info' => "This way you can control if this plugin is providing the search results",
+	'search_advanced:settings:search_types_menu_format' => "How to display search types",
+	'search_advanced:settings:search_types_menu_format:info' => "How should the search types be listed on the results page",
+	'search_advanced:settings:search_types_menu_format:menu' => "As a menu",
+	'search_advanced:settings:search_types_menu_format:dropdown' => "As a dropdown",
 	'search_advanced:settings:filter_position' => "Position of additional content filters",
 	'search_advanced:settings:filter_position:info' => "If additional filter options are available, this settings controls where they are shown.",
 	'search_advanced:settings:filter_position:content' => "On top of the search results",
@@ -48,4 +52,6 @@ return array(
 	'search_advanced:menu:search_list:list:title' => "Change the look of the search results",
 	'search_advanced:menu:search_list:entity' => "Default",
 	'search_advanced:menu:search_list:compact' => "Compact",
+
+	'menu:search_types:header:object' => "Objects",
 );

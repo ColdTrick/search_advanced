@@ -18,6 +18,15 @@ elgg.search_advanced.init = function() {
 	$(document).click(function() {
 		$('.elgg-menu-search-list .elgg-child-menu').hide();
 	});
+	
+	$(document).on('change', 'select.search-advanced-search-types', function() {
+		var url = $(this).val();
+		if (elgg.search_advanced.ajax_load_url == undefined) {
+			document.location = url;
+		} else {
+			elgg.search_advanced.ajax_load_url(url)
+		}
+	});
 };
 
 elgg.register_hook_handler('init', 'system', elgg.search_advanced.init);

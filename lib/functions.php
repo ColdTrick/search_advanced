@@ -87,7 +87,7 @@ function search_advanced_register_menu_items($params) {
 	
 	$query_data = htmlspecialchars(http_build_query($query_parts));
 	
-	elgg_register_menu_item('page', [
+	elgg_register_menu_item('search_types', [
 		'name' => 'all',
 		'text' => elgg_echo('all'),
 		'href' => "search?$query_data"
@@ -120,7 +120,7 @@ function search_advanced_register_menu_items($params) {
 		
 		$data = htmlspecialchars(http_build_query($query_parts));
 			
-		elgg_register_menu_item('page', [
+		elgg_register_menu_item('search_types', [
 			'name' => $label,
 			'text' => $text,
 			'href' => "search?$data",
