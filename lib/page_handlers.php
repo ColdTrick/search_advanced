@@ -34,14 +34,9 @@ function search_advanced_search_page_handler($page) {
 	// maintain backward compatibility
 	if (!get_input("q", get_input("tag", NULL)) && isset($page[0])) {
 		set_input("q", $page[0]);
-		//set_input("search_type", "tags");
+		set_input("search_type", "tags");
 	}
-	
-	// as there is no tags search any more, replace it with ALL search
-	if (get_input("search_type") == "tags") {
-		set_input("search_type", "all");
-	}
-	
+		
 	search_advanced_update_list_type();
 	
 	include_once(dirname(dirname(__FILE__)) . "/pages/search/index.php");

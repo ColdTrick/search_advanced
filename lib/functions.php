@@ -11,6 +11,7 @@ function search_advanced_prepare_search_hooks() {
 	elgg_unregister_plugin_hook_handler('search', 'object', 'search_objects_hook');
 	elgg_unregister_plugin_hook_handler('search', 'user', 'search_users_hook');
 	elgg_unregister_plugin_hook_handler('search', 'group', 'search_groups_hook');
+	elgg_unregister_plugin_hook_handler('search', 'tags', 'search_tags_hook');
 	
 	// register search advanced search hooks
 	elgg_register_plugin_hook_handler('search', 'object', 'search_advanced_objects_hook');
@@ -23,6 +24,8 @@ function search_advanced_prepare_search_hooks() {
 	elgg_register_plugin_hook_handler('search', 'object', 'search_advanced_fallback_search_hook', 9000);
 	elgg_register_plugin_hook_handler('search', 'user', 'search_advanced_fallback_search_hook', 9000);
 	elgg_register_plugin_hook_handler('search', 'group', 'search_advanced_fallback_search_hook', 9000);
+	elgg_register_plugin_hook_handler('search', 'tags', 'search_advanced_fallback_search_hook', 9000);
+
 }
 
 /**

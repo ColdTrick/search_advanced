@@ -14,21 +14,7 @@
  * @return array
  */
 function search_advanced_custom_types_hook($hook, $type, $value, $params) {
-	if (!is_array($value)) {
-		return;
-	}
-	
-	if (elgg_get_plugin_setting('search_hooks_enabled', 'search_advanced', 'yes') == 'no') {
-		return;
-	}
-	
-	$tags_key = array_search('tags', $value);
-	if ($tags_key === false) {
-		return;
-	}
-	
-	unset($value[$tags_key]);
-	return $value;
+
 }
 
 /**
@@ -436,7 +422,7 @@ function search_advanced_fallback_search_hook($hook, $type, $value, $params) {
 		return;
 	}
 	
-	if (!in_array($type, ['object', 'user', 'group'])) {
+	if (!in_array($type, ['object', 'user', 'group', 'tags'])) {
 		return;
 	}
 	
@@ -447,6 +433,8 @@ function search_advanced_fallback_search_hook($hook, $type, $value, $params) {
 			return search_users_hook($hook, $type, $value, $params);
 		case 'group':
 			return search_groups_hook($hook, $type, $value, $params);
+		case 'tags':
+			return search_tags_hook($hook, $type, $value, $params);
 	}
 }
 
