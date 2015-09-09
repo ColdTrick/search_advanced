@@ -3,6 +3,10 @@
 return array(
 	'search_advanced:settings:search_hooks_enabled' => "Search Advanced should control the search results",
 	'search_advanced:settings:search_hooks_enabled:info' => "This way you can control if this plugin is providing the search results",
+	'search_advanced:settings:filter_position' => "Position of additional content filters",
+	'search_advanced:settings:filter_position:info' => "If additional filter options are available, this settings controls where they are shown.",
+	'search_advanced:settings:filter_position:content' => "On top of the search results",
+	'search_advanced:settings:filter_position:sidebar' => "In the sidebar",
 	'search_advanced:settings:combine_search_results' => "Combine search results",
 	'search_advanced:settings:combine_search_results:info' => "This will show a combined list of the most recently created content based on your search query. There will be no more grouping on the 'all' page. Filtering with the side menu is still possible.",
 	'search_advanced:settings:enable_multi_tag' => "Enable multi tag search",

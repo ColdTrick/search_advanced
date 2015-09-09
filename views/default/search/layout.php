@@ -46,9 +46,12 @@ if (!elgg_is_xhr() || ($search_with_loader && $loader)) {
 }
 
 if (!elgg_is_xhr() || $loader) {
+	$sidebar = elgg_view('search/sidebar', $vars);
+	
 	echo elgg_view_layout('one_sidebar', [
 		'title' => $title,
 		'content' => $content,
+		'sidebar' => $sidebar,
 		'class' => $class
 	]);
 } else {

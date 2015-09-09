@@ -12,7 +12,14 @@ $profile_field_values = json_decode($profile_field_values, true);
 $profile_field_soundex_submit_values = (array) get_input("search_advanced_profile_fields_soundex");
 $profile_field_soundex_values = json_decode($profile_field_soundex_values, true);
 
-$show_placeholder = (bool) elgg_extract('show_placeholder', $vars, false);
+$show_placeholder_default = false;
+$show_label_default = true;
+if (elgg_extract('filter_position', $vars) === 'sidebar') {
+	$show_placeholder_default = true;
+	$show_label_default = false;
+}
+$show_placeholder = (bool) elgg_extract('show_placeholder', $vars, $show_placeholder_default);
+$show_label = (bool) elgg_extract('show_label', $vars, $show_label_default);
 
 $output = array();
 foreach ($profile_fields as $profile_field => $field_type) {
@@ -53,7 +60,6 @@ if (empty($output)) {
 }
 
 $show_button = (bool) elgg_extract('show_button', $vars, true);
-$show_label = (bool) elgg_extract('show_label', $vars, true);
 $soundex_newline = (bool) elgg_extract('soundex_newline', $vars, elgg_in_context('widgets'));
 
 foreach ($output as $row) {

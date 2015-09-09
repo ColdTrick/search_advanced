@@ -13,6 +13,18 @@ $separator_options = [
 	'space' => elgg_echo('search_advanced:settings:multi_tag_separator:space'),
 ];
 
+echo elgg_format_element('label', [], elgg_echo('search_advanced:settings:filter_position'));
+echo elgg_view('input/dropdown', [
+	'name' => 'params[filter_position]',
+	'options_values' => [
+		'content' => elgg_echo('search_advanced:settings:filter_position:content'),
+		'sidebar' => elgg_echo('search_advanced:settings:filter_position:sidebar'),
+	],
+	'value' => $plugin->filter_position,
+	'class' => 'mls'
+]);
+echo elgg_format_element('div', ['class'=> 'elgg-subtext'], elgg_echo('search_advanced:settings:filter_position:info'));
+
 echo elgg_format_element('label', [], elgg_echo('search_advanced:settings:combine_search_results'));
 echo elgg_view('input/dropdown', [
 	'name' => 'params[combine_search_results]',

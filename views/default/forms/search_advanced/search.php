@@ -47,6 +47,5 @@ if ($container_guid) {
 
 echo elgg_view("input/submit", ["value" => elgg_echo("submit"), "class" => "hidden"]);
 
-if ($type === 'user') {
-	echo elgg_view('search_advanced/search/user', $vars);
-}
+$vars['filter_position'] = 'content';
+echo elgg_view('search/filter', $vars);
