@@ -96,6 +96,18 @@ function search_advanced_register_menu_items($params) {
 	$query_parts['owner_guid'] = $search_params['owner_guid'];
 	$query_parts['container_guid'] = $search_params['container_guid'];
 	
+	$searched_search_type = elgg_extract('search_type', $search_params);
+	$searched_type = elgg_extract('type', $search_params);
+	$searched_subtype = elgg_extract('subtype', $search_params);
+	
+	if ($searched_search_type == 'entities') {
+		$searched_search_type = 'item';
+	} else {
+		$searched_type = $searched_search_type;
+		$searched_search_type = 'search_types';
+	}
+	$searched_typesubtype = rtrim(implode(':', [$searched_search_type, $searched_type, $searched_subtype]), ':');
+	
 	foreach ($search_result_counters as $type_subtype => $count) {
 		if (!$count) {
 			continue;
@@ -117,13 +129,14 @@ function search_advanced_register_menu_items($params) {
 		}
 		
 		$text = elgg_echo($label) . ' ' . elgg_format_element('span', ['class' => 'elgg-quiet'], "({$count})");
-		
+
 		$data = htmlspecialchars(http_build_query($query_parts));
-			
+				
 		elgg_register_menu_item('search_types', [
 			'name' => $label,
 			'text' => $text,
 			'href' => "search?$data",
+			'selected' => ($type_subtype == $searched_typesubtype),
 			'section' => ($type == 'object') ? $type : 'default'
 		]);
 	}
