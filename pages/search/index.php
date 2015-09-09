@@ -276,6 +276,8 @@ if (is_array($custom_types) && !empty($params["query"])) {
 
 		$current_params = $params;
 		$current_params['search_type'] = $type;
+		$current_params['subtype'] = ELGG_ENTITIES_ANY_VALUE;
+		$current_params['type'] = ELGG_ENTITIES_ANY_VALUE;
 		
 		if ($search_type != 'all' && $search_type != $type) {
 			// only want count if doing specific search
