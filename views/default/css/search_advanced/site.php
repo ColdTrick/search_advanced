@@ -129,3 +129,6 @@ form.elgg-search {
 	color: #444;
 }
 	
+select.search-advanced-search-types {
+	max-width: 100%;
+}

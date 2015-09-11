@@ -9,7 +9,7 @@ if (empty($menu)) {
 }
 
 if ($display_format == 'menu') {
-	echo elgg_view('navigation/menu/page', $vars);
+	$body = elgg_view('navigation/menu/page', $vars);
 } else {
 	
 	$options = '';
@@ -31,6 +31,11 @@ if ($display_format == 'menu') {
 		}
 	}
 	
-	echo elgg_format_element('select', ['class' => 'search-advanced-search-types'], $options);
+	$body = elgg_format_element('select', ['class' => 'search-advanced-search-types'], $options);
 }
 
+if (empty($body)) {
+	return;
+}
+
+echo elgg_view_module('aside', elgg_echo('search_advanced:filter:refine'), $body);

@@ -53,5 +53,7 @@ return array(
 	'search_advanced:menu:search_list:entity' => "Default",
 	'search_advanced:menu:search_list:compact' => "Compact",
 
+	'search_advanced:filter:refine' => "Refine the results",
+
 	'menu:search_types:header:object' => "Objects",
 );
