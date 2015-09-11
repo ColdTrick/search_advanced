@@ -38,9 +38,7 @@ $default_params = [
 $query_params = (array) elgg_extract('query_params', $vars, []);
 $query_params = array_merge($default_params, $query_params);
 
-$query = http_build_query($query_params);
-
-$url = elgg_get_site_url() . "search?$query";
+$url = search_advanced_get_search_url();
 
 $more_items = $vars['results']['count'] - ($vars['params']['offset'] + $vars['params']['limit']);
 
