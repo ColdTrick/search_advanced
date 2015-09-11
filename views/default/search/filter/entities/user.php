@@ -1,5 +1,6 @@
 <?php
 
+$search_filter = elgg_extract('search_filter', $vars, []);
 $profile_fields = elgg_get_config("profile_fields");
 $profile_field_values = elgg_get_plugin_setting("user_profile_fields_search_form", "search_advanced");
 $profile_field_soundex_values = elgg_get_plugin_setting("user_profile_fields_search_form_soundex", "search_advanced");
@@ -7,9 +8,9 @@ if (empty($profile_field_values) || empty($profile_fields)) {
 	return;
 }
 
-$submit_values = (array) get_input("search_advanced_profile_fields");
+$submit_values = elgg_extract('profile_fields', $search_filter, []);
 $profile_field_values = json_decode($profile_field_values, true);
-$profile_field_soundex_submit_values = (array) get_input("search_advanced_profile_fields_soundex");
+$profile_field_soundex_submit_values = elgg_extract('profile_fields_soundex', $search_filter, []);
 $profile_field_soundex_values = json_decode($profile_field_soundex_values, true);
 
 $show_placeholder_default = false;
@@ -35,13 +36,13 @@ foreach ($profile_fields as $profile_field => $field_type) {
 	$row = new stdClass();
 	$row->label = $name;
 	$row->input = elgg_view("input/text", array(
-		"name" => "search_advanced_profile_fields[" . $profile_field . "]",
+		"name" => "filter[profile_fields][" . $profile_field . "]",
 		"value" => elgg_extract($profile_field, $submit_values),
 		"placeholder" => $show_placeholder ? $name : '',
 	));
 	if (in_array($profile_field, $profile_field_soundex_values)) {
 		$soundex_options = array(
-			"name" => "search_advanced_profile_fields_soundex[]",
+			"name" => "filter[profile_fields_soundex][]",
 			"value" => $profile_field,
 			"label" => elgg_echo("search_advanced:users:profile_field:soundex")
 		);

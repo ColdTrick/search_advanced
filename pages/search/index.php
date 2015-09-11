@@ -17,8 +17,6 @@ $entity_type = get_input('entity_type');
 // @todo is there an example query to demonstrate ^
 // XSS protection is more important that searching for HTML.
 $query = stripslashes(get_input('q', get_input('tag', '')));
-$profile_filter = get_input('search_advanced_profile_fields');
-$profile_soundex = get_input('search_advanced_profile_fields_soundex');
 
 // @todo - create function for sanitization of strings for display in 1.8
 // encode <,>,&, quotes and characters above 127
@@ -55,13 +53,6 @@ if ($search_with_loader && !elgg_is_xhr()) {
 	return;
 }
 
-// check and show error page
-$error_output = elgg_view('search_advanced/error', $vars);
-if ($error_output) {
-	echo $error_output;
-	return;
-}
-
 if (search_advanced_get_list_type() == 'compact') {
 	$limit = ($search_type == 'all') ? 5 : get_input('limit', 20);
 } else {
@@ -82,11 +73,20 @@ $params = array(
 	'owner_guid' => get_input('owner_guid'),
 	'container_guid' => get_input('container_guid'),
 	'pagination' => ($search_type == 'all') ? false : true,
-	'profile_filter' => $profile_filter,
-	'profile_soundex' => $profile_soundex
+	'search_filter' => (array) get_input('filter', []),
 );
 
 $params = elgg_trigger_plugin_hook('search_params', 'search', $params, $params);
+
+// check and show error page
+$error_vars = $vars;
+$error_vars['params'] = $params;
+$error_output = elgg_view('search_advanced/error', $error_vars);
+
+if ($error_output) {
+	echo $error_output;
+	return;
+}
 
 $types = get_registered_entity_types();
 $custom_types = elgg_trigger_plugin_hook('search_types', 'get_types', $params, array());
@@ -122,8 +122,8 @@ foreach ($types as $type => $subtypes) {
 		if ($type !== "user" && empty($params["query"])) {
 			continue;
 		}
-		
-		if ($type == "user" && empty($params["query"]) && empty($profile_filter)) {
+
+		if ($type == "user" && empty($params["query"]) && empty($params['search_filter']['profile_fields'])) {
 			continue;
 		}
 		// pull in default type entities with no subtypes
