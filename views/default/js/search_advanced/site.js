@@ -24,7 +24,7 @@ elgg.search_advanced.init = function() {
 		if (elgg.search_advanced.ajax_load_url == undefined) {
 			document.location = url;
 		} else {
-			elgg.search_advanced.ajax_load_url(url)
+			elgg.search_advanced.ajax_load_url(url);
 		}
 	});
 };

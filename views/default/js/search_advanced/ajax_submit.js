@@ -42,7 +42,7 @@ elgg.search_advanced.ajax_load_url = function (url) {
 		var new_url = '/search?loader=1&' + href_parts[1];
 		new_url = elgg.normalize_url(new_url);		
 		
-		$('.elgg-layout').load(new_url, function() {
+		$('.elgg-page > .elgg-page-body > .elgg-inner').load(new_url, function() {
 			spinner.stop();
 		});
 	});
