@@ -27,6 +27,20 @@ elgg.search_advanced.init = function() {
 			elgg.search_advanced.ajax_load_url(url);
 		}
 	});
+
+	$(document).on('click', '.search-advanced-search-sidebar-button', function() {
+		$('.elgg-form-search-advanced-search').submit();
+	});
+	
+	$(document).on('submit', 'form.elgg-form-search-advanced-search', function(event) {
+		var $sidebar_input = $('.elgg-sidebar [name^="filter"]');
+		if (!$sidebar_input.length) {
+			return;
+		}
+		
+		var href = elgg.normalize_url('search?' + $sidebar_input.serialize());
+		$(this).append($sidebar_input.clone().hide());
+	});
 };
 
 elgg.register_hook_handler('init', 'system', elgg.search_advanced.init);
