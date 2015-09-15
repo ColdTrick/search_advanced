@@ -106,8 +106,14 @@ foreach ($entities as $entity) {
 
 $header = elgg_format_element('h3', [], $title);
 if ($show_more) {
+	$url = search_advanced_get_search_url([
+		'limit' => null,
+		'search_type' => $search_type,
+		'entity_type' => $type,
+		'entity_subtype' => $subtype,
+	]);
 	$more_link = elgg_view('output/url', [
-		'href' => elgg_http_remove_url_query_element($url, 'limit'),
+		'href' => $url,
 		'text' => elgg_echo('search:more', array($count, $title)),
 		'class' => 'search-more float-alt'
 	]);
