@@ -55,5 +55,6 @@ return array(
 
 	'search_advanced:filter:refine' => "Refine the results",
 
+	'search:filter:entities:user:title' => "Profile fields",
 	'menu:search_types:header:object' => "Objects",
 );

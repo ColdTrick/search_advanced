@@ -15,9 +15,11 @@ $profile_field_soundex_values = json_decode($profile_field_soundex_values, true)
 
 $show_placeholder_default = false;
 $show_label_default = true;
+$module_type_default = false;
 if (elgg_extract('filter_position', $vars) === 'sidebar') {
 	$show_placeholder_default = true;
 	$show_label_default = false;
+	$module_type_default = 'aside';
 }
 $show_placeholder = (bool) elgg_extract('show_placeholder', $vars, $show_placeholder_default);
 $show_label = (bool) elgg_extract('show_label', $vars, $show_label_default);
@@ -35,6 +37,7 @@ foreach ($profile_fields as $profile_field => $field_type) {
 
 	$row = new stdClass();
 	$row->label = $name;
+	$row->class = "search-filter-profile-field-{$profile_field}";
 	$row->input = elgg_view("input/text", array(
 		"name" => "filter[profile_fields][" . $profile_field . "]",
 		"value" => elgg_extract($profile_field, $submit_values),
@@ -60,9 +63,10 @@ if (empty($output)) {
 	return;
 }
 
-$show_button = (bool) elgg_extract('show_button', $vars, true);
+$show_button = (bool) elgg_extract('show_button', $vars, false);
 $soundex_newline = (bool) elgg_extract('soundex_newline', $vars, elgg_in_context('widgets'));
 
+$body = '';
 foreach ($output as $row) {
 	$result = '';
 	
@@ -79,10 +83,19 @@ foreach ($output as $row) {
 
 		$result .= $row->soundex;
 	}
-		
-	echo elgg_format_element('div', [], $result);
+			
+	$body .= elgg_format_element('div', ['class' => $row->class], $result);
 }
 
 if ($show_button) {
-	echo elgg_format_element('div', [], elgg_view("input/submit", ["value" => elgg_echo("search")]));
+	$body .= elgg_format_element('div', [], elgg_view("input/submit", ["value" => elgg_echo("search")]));
+}
+
+$module_type = elgg_extract('module_type', $vars, $module_type_default);
+
+if ($module_type) {
+	$title = elgg_echo('search:filter:entities:user:title');
+	echo elgg_view_module($module_type, $title, $body);
+} else {
+	echo $body;
 }
