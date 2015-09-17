@@ -88,17 +88,7 @@ if ($error_output) {
 	return;
 }
 
-$types = get_registered_entity_types();
-$custom_types = elgg_trigger_plugin_hook('search_types', 'get_types', $params, array());
-
-$object_types = elgg_extract('object', $types);
-if ($object_types) {
-	// the sidebar menu shows objects below other entity types
-	// by moving the object types to the end of the array this will also
-	// make sure that on the search index page they are also listed last
-	unset($types['object']);
-	$types['object'] = $object_types;
-}
+$types = search_advanced_search_get_types();
 
 // to pass the correct current search type to the views
 $current_params = $params;
@@ -108,10 +98,7 @@ $current_params['search_type'] = 'entities';
 // if a plugin returns NULL or '' for subtype, pass to generic type search function.
 // if still NULL or '' or empty(array()) no results found. (== don't show??)
 
-$combine_search_results = false;
-if (elgg_get_plugin_setting('combine_search_results', 'search_advanced') == 'yes') {
-	$combine_search_results = true;
-}
+$combine_search_results = elgg_get_plugin_setting('combine_search_results', 'search_advanced', 'no');
 
 // start the actual search
 $search_result_counters = [];
@@ -133,6 +120,11 @@ foreach ($types as $type => $subtypes) {
 		unset($current_params['search_advanced_count_only']);
 		if ($search_type != 'all' && $entity_type != $type) {
 			// only want count if doing specific search
+			$current_params['search_advanced_count_only'] = true;
+		}
+		
+		if (($combine_search_results == 'all') && ($search_type == 'all')) {
+			// content comes from somewhere else
 			$current_params['search_advanced_count_only'] = true;
 		}
 		
@@ -176,15 +168,15 @@ foreach ($types as $type => $subtypes) {
 		continue;
 	}
 	
-	if ($combine_search_results && $search_type == 'all') {
-		// content and counters come from somewhere else
-		continue;
-	}
-	
 	foreach ($subtypes as $subtype) {
 		unset($current_params['search_advanced_count_only']);
 		if ($search_type !== 'all' && $params['subtype'] !== $subtype) {
 			// only want count if doing specific search
+			$current_params['search_advanced_count_only'] = true;
+		}
+		
+		if (($combine_search_results !== 'no') && ($search_type == 'all')) {
+			// content comes from somewhere else
 			$current_params['search_advanced_count_only'] = true;
 		}
 			
@@ -214,7 +206,7 @@ foreach ($types as $type => $subtypes) {
 
 		// save result count
 		$search_result_counters["item:{$type}:{$subtype}"] = $results['count'];
-		
+
 		if (!is_array($results['entities']) || empty($results['count'])) {
 			// no results, so no need for any output
 			continue;
@@ -233,79 +225,26 @@ foreach ($types as $type => $subtypes) {
 }
 
 // add the combined content search results
-if ($combine_search_results && ($search_type == 'all') && !empty($params["query"])) {
-	$current_params = $params;
-	$current_params['search_type'] = 'entities';
-	$current_params['type'] = 'object';
-	$current_params['limit'] = 20;
-	
-	if (array_key_exists('object', $types)) {
-		// combined search results only combine objects
-		elgg_push_context('combined_search');
-		
-		$current_params['subtype'] = $types['object'];
-		$results = elgg_trigger_plugin_hook('search', $type, $current_params, array());
-		if (is_array($results['entities']) && $results['count']) {
-			if ($view = search_get_search_view($current_params, 'list')) {
-				
-				// reset count to 0 to remove the "view more" url
-				$results['count'] = 0;
-				
-				$results_html['all:combined'] = elgg_view($view, array(
-					'results' => $results,
-					'params' => $current_params,
-				));
-			}
-		}
-		
-		// determine menu counters
-		$totals = search_advanced_get_combined_search_counters(['search_params' => $current_params]);
-		if (!empty($totals)) {
-			foreach ($totals as $row) {
-				$search_result_counters["item:object:{$row->subtype}"] = $row->total;
-			}
-		}
-		
-		elgg_pop_context();
-	}
+$combined_result = search_advanced_search_index_combined_search($combine_search_results, $params);
+if (!empty($combined_result) && isset($combined_result['content'])) {
+	$results_html['all:combined'] = $combined_result['content'];
 }
 
 // call custom searches
-if (is_array($custom_types) && !empty($params["query"])) {
+$custom_types = (array) elgg_trigger_plugin_hook('search_types', 'get_types', $params, []);
+if (!empty($params['query'])) {
 	foreach ($custom_types as $type) {
 
-		$current_params = $params;
-		$current_params['search_type'] = $type;
-		$current_params['subtype'] = ELGG_ENTITIES_ANY_VALUE;
-		$current_params['type'] = ELGG_ENTITIES_ANY_VALUE;
-		
-		if ($search_type != 'all' && $search_type != $type) {
-			// only want count if doing specific search
-			$current_params['search_advanced_count_only'] = true;
-		}
-		
-		$results = elgg_trigger_plugin_hook('search', $type, $current_params, array());
-
-		if ($results === FALSE) {
-			// someone is saying not to display these types in searches.
+		$custom_result = search_advanced_search_index_custom_search($type, $params);
+		if (empty($custom_result)) {
 			continue;
 		}
-		
-		if (isset($results['entities']) && is_array($results['entities']) && $results['count']) {
-			if ($view = search_get_search_view($current_params, 'list')) {
-				$search_result_counters["search_types:" . $type] = $results['count'];
-				if ($current_params['search_advanced_count_only'] !== true) {
-					$results_html["search_types:$type"] = elgg_view($view, array(
-						'results' => $results,
-						'params' => $current_params,
-					));
-				}
-			}
+		if (isset($custom_result['count'])) {
+			$search_result_counters["search_types:$type"] = $custom_result['count'];
 		}
 		
-		if (isset($results["content"])) {
-			// some special case where content is provide via a hook instead of a view
-			$results_html["search_types:$type"] = $results["content"];
+		if (isset($custom_result['content'])) {
+			$results_html["search_types:$type"] = $custom_result['content'];
 		}
 	}
 }
@@ -316,7 +255,6 @@ $highlighted_query = '';
 if (!empty($display_query)) {
 	$highlighted_query = search_highlight_words($searched_words, $display_query);
 }
-
 
 $result_keys = array_keys($results_html);
 

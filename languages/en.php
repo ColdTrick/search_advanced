@@ -13,6 +13,8 @@ return array(
 	'search_advanced:settings:filter_position:sidebar' => "In the sidebar",
 	'search_advanced:settings:combine_search_results' => "Combine search results",
 	'search_advanced:settings:combine_search_results:info' => "This will show a combined list of the most recently created content based on your search query. There will be no more grouping on the 'all' page. Filtering with the side menu is still possible.",
+	'search_advanced:settings:combine_search_results:objects' => "Combine objects",
+	'search_advanced:settings:combine_search_results:all' => "Combine all",
 	'search_advanced:settings:enable_multi_tag' => "Enable multi tag search",
 	'search_advanced:settings:enable_multi_tag:info' => "Search queries will be handled as two separate search queries. The results will be combined. The separator acts as an OR statement. This only applies to the metadata.",
 	'search_advanced:settings:multi_tag_separator' => "Separator",
@@ -57,4 +59,5 @@ return array(
 
 	'search:filter:entities:user:title' => "Profile fields",
 	'menu:search_types:header:object' => "Objects",
+	'search_types:entities' => "Content",
 );

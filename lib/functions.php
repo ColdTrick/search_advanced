@@ -17,6 +17,7 @@ function search_advanced_prepare_search_hooks() {
 	elgg_register_plugin_hook_handler('search', 'object', 'search_advanced_objects_hook');
 	elgg_register_plugin_hook_handler('search', 'user', 'search_advanced_users_hook');
 	elgg_register_plugin_hook_handler('search', 'group', 'search_advanced_groups_hook');
+	elgg_register_plugin_hook_handler('search', 'combined:all', 'search_advanced_combined_all_hook');
 	
 	elgg_register_plugin_hook_handler('search_types', 'get_types', 'search_advanced_custom_types_hook', 9999);
 	
@@ -140,62 +141,6 @@ function search_advanced_register_menu_items($params) {
 			'section' => ($type == 'object') ? $type : 'default'
 		]);
 	}
-}
-
-/**
- * Returns an array of counters
- *
- * @param array $params parameters
- *
- * @return array
- */
-function search_advanced_get_combined_search_counters($params) {
-	$search_params = elgg_extract('search_params', $params);
-	
-	$db_prefix = elgg_get_config('dbprefix');
-		
-	$count_query  = "SELECT es.subtype, count(distinct e.guid) as total";
-	$count_query .= " FROM {$db_prefix}entities e";
-	$count_query .= " JOIN {$db_prefix}objects_entity oe ON e.guid = oe.guid";
-	$count_query .= " JOIN {$db_prefix}entity_subtypes es ON e.subtype = es.id";
-	
-	$fields = ['title', 'description'];
-	$where = search_advanced_get_where_sql('oe', $fields, $search_params);
-	
-	// add tags search
-	if ($valid_tag_names = elgg_get_registered_tag_metadata_names()) {
-		$tag_name_ids = array();
-		foreach ($valid_tag_names as $tag_name) {
-			$tag_name_ids[] = elgg_get_metastring_id($tag_name);
-		}
-			
-		$count_query .= " JOIN {$db_prefix}metadata md on e.guid = md.entity_guid";
-		$count_query .= " JOIN {$db_prefix}metastrings msv ON md.value_id = msv.id";
-			
-		$md_where = "((md.name_id IN (" . implode(",", $tag_name_ids) . ")) AND msv.string = '" . sanitise_string($search_params["query"]) . "')";
-	}
-	
-	// add wheres
-	$count_query .= " WHERE e.type = 'object' AND es.subtype IN ('" . implode("', '", $search_params['subtype']) . "') AND ";
-	if ($search_params['container_guid']) {
-		$count_query .= "e.container_guid = " . $search_params['container_guid'] . " AND ";
-	}
-	
-	if (isset($md_where)) {
-		$count_query .= "((" . $where . ") OR (" . $md_where . "))";
-	} else {
-		$count_query .= $where;
-	}
-	
-	$count_query .= " AND e.site_guid = " . elgg_get_site_entity()->getGUID() . " AND ";
-	
-	// Add access controls
-	$count_query .= get_access_sql_suffix('e');
-	$count_query .= " GROUP BY e.subtype";
-	
-	$totals = get_data($count_query);
-	
-	return $totals;
 }
 
 function search_advanced_query_to_array($query, $delimiter = '\s') {
@@ -359,4 +304,141 @@ function search_advanced_get_search_view($params, $view_type) {
 	}
 	
 	return search_get_search_view($params, 'entity');
+}
+
+function search_advanced_search_get_types() {
+	$types = get_registered_entity_types();
+	
+	$object_types = elgg_extract('object', $types);
+	if ($object_types) {
+		// the sidebar menu shows objects below other entity types
+		// by moving the object types to the end of the array this will also
+		// make sure that on the search index page they are also listed last
+		unset($types['object']);
+		$types['object'] = $object_types;
+	}
+	
+	return $types;
+}
+
+function search_advanced_search_index_custom_search($type, $params) {
+	if (empty($type)) {
+		return;
+	}
+	
+	$current_search_type = elgg_extract('search_type', $params);
+	
+	$current_params = $params;
+	$current_params['search_type'] = $type;
+	$current_params['subtype'] = ELGG_ENTITIES_ANY_VALUE;
+	$current_params['type'] = ELGG_ENTITIES_ANY_VALUE;
+	
+	if (($current_search_type !== 'all') && ($current_search_type !== $type)) {
+		// only want count if doing specific search
+		$current_params['search_advanced_count_only'] = true;
+	}
+	
+	// assumed result to be ['count' => xxx, 'entities' => [ElggEntity entity A, ElggEntity entity B]]
+	$result = elgg_trigger_plugin_hook('search', $type, $current_params, []);
+		
+	if ($result === FALSE) {
+		// someone is saying not to display these types in searches.
+		continue;
+	}
+	
+	if (isset($result['content'])) {
+		// some special case where content is provide via a hook instead of a view
+		return $result;
+	}
+	
+	if ($current_params['search_advanced_count_only'] == true) {
+		return $result;
+	}
+	
+	// are there entities?
+	$entities = elgg_extract('entities', $result);
+	if (!is_array($entities)) {
+		return $result;
+	}
+	
+	$view = search_get_search_view($current_params, 'list');
+	if (empty($view)) {
+		// nothing to see...
+		return $result;
+	}
+		
+	$result['content'] = elgg_view($view, [
+		'results' => $result,
+		'params' => $current_params,
+	]);
+	
+	return $result;
+}
+
+function search_advanced_search_index_combined_search($combine_search_results = 'no', $params) {
+	
+	if (elgg_extract('search_type', $params) !== 'all') {
+		return;
+	}
+	
+	if (empty($params['query'])) {
+		return;
+	}
+	
+	if (!in_array($combine_search_results, ['all', 'objects'])) {
+		return;
+	}
+	
+	$types = search_advanced_search_get_types();
+	
+	$current_params = $params;
+	$current_params['search_type'] = 'entities';
+	$current_params['limit'] = 20;
+	
+	if ($combine_search_results == 'objects') {
+		$current_params['type'] = 'object';
+		$current_params['subtype'] = elgg_extract('object', $types);
+		if (empty($current_params['subtype'])) {
+			return;
+		}
+		
+		$results = elgg_trigger_plugin_hook('search', 'object', $current_params, []);
+	} elseif ($combine_search_results == 'all') {
+		unset($current_params['type']);
+		unset($current_params['subtype']);
+		
+		foreach ($types as $type => $subtypes) {
+			if (empty($subtypes)) {
+				$types[$type] = null;
+			}
+		}
+		
+		$current_params['type_subtype_pairs'] = $types;
+		$results = elgg_trigger_plugin_hook('search', 'combined:all', $current_params, []);
+	}
+	
+	$entities = elgg_extract('entities', $results);
+	
+	if (empty($entities)) {
+		return;
+	}
+	
+	elgg_push_context('combined_search');
+	
+	$view = search_get_search_view($current_params, 'list');
+	if (empty($view)) {
+		return;
+	}
+
+	// reset count to 0 to remove the "view more" url
+	$results['count'] = 0;
+
+	$content = elgg_view($view, [
+		'results' => $results,
+		'params' => $current_params,
+	]);
+	
+	elgg_pop_context();
+	
+	return ['content' => $content];
 }

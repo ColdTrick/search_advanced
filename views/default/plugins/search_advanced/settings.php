@@ -13,6 +13,12 @@ $separator_options = [
 	'space' => elgg_echo('search_advanced:settings:multi_tag_separator:space'),
 ];
 
+$combine_search_results_options = [
+	'no' => elgg_echo('option:no'),
+	'objects' => elgg_echo('search_advanced:settings:combine_search_results:objects'),
+	'all' => elgg_echo('search_advanced:settings:combine_search_results:all'),
+];
+
 echo elgg_format_element('label', [], elgg_echo('search_advanced:settings:filter_position'));
 echo elgg_view('input/dropdown', [
 	'name' => 'params[filter_position]',
@@ -40,7 +46,7 @@ echo elgg_format_element('div', ['class'=> 'elgg-subtext'], elgg_echo('search_ad
 echo elgg_format_element('label', [], elgg_echo('search_advanced:settings:combine_search_results'));
 echo elgg_view('input/dropdown', [
 	'name' => 'params[combine_search_results]',
-	'options_values' => $noyes_options,
+	'options_values' => $combine_search_results_options,
 	'value' => $plugin->combine_search_results,
 	'class' => 'mls'
 ]);

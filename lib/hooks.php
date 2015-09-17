@@ -139,6 +139,150 @@ function search_advanced_objects_hook($hook, $type, $value, $params) {
 }
 
 /**
+ * Return default results for searches on everything
+ *
+ * @param string       $hook   name of hook
+ * @param string       $type   type of hook
+ * @param unknown_type $value  current value
+ * @param array        $params parameters
+ *
+ * @return array
+ */
+function search_advanced_combined_all_hook($hook, $type, $value, $params) {
+	if (!empty($value)) {
+		return;
+	}
+	
+	if (elgg_get_plugin_setting('search_hooks_enabled', 'search_advanced', 'yes') == 'no') {
+		return;
+	}
+
+	static $tag_name_ids;
+	static $tag_value_ids;
+	static $valid_tag_names;
+	
+	$query_parts = (array) search_advanced_tag_query_to_array($params['query']);
+	if (empty($params['query']) || empty($query_parts)) {
+		return ['entities' => [], 'count' => 0];
+	}
+	
+	if (!isset($tag_name_ids)) {
+		$tag_name_ids = false;
+		if ($valid_tag_names = elgg_get_registered_tag_metadata_names()) {
+			$tag_name_ids = search_advanced_get_metastring_ids($valid_tag_names);
+		}
+	}
+	
+	$params['joins'] = elgg_extract('joins', $params, []);
+	
+	$db_prefix = elgg_get_config('dbprefix');
+	
+	$types = elgg_extract('type_subtype_pairs', $params);
+	
+	$wheres = [];
+	foreach ($types as $entity_type => $entity_subtypes) {
+		switch($entity_type) {
+			case 'object':
+				$params["joins"][] = "LEFT OUTER JOIN {$db_prefix}objects_entity oe ON e.guid = oe.guid";
+				
+				$fields = ['title', 'description'];
+				$wheres[] = search_advanced_get_where_sql('oe', $fields, $params, false);
+				break;
+			case 'user':
+				$params["joins"][] = "LEFT OUTER JOIN {$db_prefix}users_entity ue ON e.guid = ue.guid";
+				
+				$fields = ['username', 'name'];
+				$wheres[] = search_advanced_get_where_sql('ue', $fields, $params, false);
+				break;
+			case 'group':
+				$params["joins"][] = "LEFT OUTER JOIN {$db_prefix}groups_entity ge ON e.guid = ge.guid";
+				
+				$fields = ['name', 'description'];
+				$wheres[] = search_advanced_get_where_sql('ge', $fields, $params, false);
+				break;
+		}
+	}
+	
+	$where = '(' . implode(' OR ', $wheres) . ')';
+		
+	$params["wheres"] = elgg_extract("wheres", $params, []);
+	
+	if ($tag_name_ids) {
+		// look up value ids to save a join
+		if (!isset($tag_value_ids)) {
+			$tag_value_ids = search_advanced_get_metastring_ids($query_parts);
+		}
+		
+		if (empty($tag_value_ids)) {
+			$params['wheres'][] = $where;
+		} else {
+			$params["joins"][] = "LEFT OUTER JOIN {$db_prefix}metadata md on e.guid = md.entity_guid";
+			
+			$md_where = "((md.name_id IN (" . implode(",", $tag_name_ids) . ")) AND md.value_id IN (" . implode(",", $tag_value_ids) . "))";
+			$params['wheres'][] = "(($where) OR ($md_where))";
+		}
+	} else {
+		$params['wheres'][] = $where;
+	}
+	
+	$params['count'] = true;
+	$count = elgg_get_entities($params);
+	
+	// no need to continue if nothing here.
+	if (!$count || ($params['search_advanced_count_only'] == true)) {
+		return ['entities' => [], 'count' => $count];
+	}
+		
+	$params['count'] = false;
+	$entities = elgg_get_entities($params);
+
+	// add the volatile data for why these entities have been returned.
+	foreach ($entities as $entity) {
+		$title = search_get_highlighted_relevant_substrings($entity->title, $params['query']);
+		$entity->setVolatileData('search_matched_title', $title);
+
+		$desc = search_get_highlighted_relevant_substrings($entity->description, $params['query']);
+		$entity->setVolatileData('search_matched_description', $desc);
+		
+		if (empty($valid_tag_names)) {
+			continue;
+		}
+		
+		$matched_tags_strs = [];
+		
+		// get tags for each tag name requested to find which ones matched.
+		foreach ($valid_tag_names as $tag_name) {
+			$tags = $entity->getTags($tag_name);
+		
+			// @todo make one long tag string and run this through the highlight
+			// function.  This might be confusing as it could chop off
+			// the tag labels.
+		
+			foreach ($query_parts as $part) {
+				if (in_array(strtolower($part), array_map('strtolower', $tags))) {
+					if (is_array($tags)) {
+						$tag_name_str = elgg_echo("tag_names:$tag_name");
+						$matched_tags_strs[] = "$tag_name_str: " . implode(', ', $tags);
+						// only need it once for each tag
+						break;
+					}
+				}
+			}
+		}
+			
+		$tags_str = implode('. ', $matched_tags_strs);
+		$tags_str = search_get_highlighted_relevant_substrings($tags_str, $params['query']);
+		
+		$entity->setVolatileData('search_matched_extra', $tags_str);
+	}
+
+	return [
+		'entities' => $entities,
+		'count' => $count,
+	];
+}
+
+/**
  * Return default results for searches on groups.
  *
  * @param string       $hook   name of hook

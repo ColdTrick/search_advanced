@@ -21,9 +21,8 @@ $href = search_advanced_get_search_url([
 	'search_type' => $search_type
 ]);
 
-echo elgg_view("output/url", [
-	"class" => "float-alt elgg-quiet",
-	//"href" => "search?q=" . $vars['params']['query'] . "&entity_subtype=" . $subtype . "&entity_type=" . $type . "&search_type=entities",
+echo elgg_view('output/url', [
+	'class' => 'float-alt elgg-quiet',
 	'href' => $href,
-	"text" => elgg_echo("item:" . $type . ":" . $subtype)
+	'text' => elgg_echo(rtrim("item:{$type}:{$subtype}", ':'))
 ]);
