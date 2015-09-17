@@ -41,6 +41,13 @@ elgg.search_advanced.init = function() {
 		var href = elgg.normalize_url('search?' + $sidebar_input.serialize());
 		$(this).append($sidebar_input.clone().hide());
 	});
+	
+	$(document).on('keypress', '.elgg-sidebar [name^="filter"]', function(event) {
+		if (event.keyCode !== 13) {
+			return;
+		}
+		$('.elgg-form-search-advanced-search').submit();
+	});
 };
 
 elgg.register_hook_handler('init', 'system', elgg.search_advanced.init);
