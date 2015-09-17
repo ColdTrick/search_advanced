@@ -109,7 +109,7 @@ function search_advanced_register_menu_items($params) {
 	$searched_typesubtype = rtrim(implode(':', [$searched_search_type, $searched_type, $searched_subtype]), ':');
 	
 	foreach ($search_result_counters as $type_subtype => $count) {
-		if (!$count) {
+		if (!$count && ($type_subtype !== $searched_typesubtype)) {
 			continue;
 		}
 		$label = $type_subtype;
