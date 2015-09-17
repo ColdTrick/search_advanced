@@ -132,3 +132,10 @@ form.elgg-search {
 select.search-advanced-search-types {
 	max-width: 100%;
 }
+select.search-advanced-search-types .search-advanced-search-types-parent {
+	font-weight: bold;
+	font-style: italic;
+}
+select.search-advanced-search-types .search-advanced-search-types-child {
+	padding-left: 20px;
+}

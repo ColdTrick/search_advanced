@@ -14,20 +14,40 @@ if ($display_format == 'menu') {
 	
 	$options = '';
 	foreach ($menu as $section => $menu_items) {
-		$group_options = '';
 		foreach ($menu_items as $menu_item) {
 			$selected = false;
 			if ($selected_item && ($selected_item->getName() == $menu_item->getName())) {
 				$selected = true;
 			}
-			$group_options .= elgg_format_element('option', ['value' => $menu_item->getHref(), 'selected' => $selected], $menu_item->getText());
-		}
-		
-		if ($section == 'default') {
-			$options .= $group_options;
-		} else {
-			$label = elgg_echo("menu:search_types:header:$section");
-			$options .= elgg_format_element('optgroup', ['label' => $label], $group_options);
+			
+			$children = $menu_item->getChildren();
+			$text = $menu_item->getText();
+			$option_options = [
+				'value' => $menu_item->getHref(),
+				'selected' => $selected,
+			];
+			
+			if ($children) {
+				$option_options['class'] = 'search-advanced-search-types-parent';
+			}
+			
+			$options .= elgg_format_element('option', $option_options, $text);
+						
+			if (!$children) {
+				continue;
+			}
+			
+			foreach ($children as $child) {
+				$selected = false;
+				if ($selected_item && ($selected_item->getName() == $child->getName())) {
+					$selected = true;
+				}
+				$options .= elgg_format_element('option', [
+					'value' => $child->getHref(),
+					'selected' => $selected,
+					'class' => 'search-advanced-search-types-child',
+				], $child->getText());
+			}
 		}
 	}
 	
