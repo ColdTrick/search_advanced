@@ -45,7 +45,7 @@ foreach ($profile_fields as $profile_field => $field_type) {
 	));
 	if (in_array($profile_field, $profile_field_soundex_values)) {
 		$soundex_options = array(
-			"name" => "filter[profile_fields_soundex][]",
+			"name" => "filter[profile_fields_soundex][" . $profile_field . "]",
 			"value" => $profile_field,
 			"label" => elgg_echo("search_advanced:users:profile_field:soundex")
 		);
