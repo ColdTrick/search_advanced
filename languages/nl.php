@@ -1,10 +1,34 @@
 <?php
 /**
- * This file was created by Translation Editor v2.0
- * On 2014-12-01 11:34
+ * This file was created by Translation Editor v4.0
+ * On 2015-09-18 15:47
  */
 
 return array (
+  'search_advanced:settings:search_hooks_enabled' => 'Search Advanced moet de zoekresultaten leveren',
+  'search_advanced:settings:search_hooks_enabled:info' => 'Hiermee kun je bepalen of deze plugin de zoekresultaten levert',
+  'search_advanced:settings:search_types_menu_format' => 'Hoe moeten de zoektypes worden gepresenteerd',
+  'search_advanced:settings:search_types_menu_format:info' => 'Hiermee bepaal je hoe de zoektypes op de zoekresultaten pagina worden getoond',
+  'search_advanced:settings:search_types_menu_format:menu' => 'Als een menu',
+  'search_advanced:settings:search_types_menu_format:dropdown' => 'Als een dropdown',
+  'search_advanced:settings:filter_position' => 'Positie van aanvullende content filters',
+  'search_advanced:settings:filter_position:info' => 'Hier kun je instellen waar de (eventueel) aanvullende filter opties zichtbaar zijn.',
+  'search_advanced:settings:filter_position:content' => 'Boven de zoekresultaten',
+  'search_advanced:settings:filter_position:sidebar' => 'In de zijbalk',
+  'search_advanced:settings:combine_search_results:objects' => 'Objecten samenvoegen',
+  'search_advanced:settings:combine_search_results:all' => 'Alles samenvoegen',
+  'search_advanced:settings:profile_fields:disclaimer' => 'De instellingen hieronder zijn alleen van toepassing op search engines die het ondersteunen. Indien Search Advanced niet de zoekresultaten levert, dan kan het zijn dat deze instellingen geen functie hebben.',
+  'search_advanced:results:title' => '%s resultaten voor %s',
+  'search_advanced:results:container:title' => 'Resultaten gelimiteerd tot de groep: %s',
+  'search_advanced:results:container:undo' => 'Groepfilter ongedaan maken',
+  'search_advanced:members:sidebar:q:placeholder' => 'Zoek naar een gebruiker',
+  'search_advanced:menu:search_list:list:title' => 'Wijzig de weergave van de zoekresultaten',
+  'search_advanced:menu:search_list:entity' => 'Standaard',
+  'search_advanced:menu:search_list:compact' => 'Compact',
+  'search_advanced:filter:refine' => 'Verfijn de resultaten',
+  'search:filter:entities:user:title' => 'Profielvelden',
+  'menu:search_types:header:object' => 'Content',
+  'search_types:entities' => 'Content',
   'search_advanced:settings:search_with_loader' => 'Maak gebruik van vertraagd zoeken',
   'search_advanced:settings:search_with_loader:info' => 'Toon direct een laad scherm en de zoekresultaten worden via AJAX geladen',
   'search_advanced:settings:profile_fields' => 'Configureer specifieke instellingen voor profiel velden',
