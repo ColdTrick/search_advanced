@@ -335,7 +335,7 @@ function search_advanced_search_index_custom_search($type, $params) {
 	
 	if (($current_search_type !== 'all') && ($current_search_type !== $type)) {
 		// only want count if doing specific search
-		$current_params['search_advanced_count_only'] = true;
+		$current_params['count'] = true;
 	}
 	
 	// assumed result to be ['count' => xxx, 'entities' => [ElggEntity entity A, ElggEntity entity B]]
@@ -351,7 +351,7 @@ function search_advanced_search_index_custom_search($type, $params) {
 		return $result;
 	}
 	
-	if ($current_params['search_advanced_count_only'] == true) {
+	if ($current_params['count'] == true) {
 		return $result;
 	}
 	

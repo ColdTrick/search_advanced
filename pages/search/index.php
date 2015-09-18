@@ -117,15 +117,15 @@ foreach ($types as $type => $subtypes) {
 		$current_params['type'] = $type;
 		$current_params['subtype'] = ELGG_ENTITIES_ANY_VALUE;
 
-		unset($current_params['search_advanced_count_only']);
+		unset($current_params['count']);
 		if ($search_type != 'all' && $entity_type != $type) {
 			// only want count if doing specific search
-			$current_params['search_advanced_count_only'] = true;
+			$current_params['count'] = true;
 		}
 		
 		if (($combine_search_results == 'all') && ($search_type == 'all')) {
 			// content comes from somewhere else
-			$current_params['search_advanced_count_only'] = true;
+			$current_params['count'] = true;
 		}
 		
 		$results = elgg_trigger_plugin_hook('search', $type, $current_params, array());
@@ -148,7 +148,7 @@ foreach ($types as $type => $subtypes) {
 			continue;
 		}
 					
-		if ($current_params['search_advanced_count_only'] === true) {
+		if ($current_params['count'] === true) {
 			// only interested in count so skip to next
 			continue;
 		}
@@ -169,15 +169,15 @@ foreach ($types as $type => $subtypes) {
 	}
 	
 	foreach ($subtypes as $subtype) {
-		unset($current_params['search_advanced_count_only']);
+		unset($current_params['count']);
 		if ($search_type !== 'all' && $params['subtype'] !== $subtype) {
 			// only want count if doing specific search
-			$current_params['search_advanced_count_only'] = true;
+			$current_params['count'] = true;
 		}
 		
 		if (($combine_search_results !== 'no') && ($search_type == 'all')) {
 			// content comes from somewhere else
-			$current_params['search_advanced_count_only'] = true;
+			$current_params['count'] = true;
 		}
 			
 		$current_params['subtype'] = $subtype;
@@ -212,7 +212,7 @@ foreach ($types as $type => $subtypes) {
 			continue;
 		}
 
-		if ($current_params['search_advanced_count_only'] === true) {
+		if ($current_params['count'] === true) {
 			// only interested in count so skip to next
 			continue;
 		}
