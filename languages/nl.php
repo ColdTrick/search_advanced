@@ -28,7 +28,6 @@ return array (
   'search_advanced:filter:refine' => 'Verfijn de resultaten',
   'search:filter:entities:user:title' => 'Profielvelden',
   'menu:search_types:header:object' => 'Content',
-  'search_types:entities' => 'Content',
   'search_advanced:settings:search_with_loader' => 'Maak gebruik van vertraagd zoeken',
   'search_advanced:settings:search_with_loader:info' => 'Toon direct een laad scherm en de zoekresultaten worden via AJAX geladen',
   'search_advanced:settings:profile_fields' => 'Configureer specifieke instellingen voor profiel velden',

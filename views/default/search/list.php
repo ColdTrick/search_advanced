@@ -58,8 +58,6 @@ if (array_key_exists('pagination', $vars['params']) && $vars['params']['paginati
 }
 
 // figure out what we're dealing with.
-$title = elgg_echo('search:unknown_entity');
-
 $type = elgg_extract('entity_type', $query_params);
 $subtype = elgg_extract('entity_subtype', $query_params);
 $search_type = elgg_extract('search_type', $query_params);
@@ -70,6 +68,10 @@ if (elgg_language_key_exists("item:$type:$subtype")) {
 	$title = elgg_echo("search_advanced:content:title");
 } elseif ($type) {
 	$title = elgg_echo("item:$type");
+} elseif ($type == 'entities') {
+	$title = elgg_echo("search_advanced:content:title");
+} else {
+	$title = elgg_echo('search:unknown_entity');
 }
 
 // allow overrides for titles

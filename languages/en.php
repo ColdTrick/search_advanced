@@ -59,5 +59,4 @@ return array(
 
 	'search:filter:entities:user:title' => "Profile fields",
 	'menu:search_types:header:object' => "Objects",
-	'search_types:entities' => "Content",
 );
