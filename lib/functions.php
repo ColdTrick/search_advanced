@@ -343,7 +343,7 @@ function search_advanced_search_index_custom_search($type, $params) {
 		
 	if ($result === FALSE) {
 		// someone is saying not to display these types in searches.
-		continue;
+		return;
 	}
 	
 	if (isset($result['content'])) {
