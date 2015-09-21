@@ -321,7 +321,7 @@ function search_advanced_search_get_types() {
 	return $types;
 }
 
-function search_advanced_search_index_custom_search($type, $params) {
+function search_advanced_search_index_custom_search($type, $params, $combine_search_results = 'no') {
 	if (empty($type)) {
 		return;
 	}
@@ -335,6 +335,11 @@ function search_advanced_search_index_custom_search($type, $params) {
 	
 	if (($current_search_type !== 'all') && ($current_search_type !== $type)) {
 		// only want count if doing specific search
+		$current_params['count'] = true;
+	}
+	
+	if (($combine_search_results === 'all') && ($current_search_type == 'all')) {
+		// content comes from somewhere else
 		$current_params['count'] = true;
 	}
 	

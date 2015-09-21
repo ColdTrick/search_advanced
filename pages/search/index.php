@@ -235,7 +235,7 @@ $custom_types = (array) elgg_trigger_plugin_hook('search_types', 'get_types', $p
 if (!empty($params['query'])) {
 	foreach ($custom_types as $type) {
 
-		$custom_result = search_advanced_search_index_custom_search($type, $params);
+		$custom_result = search_advanced_search_index_custom_search($type, $params, $combine_search_results);
 		if (empty($custom_result)) {
 			continue;
 		}
