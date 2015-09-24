@@ -68,7 +68,7 @@ if (elgg_language_key_exists("item:$type:$subtype")) {
 	$title = elgg_echo("search_advanced:content:title");
 } elseif ($type) {
 	$title = elgg_echo("item:$type");
-} elseif ($type == 'entities') {
+} elseif (in_array('entities', [$type, $search_type])) {
 	$title = elgg_echo("search_advanced:content:title");
 } else {
 	$title = elgg_echo('search:unknown_entity');
