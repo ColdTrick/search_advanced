@@ -39,6 +39,7 @@ function search_advanced_objects_hook($hook, $type, $value, $params) {
 	static $tag_name_ids;
 	static $tag_value_ids;
 	static $valid_tag_names;
+	$return_only_count = elgg_extract('count', $params, false);
 	
 	$query_parts = (array) search_advanced_tag_query_to_array($params['query']);
 	if (empty($params['query']) || empty($query_parts)) {
@@ -83,12 +84,12 @@ function search_advanced_objects_hook($hook, $type, $value, $params) {
 	
 	$params['count'] = true;
 	$count = elgg_get_entities($params);
-	
+
 	// no need to continue if nothing here.
-	if (!$count || ($params['count'] == true)) {
+	if (!$count || $return_only_count) {
 		return ['entities' => [], 'count' => $count];
 	}
-		
+	
 	$params['count'] = false;
 	$entities = elgg_get_entities($params);
 
@@ -160,6 +161,7 @@ function search_advanced_combined_all_hook($hook, $type, $value, $params) {
 	static $tag_name_ids;
 	static $tag_value_ids;
 	static $valid_tag_names;
+	$return_only_count = elgg_extract('count', $params, false);
 	
 	$query_parts = (array) search_advanced_tag_query_to_array($params['query']);
 	if (empty($params['query']) || empty($query_parts)) {
@@ -229,7 +231,7 @@ function search_advanced_combined_all_hook($hook, $type, $value, $params) {
 	$count = elgg_get_entities($params);
 	
 	// no need to continue if nothing here.
-	if (!$count || ($params['count'] == true)) {
+	if (!$count || $return_only_count) {
 		return ['entities' => [], 'count' => $count];
 	}
 		
@@ -301,6 +303,8 @@ function search_advanced_groups_hook($hook, $type, $value, $params) {
 		return;
 	}
 	
+	$return_only_count = elgg_extract('count', $params, false);
+	
 	$query_parts = (array) search_advanced_tag_query_to_array($params['query']);
 	if (empty($params['query']) || empty($query_parts)) {
 		return ['entities' => [], 'count' => 0];
@@ -360,7 +364,7 @@ function search_advanced_groups_hook($hook, $type, $value, $params) {
 	$count = elgg_get_entities($params);
 	
 	// no need to continue if nothing here.
-	if (!$count || ($params["count"] == true)) {
+	if (!$count || $return_only_count) {
 		return ['entities' => [], 'count' => $count];
 	}
 	
@@ -402,6 +406,8 @@ function search_advanced_users_hook($hook, $type, $value, $params) {
 	if (elgg_get_plugin_setting('search_hooks_enabled', 'search_advanced', 'yes') == 'no') {
 		return;
 	}
+	
+	$return_only_count = elgg_extract('count', $params, false);
 	
 	$db_prefix = elgg_get_config('dbprefix');
 	$params['joins'] = [
@@ -532,7 +538,7 @@ function search_advanced_users_hook($hook, $type, $value, $params) {
 	$count = elgg_get_entities_from_relationship($params);
 
 	// no need to continue if nothing here.
-	if (!$count || ($params["count"] == true)) {
+	if (!$count || $return_only_count) {
 		return ['entities' => [], 'count' => $count];
 	}
 	
