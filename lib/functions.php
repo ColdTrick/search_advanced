@@ -110,7 +110,7 @@ function search_advanced_register_menu_items($params) {
 	
 	$searched_typesubtype = rtrim(implode(':', [$searched_search_type, $searched_type, $searched_subtype]), ':');
 	
-	if (!array_key_exists($searched_typesubtype, $search_result_counters)) {
+	if (!array_key_exists($searched_typesubtype, $search_result_counters) && ($searched_typesubtype !== 'search_types:all')) {
 		$search_result_counters[$searched_typesubtype] = 0;
 	}
 	
