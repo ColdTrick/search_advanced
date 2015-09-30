@@ -45,7 +45,18 @@ if ($container_guid) {
 	echo elgg_view("input/hidden", ["name" => "container_guid", "value" => $container_guid]);
 }
 
-echo elgg_view("input/submit", ["value" => elgg_echo("submit"), "class" => "hidden"]);
 
 $vars['filter_position'] = 'content';
-echo elgg_view('search/filter', $vars);
+$filter = elgg_view('search/filter', $vars);
+
+$submit_options = [
+	'value' => elgg_echo('submit'),
+	'class' => 'hidden',
+];
+
+if (!empty($filter)) {
+	echo $filter;
+	unset($submit_options['class']);
+}
+
+echo elgg_view("input/submit", $submit_options);
