@@ -403,19 +403,30 @@ function search_advanced_search_index_combined_search($combine_search_results = 
 	
 	$current_params = $params;
 	$current_params['search_type'] = 'entities';
-	$current_params['limit'] = 20;
 	
 	if ($combine_search_results == 'objects') {
 		$current_params['type'] = 'object';
 		$current_params['subtype'] = elgg_extract('object', $types);
+		
+		// show a bit more content but disable pagination
+		$current_params['offset'] = 0;
+		$current_params['limit'] = 20;
+				
 		if (empty($current_params['subtype'])) {
 			return;
 		}
 		
 		$results = elgg_trigger_plugin_hook('search', 'object', $current_params, []);
+		
+		// reset count to 0 to remove the "view more" url
+		$results['count'] = 0;
 	} elseif ($combine_search_results == 'all') {
 		unset($current_params['type']);
 		unset($current_params['subtype']);
+		
+		$current_params['limit'] = (int) get_input('limit', 10);
+		$current_params['offset'] = (int) get_input('offset', 0);
+		$current_params['pagination'] = true;
 		
 		foreach ($types as $type => $subtypes) {
 			if (empty($subtypes)) {
@@ -439,9 +450,6 @@ function search_advanced_search_index_combined_search($combine_search_results = 
 	if (empty($view)) {
 		return;
 	}
-
-	// reset count to 0 to remove the "view more" url
-	$results['count'] = 0;
 
 	$content = elgg_view($view, [
 		'results' => $results,
