@@ -122,7 +122,7 @@ if ($show_more) {
 	$header = $more_link . $header;
 }
 
-$body = elgg_format_element('ul', ['class' => 'elgg-list search-list'], $list_items);
+$body = elgg_format_element('ul', ['class' => 'elgg-list search-list search-list-type-' . search_advanced_get_list_type()], $list_items);
 $body .= $nav;
 
 echo elgg_view_module('info', '', $body, ['header' => $header]);
