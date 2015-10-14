@@ -400,6 +400,12 @@ function search_advanced_search_index_combined_search($combine_search_results = 
 	}
 	
 	$types = search_advanced_search_get_types();
+	if (isset($types['object']) && in_array('groupforumtopic', $types['object'])) {
+		$types['object'][] = 'discussion_reply';
+	}
+	if (isset($types['object']) && in_array('page', $types['object'])) {
+		$types['object'][] = 'page_top';
+	}
 	
 	$current_params = $params;
 	$current_params['search_type'] = 'entities';
