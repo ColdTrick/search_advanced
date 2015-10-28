@@ -30,6 +30,11 @@ function search_advanced_init() {
 	elgg_extend_view('css/elgg', 'css/search_advanced/site');
 	elgg_extend_view('js/elgg', 'js/search_advanced/site.js');
 	
+	elgg_define_js('browserstate-history', [
+		'src' => '/mod/search_advanced/vendors/browserstate-history.js/jquery.history.js',
+		'exports' => 'History',
+	]);
+	
 	elgg_extend_view('page/elements/foot', 'search_advanced/foot', 400);
 		
 	// widgets
