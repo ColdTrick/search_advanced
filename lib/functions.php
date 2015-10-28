@@ -142,6 +142,7 @@ function search_advanced_register_menu_items($params) {
 			'name' => $label,
 			'text' => $text,
 			'href' => "search?$data",
+			'data' => ['count' => $count],
 			'selected' => ($type_subtype == $searched_typesubtype),
 			'section' => ($type == 'object') ? $type : 'default'
 		]);
