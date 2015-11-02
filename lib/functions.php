@@ -465,5 +465,5 @@ function search_advanced_search_index_combined_search($combine_search_results = 
 	
 	elgg_pop_context();
 	
-	return ['content' => $content];
+	return ['content' => $content, 'count' => $results['count']];
 }

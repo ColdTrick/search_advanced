@@ -261,7 +261,11 @@ $result_keys = array_keys($results_html);
 $total = 0;
 foreach ($result_keys as $key) {
 	if ($key === 'all:combined') {
-		$total = array_sum($search_result_counters);
+		if ($combine_search_results == 'objects') {
+			$total = array_sum($search_result_counters);
+		} else {
+			$total = $combined_result['count'];
+		}
 		break;
 	}
 	$total += $search_result_counters[$key];
