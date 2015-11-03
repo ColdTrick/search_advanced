@@ -484,37 +484,44 @@ function search_advanced_users_hook($hook, $type, $value, $params) {
 		$params['wheres'] = array($where);
 	}
 	
-	$profile_fields = elgg_extract('profile_fields', $params['search_filter']);
-	if (!empty($profile_fields)) {
-		$profile_field_likes = [];
-		
-		$profile_soundex = elgg_extract('profile_fields_soundex', $params['search_filter']);
-		foreach ($profile_fields as $field_name => $field_value) {
-			$field_value = trim(sanitise_string($field_value));
-			if (!empty($field_value)) {
-				$tag_name_id = elgg_get_metastring_id($field_name);
-				
-				$params["joins"][] = "JOIN {$db_prefix}metadata md$i on e.guid = md$i.entity_guid";
-				$params["joins"][] = "JOIN {$db_prefix}metastrings msv$i ON md$i.value_id = msv$i.id";
-				
-				// do a soundex match
-				if (is_array($profile_soundex) && in_array($field_name, $profile_soundex)) {
-					$profile_field_likes[] = "md$i.name_id = $tag_name_id AND soundex(CONCAT('X', msv$i.string)) = soundex(CONCAT('X','$field_value'))";
-				} else {
-					$profile_field_likes[] = "md$i.name_id = $tag_name_id AND msv$i.string LIKE '%$field_value%'";
-				}
-				
-				$i++;
-			}
-		}
-		
-		if (!empty($profile_field_likes)) {
-			$profile_field_where = "(" . implode(" AND ", $profile_field_likes) . ")";
+	// additional filters
+	$search_filter = elgg_extract('search_filter', $params);
+	if (!empty($search_filter)) {
+		// on profile fields?
+		$profile_fields = elgg_extract('profile_fields', $search_filter);
+		if (!empty($profile_fields)) {
+			$profile_field_likes = [];
 			
-			if (empty($params["wheres"])) {
-				$params["wheres"] = array($profile_field_where);
-			} else {
-				$params["wheres"] = array($params["wheres"][0] . " AND " . $profile_field_where);
+			// use soundex on some fields
+			$profile_soundex = elgg_extract('profile_fields_soundex', $search_filter);
+			
+			foreach ($profile_fields as $field_name => $field_value) {
+				$field_value = trim(sanitise_string($field_value));
+				if (!empty($field_value)) {
+					$tag_name_id = elgg_get_metastring_id($field_name);
+					
+					$params["joins"][] = "JOIN {$db_prefix}metadata md$i on e.guid = md$i.entity_guid";
+					$params["joins"][] = "JOIN {$db_prefix}metastrings msv$i ON md$i.value_id = msv$i.id";
+					
+					// do a soundex match
+					if (is_array($profile_soundex) && in_array($field_name, $profile_soundex)) {
+						$profile_field_likes[] = "md$i.name_id = $tag_name_id AND soundex(CONCAT('X', msv$i.string)) = soundex(CONCAT('X','$field_value'))";
+					} else {
+						$profile_field_likes[] = "md$i.name_id = $tag_name_id AND msv$i.string LIKE '%$field_value%'";
+					}
+					
+					$i++;
+				}
+			}
+			
+			if (!empty($profile_field_likes)) {
+				$profile_field_where = "(" . implode(" AND ", $profile_field_likes) . ")";
+				
+				if (empty($params["wheres"])) {
+					$params["wheres"] = array($profile_field_where);
+				} else {
+					$params["wheres"] = array($params["wheres"][0] . " AND " . $profile_field_where);
+				}
 			}
 		}
 	}
