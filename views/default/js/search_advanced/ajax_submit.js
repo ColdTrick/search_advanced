@@ -19,6 +19,7 @@ elgg.search_advanced.init_ajax_submit = function() {
 	        	
 	        	$('.elgg-page > .elgg-page-body > .elgg-inner').load(State.url, function() {
 	        		spinner.stop();
+	        		$(window).scrollTop(0);
 	        	});
 	        });	        	
 	    });
@@ -64,6 +65,7 @@ elgg.search_advanced.ajax_load_url = function (url) {
 		
 		$('.elgg-page > .elgg-page-body > .elgg-inner').load(new_url, function() {
 			spinner.stop();
+			$(window).scrollTop(0);
 			
 			elgg.search_advanced.history_pushed = true;
 			History.pushState(null, null, new_url);
