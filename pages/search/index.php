@@ -249,13 +249,6 @@ if (!empty($params['query'])) {
 	}
 }
 
-// highlight search terms
-$searched_words = search_remove_ignored_words($display_query, 'array');
-$highlighted_query = '';
-if (!empty($display_query)) {
-	$highlighted_query = search_highlight_words($searched_words, $display_query);
-}
-
 $result_keys = array_keys($results_html);
 
 $total = 0;
@@ -271,11 +264,7 @@ foreach ($result_keys as $key) {
 	$total += $search_result_counters[$key];
 }
 
-if (empty($highlighted_query)) {
-	$title = elgg_echo('search_advanced:results:title', [$total, '']);
-} else {
-	$title = elgg_echo('search_advanced:results:title', [$total, "\"$highlighted_query\""]);
-}
+$title = elgg_view('search/title', ['query' => $query, 'count' => $total]);
 
 $results_html = elgg_trigger_plugin_hook('search_results', 'search', ['orig_results' => $results_html], $results_html);
 
