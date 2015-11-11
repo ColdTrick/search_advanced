@@ -95,6 +95,11 @@ if (get_input("search_type") !== "entities") {
 		$title_key = ($more == 1) ? 'comment' : 'comments';
 		$more_str = elgg_echo('search:more', array($count, $type_str));
 		$more_url = elgg_http_remove_url_query_element($url, 'limit');
+		
+		if ($vars['params']['container_guid']) {
+			$more_url .= "&container_guid=" . $vars['params']['container_guid'];
+		}
+		
 		$more_link = "<li class='elgg-item'><a href=\"$more_url\">$more_str</a></li>";
 	} else {
 		$more_link = '';
@@ -120,8 +125,8 @@ foreach ($entities as $entity) {
 			// add a floating tag
 			$subtype = $entity->getSubtype();
 			$url_options = array(
-				"class" => "float-alt elgg-quiet", 
-				"href" => "search?q=" . $vars['params']['query'] . "&entity_subtype=" . $subtype . "&entity_type=" . $entity->getType() . "&search_type=entities", 
+				"class" => "float-alt elgg-quiet",
+				"href" => "search?q=" . $vars['params']['query'] . "&entity_subtype=" . $subtype . "&entity_type=" . $entity->getType() . "&search_type=entities",
 				"text" => elgg_echo("item:" . $entity->getType() . ":" . $subtype)
 			);
 			if ($vars['params']['container_guid']) {
