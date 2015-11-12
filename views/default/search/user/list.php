@@ -32,6 +32,8 @@ $query = http_build_query(
 		'search_type' => $vars['params']['search_type'],
 		'search_advanced_profile_fields' => $vars['params']['profile_filter'],
 		'search_advanced_profile_fields_soundex' => $vars['params']['profile_soundex'],
+		'sort' => $vars['params']['sort'],
+		'order' => $vars['params']['order'],
 	//@todo include vars for sorting, order, and friend-only.
 	)
 );

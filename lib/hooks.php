@@ -10,7 +10,7 @@
  * @param string $type        type of hook
  * @param unknown_type $value current value
  * @param array $params       parameters
- * 
+ *
  * @return array
  */
 function search_advanced_objects_hook($hook, $type, $value, $params) {
@@ -149,7 +149,7 @@ function search_advanced_objects_hook($hook, $type, $value, $params) {
  * @param string $type        type of hook
  * @param unknown_type $value current value
  * @param array $params       parameters
- * 
+ *
  * @return array
  */
 function search_advanced_groups_hook($hook, $type, $value, $params) {
@@ -270,7 +270,7 @@ function search_advanced_groups_hook($hook, $type, $value, $params) {
  * @param string $type        type of hook
  * @param unknown_type $value current value
  * @param array $params       parameters
- * 
+ *
  * @return array
  */
 function search_advanced_users_hook($hook, $type, $value, $params) {
@@ -379,6 +379,21 @@ function search_advanced_users_hook($hook, $type, $value, $params) {
 		}
 	}
 	
+	
+	$sort = elgg_extract('sort', $params);
+	$sort_order = elgg_extract('order', $params, 'desc');
+	if (!in_array($sort_order, array('desc', 'asc'))) {
+		$sort_order = 'desc';
+	}
+	
+	if ($sort) {
+		switch ($sort) {
+			case 'alpha':
+				$params['order_by'] = 'ue.name ' . $sort_order;
+				break;
+		}
+	}
+	
 	// override subtype -- All users should be returned regardless of subtype.
 	$params['subtype'] = ELGG_ENTITIES_ANY_VALUE;
 
@@ -415,7 +430,7 @@ function search_advanced_users_hook($hook, $type, $value, $params) {
  * @param string $type   Hook type
  * @param array  $value  Empty array
  * @param array  $params Search parameters
- * 
+ *
  * @return array
  */
 function search_advanced_comments_hook($hook, $type, $value, $params) {
