@@ -84,6 +84,7 @@ function search_advanced_register_menu_items($params) {
 	$query_parts = [
 		'q' => $search_params['query'],
 		'search_type' => 'all',
+		'container_guid' => elgg_extract('container_guid', $search_params),
 	];
 	
 	$query_data = htmlspecialchars(http_build_query($query_parts));
@@ -94,8 +95,7 @@ function search_advanced_register_menu_items($params) {
 		'href' => "search?$query_data"
 	]);
 	
-	$query_parts['owner_guid'] = $search_params['owner_guid'];
-	$query_parts['container_guid'] = $search_params['container_guid'];
+	$query_parts['owner_guid'] = elgg_extract('owner_guid', $search_params);
 	
 	$searched_search_type = elgg_extract('search_type', $search_params);
 	$searched_type = elgg_extract('type', $search_params);
