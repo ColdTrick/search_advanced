@@ -5,7 +5,7 @@ require_once(dirname(__FILE__) . "/lib/hooks.php");
 
 /**
  * Initializes the plugin
- * 
+ *
  * @return void
  */
 function search_advanced_init(){
@@ -36,9 +36,9 @@ function search_advanced_init(){
 
 /**
  * Handles search pages
- * 
+ *
  * @param array $page page segments
- * 
+ *
  * @return boolean
  */
 function search_advanced_page_handler($page){
@@ -46,14 +46,17 @@ function search_advanced_page_handler($page){
 		case "autocomplete":
 			include_once(dirname(__FILE__) . "/procedures/autocomplete.php");
 			return true;
+		case "autocomplete_metadata":
+			include_once(dirname(__FILE__) . "/procedures/autocomplete_metadata.php");
+			return true;
 	}
 }
 
 /**
  * Handles search advanced pages
- * 
+ *
  * @param array $page page segments
- * 
+ *
  * @return boolean
  */
 function search_advanced_search_page_handler($page){

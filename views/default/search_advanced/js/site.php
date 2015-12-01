@@ -60,6 +60,51 @@ elgg.search_advanced.init = function() {
 		};
 	});
 
+	$(".search-advanced-user-profile-table .search-advanced-profile-field-autocomplete").each(function() {
+		var $this = $(this);
+		
+		$this
+		// don't navigate away from the field on tab when selecting an item
+		.bind( "keydown", function(event) {
+			if (event.keyCode == 27) {
+		        $(this).val("");
+		    }
+		    
+			if ( event.keyCode === $.ui.keyCode.TAB &&
+					$( this ).data( "autocomplete" ).menu.active ) {
+				event.preventDefault();
+			}
+		})
+		.autocomplete({
+			source: function( request, response ) {
+				$.getJSON( "/search_advanced/autocomplete_metadata", {
+					q: request.term,
+					autocomplete_field: $this.attr('rel'),
+				}, response );
+			},
+			search: function() {
+				// custom minLength
+				var term = this.value;
+				if ( term.length < 1){
+					return false;
+				}
+				
+				return true;
+			},
+			autoFocus: true,
+			change: function(e, ui) {
+		        if (!ui.item) {
+		            $(this).val("");
+		        }
+		    },
+		    response: function(e, ui) {
+		        if (ui.content.length == 0) {
+		            $(this).val("");
+		        }
+		    }
+		});
+	});
+
 	// type selection
 	$(".search-advanced-type-selection > li > a").click(function(e) {
 		$(this).next().show();
