@@ -14,7 +14,7 @@ elgg.search_advanced.init_type_selection = function() {
 	$(document).on('click', '.search-advanced-type-selection-dropdown a', function(e) {
 		$(".search-advanced-type-selection > li > a").html($(this).html());
 
-		$(".elgg-search input[name='search_type']").attr("disabled", "disabled");
+		$(".elgg-search input[name='search_type']").attr("disabled", "disabled").val("all");
 		$(".elgg-search input[name='entity_type']").attr("disabled", "disabled").val("");
 		$(".elgg-search input[name='entity_subtype']").attr("disabled", "disabled").val("");
 		
