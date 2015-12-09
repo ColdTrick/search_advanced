@@ -70,6 +70,10 @@ elgg.search_advanced.ajax_load_url = function (url) {
 			elgg.search_advanced.history_pushed = true;
 			History.pushState(null, null, new_url);
 			elgg.search_advanced.history_pushed = false;
+			
+			if (elgg.search_advanced.init_autocomplete != undefined) {
+				elgg.search_advanced.init_autocomplete();
+			}
 		});
 	});
 };

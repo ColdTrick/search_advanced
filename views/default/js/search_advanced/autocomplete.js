@@ -63,7 +63,9 @@ elgg.search_advanced.init_autocomplete = function() {
 
 	$("form.elgg-search").live("submit", function(e) {
 		$(".elgg-search .search-input").each(function() {
-			$(this).autocomplete("destroy");
+			if ($(this).data('ui-autocomplete') != undefined) {
+				$(this).autocomplete("destroy");
+			}
 		});
 	});
 };
