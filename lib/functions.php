@@ -105,6 +105,8 @@ function search_advanced_register_menu_items($params) {
 		$searched_search_type = 'item';
 	} else {
 		$searched_type = $searched_search_type;
+		$searched_subtype = null;
+		
 		$searched_search_type = 'search_types';
 	}
 	
