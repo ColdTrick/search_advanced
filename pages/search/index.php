@@ -170,7 +170,7 @@ foreach ($types as $type => $subtypes) {
 	
 	foreach ($subtypes as $subtype) {
 		unset($current_params['count']);
-		if ($search_type !== 'all' && $params['subtype'] !== $subtype) {
+		if ($search_type !== 'all' && ($params['subtype'] !== $subtype || $search_type !== 'entities')) {
 			// only want count if doing specific search
 			$current_params['count'] = true;
 		}
