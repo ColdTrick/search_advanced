@@ -1,6 +1,95 @@
 Version history
 ===============
 
+2.0 (2016-01-12):
+
+- added: ajax submitted search form from any page
+- added: allow class to be passed to the vars of search/layout view
+- added: auto submit on type selection if query is not empty
+- added: basic support for history.js when browsing search results
+- added: combine all feature
+- added: container filter is now showing above search results
+- added: count added as data attribute to search type menu items
+- added: custom hook to influence search params
+- added: german translation thanks to @Beaufort8
+- added: list type is added as a css class to the search results
+- added: members sidebar default field now has a placeholder text
+- added: page title now contains the number of items found
+- added: search page title now is its own view
+- added: search params to search menu
+- added: seperated search results error page check and html to a view
+- added: setting introduced to control where the search filters show
+- added: setting to enable/disable search advanced to take over search hooks
+- added: settings notice to inform about settings that could not work
+- added: sidebar filters are now applied when searching
+- added: support for enclosed search words
+- added: switch between menu or dropdown for sidebar search types selection
+- added: the ability to switch between different result layouts
+- added: user profile field search on members page
+- added: you can now control sidebar menu sorting with a view var
+- changed: additional search filters now use a generic approach
+- changed: allowing pagination on combined:all search
+- changed: always show sidebar menu item for current specific search
+- changed: cleanup of search index page code
+- changed: code beautification
+- changed: improved default search list view
+- changed: improved functionality of the ajax_submit feature
+- changed: move type selection js to own file
+- changed: moved page search to a custom hook
+- changed: moved search autocomplete js to own file and made it toggleable
+- changed: moved search widget related js to own file
+- changed: no longer filter out page_top in search page as it is unregistered in start as searchable
+- changed: reinstated the tags search as a custom type
+- changed: scroll top top of page after ajax search
+- changed: search input field is now a required field
+- changed: search param name for returning count is now named count
+- changed: search type refinement is now shown in a sidebar module
+- changed: sidebar type selection now support parent menu items and no longer shows sections as optgroups
+- changed: simplified the way menu items are added to the search sidebar
+- changed: split logic in multiple parts and started using the layout view
+- changed: updated dutch language
+- changed: use new 1.11 language key exist function
+- changed: user search form is no longer a table
+- fixed: always make sure the searched type menu item is available
+- fixed: always show quotes in search title around search words
+- fixed: combined search for discussions and pages
+- fixed: combined:all listing did not have the correct title
+- fixed: correctly destroy/recreate autocompletes when needed
+- fixed: correctly reset menu label to fetch correct item count
+- fixed: correctly reset to all when changing type selection
+- fixed: correctly set selected sidebar menu item
+- fixed: count param not set correctly for custom search types
+- fixed: css and js issue with search_list menu
+- fixed: custom search types dissapearing from sidebar menu on entity pages
+- fixed: do not fetch results html for non entity searches
+- fixed: do not query metastring ids per metastring but query in bulk
+- fixed: do not show empty double quotes on result page
+- fixed: do not show menu items with an empty count
+- fixed: escape function with return instead of continue
+- fixed: line endings
+- fixed: load ajax loaded content into correct html element
+- fixed: menu items disappearing on search pages with offset
+- fixed: no longer lose container_guid when switching to all content
+- fixed: non entity searches now have correct menu item url query params
+- fixed: only set combined content title if all else fails
+- fixed: php typehint warning
+- fixed: replaced deprecated jquery .live functions with .on
+- fixed: respect profile field order showing user search fields
+- fixed: search box input has no need for forced cell width
+- fixed: set correct base url for pagination
+- fixed: show submit button on top of search results if there is a filter
+- fixed: some minor z-index issues with the search_list menu
+- fixed: soundex filter now also has correct field name
+- fixed: subtype should be NULL for non object searches
+- fixed: use count if hook for all:combined search instead of menu total
+- fixed: user profile field filter is not working correctly
+- fixed: user profile field filter not showing up on members page
+- fixed: wordwrap added to search_list child menu items
+- fixed: you can now submit filters in the sidebar using enter key
+- removed: multisite features are no longer part of this plugin
+- removed: no longer provide custom discussion_reply search view
+- removed: no longer support global_tags and site_categories plugins
+
 1.1 (2015-08-04):
 
 - added: composer support
