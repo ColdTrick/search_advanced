@@ -1,7 +1,7 @@
 elgg.provide("elgg.search_advanced");
 
 elgg.search_advanced.init = function() {
-	$('.elgg-menu-search-list > li > a').live('click', function(e) {
+	$(document).on('click', '.elgg-menu-search-list > li > a', function(e) {
 		var $child_menu = $(this).next('.elgg-child-menu');
 		if ($child_menu.length) {
 			// hide other submenus

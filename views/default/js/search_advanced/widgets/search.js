@@ -1,7 +1,7 @@
 elgg.provide("elgg.search_advanced");
 
 elgg.search_advanced.init_widget_search = function() {
-	$(".search-advanced-widget-search-form").live("submit", function(e) {
+	$(document).on('submit', '.search-advanced-widget-search-form', function(e) {
 		var $target = $(this).next();
 		
 		var $loader = $('#elgg-widget-loader').clone();
