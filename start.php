@@ -44,6 +44,7 @@ function search_advanced_init() {
 	// register hooks
 	elgg_register_plugin_hook_handler('register', 'menu:search_type_selection', 'search_advanced_register_menu_type_selection');
 	elgg_register_plugin_hook_handler('register', 'menu:search_list', 'search_advanced_register_menu_list');
+	elgg_register_plugin_hook_handler('search_params', 'search:combined', '\ColdTrick\SearchAdvanced\SearchParams::combinedParams');
 	
 	// actions
 	elgg_register_action('search_advanced/settings/save', dirname(__FILE__) . '/actions/plugins/settings/save.php', 'admin');

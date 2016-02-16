@@ -403,12 +403,6 @@ function search_advanced_search_index_combined_search($combine_search_results = 
 	}
 	
 	$types = search_advanced_search_get_types();
-	if (isset($types['object']) && in_array('groupforumtopic', $types['object'])) {
-		$types['object'][] = 'discussion_reply';
-	}
-	if (isset($types['object']) && in_array('page', $types['object'])) {
-		$types['object'][] = 'page_top';
-	}
 	
 	$current_params = $params;
 	$current_params['search_type'] = 'entities';
@@ -425,6 +419,14 @@ function search_advanced_search_index_combined_search($combine_search_results = 
 			return;
 		}
 		
+		// let others change the search params
+		$hook_params = [
+			'combined' => $combine_search_results,
+			'search_params' => $current_params,
+		];
+		$current_params = elgg_trigger_plugin_hook('search_params', 'search:combined', $hook_params, $current_params);
+		
+		// execute search
 		$results = elgg_trigger_plugin_hook('search', 'object', $current_params, []);
 		
 		// reset count to 0 to remove the "view more" url
@@ -439,11 +441,20 @@ function search_advanced_search_index_combined_search($combine_search_results = 
 		
 		foreach ($types as $type => $subtypes) {
 			if (empty($subtypes)) {
-				$types[$type] = null;
+				$types[$type] = ELGG_ENTITIES_ANY_VALUE;
 			}
 		}
 		
 		$current_params['type_subtype_pairs'] = $types;
+		
+		// let others change the search params
+		$hook_params = [
+			'combined' => $combine_search_results,
+			'search_params' => $current_params,
+		];
+		$current_params = elgg_trigger_plugin_hook('search_params', 'search:combined', $hook_params, $current_params);
+		
+		// execute search
 		$results = elgg_trigger_plugin_hook('search', 'combined:all', $current_params, []);
 	}
 	
