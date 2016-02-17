@@ -1,6 +1,10 @@
 Version history
 ===============
 
+2.1 (2016-02-17):
+
+- added: plugin hook to change search params for combined search
+
 2.0 (2016-01-12):
 
 - added: ajax submitted search form from any page
