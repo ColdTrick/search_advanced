@@ -25,7 +25,7 @@ if (!empty($q) && !empty($autocomplete_field)) {
 	if ($metadata) {
 		foreach ($metadata as $md) {
 			$result[] = array(
-				'value' => $md->string
+				'value' => html_entity_decode($md->string)
 			);
 		}
 	}
