@@ -28,7 +28,7 @@ class SearchParams {
 					return;
 				}
 				
-				if (in_array('groupforumtopic', $subtypes)) {
+				if (in_array('groupforumtopic', $subtypes) || in_array('discussion', $subtypes)) {
 					// add discussion replies
 					$subtypes[] = 'discussion_reply';
 				}
@@ -46,7 +46,7 @@ class SearchParams {
 					return;
 				}
 				
-				if (in_array('groupforumtopic', $type_subtype_pairs['object'])) {
+				if (in_array('groupforumtopic', $type_subtype_pairs['object']) || in_array('discussion', $type_subtype_pairs['object'])) {
 					// add discussion replies
 					$type_subtype_pairs['object'][] = 'discussion_reply';
 				}
