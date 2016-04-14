@@ -1,6 +1,11 @@
 Version history
 ===============
 
+2.1.1 (2016-04-14):
+
+- fixed: correctly search through discussion_replies in Elgg 2.x
+- fixed: using correct jquery function
+
 2.1 (2016-02-17):
 
 - added: plugin hook to change search params for combined search
