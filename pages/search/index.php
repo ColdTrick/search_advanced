@@ -53,11 +53,10 @@ if ($search_with_loader && !elgg_is_xhr()) {
 }
 
 if (search_advanced_get_list_type() == 'compact') {
-	$limit = ($search_type == 'all') ? 5 : get_input('limit', 20);
+	$limit = ($search_type == 'all') ? 5 : get_input('limit', max([20, elgg_get_config('default_limit')]));
 } else {
-	$limit = ($search_type == 'all') ? 2 : get_input('limit', 10);
+	$limit = ($search_type == 'all') ? 2 : get_input('limit', elgg_get_config('default_limit'));
 }
-
 
 // set up search params
 $params = array(
