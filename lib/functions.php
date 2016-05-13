@@ -435,7 +435,7 @@ function search_advanced_search_index_combined_search($combine_search_results = 
 		unset($current_params['type']);
 		unset($current_params['subtype']);
 		
-		$current_params['limit'] = (int) get_input('limit', 10);
+		$current_params['limit'] = (int) get_input('limit', elgg_get_config('default_limit'));
 		$current_params['offset'] = (int) get_input('offset', 0);
 		$current_params['pagination'] = true;
 		
