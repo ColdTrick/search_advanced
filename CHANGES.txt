@@ -1,6 +1,13 @@
 Version history
 ===============
 
+3.0 (2016-05-26):
+
+- changed: Elgg version requirement set to 2.1
+- fixed: deprecated notice
+- fixed: search limit now uses default_limit as default value
+- fixed: use correct default limit for combined listing
+
 2.1.1 (2016-04-14):
 
 - fixed: correctly search through discussion_replies in Elgg 2.x
