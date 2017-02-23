@@ -8,8 +8,11 @@ elgg.search_advanced.init_widget_search = function() {
 		$loader.attr('id', '#elgg-widget-active-loader');
 		$loader.removeClass('hidden');
 		$target.html($loader);
+		
+		var data = $(this).serialize();
+		data += '&widget_search=1';
 
-		$target.load($(this).attr("action"), $(this).serialize()).addClass("mtm");
+		$target.load($(this).attr("action"), data).addClass("mtm");
 		e.preventDefault();
 	});
 };
