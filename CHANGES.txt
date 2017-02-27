@@ -1,6 +1,10 @@
 Version history
 ===============
 
+3.1 (2017-02-27):
+
+- added: added a flag to track searchresults shown in the searchwidget
+
 3.0 (2016-05-26):
 
 - changed: Elgg version requirement set to 2.1
