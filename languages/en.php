@@ -32,6 +32,9 @@ return array(
 	'search_advanced:settings:user_profile_fields:show_on_form' => "Show on search form",
 	'search_advanced:settings:user_profile_fields:use_soundex' => "Use Soundex",
 	'search_advanced:settings:user_profile_fields:info' => "Allow users to refine their search for users based on profile fields. Currently only text based fields are supported (text, location, url, etc).",
+	'search_advanced:settings:query_required' => "Query required",
+	'search_advanced:settings:query_required:help' => "Is a query required executing a search? If not, search will show a list with recent content (if supported).",
+	
 	'search_advanced:users:profile_field:soundex' => "Use sounds like",
 	'search_advanced:content:title' => "Content",
 	'search_advanced:content:last_updated' => "Last updated",
@@ -46,6 +49,7 @@ return array(
 	'search_advanced:widgets:search_user:no_results' => "This widget can not be used, because there are no profile fields configured for user search.",
 
 	'search_advanced:results:title' => "%s results for %s",
+	'search_advanced:results:empty:title' => "Results",
 	'search_advanced:results:container:title' => "Showing result in the group: %s",
 	'search_advanced:results:container:undo' => "Undo group filter",
 	

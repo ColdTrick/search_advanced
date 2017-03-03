@@ -4,6 +4,10 @@ $params = elgg_extract('params', $vars, []);
 $query = elgg_extract('query', $params);
 $search_filter = elgg_extract('search_filter', $params, []);
 
+if (elgg_get_plugin_setting('query_required', 'search_advanced') === 'no') {
+	return;
+}
+
 // check that we have an actual query
 if ($query || !empty($search_filter)) {
 	return;

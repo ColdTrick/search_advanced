@@ -22,17 +22,19 @@ if (!is_array($entities) || !count($entities)) {
 	return FALSE;
 }
 
+$params = elgg_extract('params', $vars, []);
+
 $default_params = [
-	'q' => $vars['params']['query'],
-	'entity_type' => $vars['params']['type'],
-	'entity_subtype' => $vars['params']['subtype'],
-	'limit' => $vars['params']['limit'],
-	'offset' => $vars['params']['offset'],
-	'search_type' => $vars['params']['search_type'],
-	'sort' => $vars['params']['sort'],
-	'order' => $vars['params']['order'],
-	'container_guid' => $vars['params']['container_guid'],
-	'owner_guid' => $vars['params']['owner_guid'],
+	'q' => elgg_extract('query', $params),
+	'entity_type' => elgg_extract('type', $params),
+	'entity_subtype' => elgg_extract('subtype', $params),
+	'limit' => elgg_extract('limit', $params),
+	'offset' => elgg_extract('offset', $params),
+	'search_type' => elgg_extract('search_type', $params),
+	'sort' => elgg_extract('sort', $params),
+	'order' => elgg_extract('order', $params),
+	'container_guid' => elgg_extract('container_guid', $params),
+	'owner_guid' => elgg_extract('owner_guid', $params),
 ];
 
 $query_params = (array) elgg_extract('query_params', $vars, []);

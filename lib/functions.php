@@ -122,7 +122,12 @@ function search_advanced_register_menu_items($params) {
 		}
 		$label = $type_subtype;
 		
-		list($item, $type, $subtype) = explode(':', $type_subtype);
+		$type_subtype_parts = explode(':', $type_subtype);
+		
+		$item = elgg_extract(0, $type_subtype_parts);
+		$type = elgg_extract(1, $type_subtype_parts);
+		$subtype = elgg_extract(2, $type_subtype_parts);
+		
 		if ($item == 'item') {
 			// entities search
 			$query_parts['entity_subtype'] = $subtype;
@@ -391,10 +396,6 @@ function search_advanced_search_index_custom_search($type, $params, $combine_sea
 function search_advanced_search_index_combined_search($combine_search_results = 'no', $params) {
 	
 	if (elgg_extract('search_type', $params) !== 'all') {
-		return;
-	}
-	
-	if (empty($params['query'])) {
 		return;
 	}
 	

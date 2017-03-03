@@ -43,7 +43,7 @@ function search_advanced_objects_hook($hook, $type, $value, $params) {
 	
 	$query_parts = (array) search_advanced_tag_query_to_array($params['query']);
 	if (empty($params['query']) || empty($query_parts)) {
-		return ['entities' => [], 'count' => 0];
+		return search_advanced_simple_hook_return($params);
 	}
 	
 	if (!isset($tag_name_ids)) {
@@ -165,7 +165,7 @@ function search_advanced_combined_all_hook($hook, $type, $value, $params) {
 	
 	$query_parts = (array) search_advanced_tag_query_to_array($params['query']);
 	if (empty($params['query']) || empty($query_parts)) {
-		return ['entities' => [], 'count' => 0];
+		return search_advanced_simple_hook_return($params);
 	}
 	
 	if (!isset($tag_name_ids)) {
@@ -307,7 +307,7 @@ function search_advanced_groups_hook($hook, $type, $value, $params) {
 	
 	$query_parts = (array) search_advanced_tag_query_to_array($params['query']);
 	if (empty($params['query']) || empty($query_parts)) {
-		return ['entities' => [], 'count' => 0];
+		return search_advanced_simple_hook_return($params);
 	}
 	
 	$fields = ['name', 'description'];
@@ -527,7 +527,7 @@ function search_advanced_users_hook($hook, $type, $value, $params) {
 	}
 	
 	if (empty($params['wheres'])) {
-		return ['entities' => [], 'count' => 0];
+		return search_advanced_simple_hook_return($params);
 	}
 	
 	$wheres = (array) elgg_extract("wheres", $params);
@@ -563,6 +563,34 @@ function search_advanced_users_hook($hook, $type, $value, $params) {
 		'entities' => $entities,
 		'count' => $count,
 	];
+}
+
+/**
+ * Simple function to return default entity listing
+ *
+ * @param array $params search paramaters
+ *
+ * @return array
+ */
+function search_advanced_simple_hook_return($params) {
+	
+	$result = ['entities' => [], 'count' => 0];
+	
+	$return_only_count = elgg_extract('count', $params, false);
+	
+	// just do a regular entity retrieval
+	$params['count'] = true;
+	$result['count'] = elgg_get_entities($params);
+	
+	// no need to continue if nothing here.
+	if (!$result['count'] || $return_only_count) {
+		return $result;
+	}
+	
+	$params['count'] = false;
+	$result['entities'] = elgg_get_entities($params);
+	
+	return $result;
 }
 
 /**

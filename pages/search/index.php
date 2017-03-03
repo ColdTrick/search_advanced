@@ -29,7 +29,7 @@ if (function_exists('mb_convert_encoding')) {
 $display_query = htmlspecialchars($display_query, ENT_QUOTES, 'UTF-8', false);
 
 if (empty($display_query)) {
-	$page_title = elgg_echo('search:results', ['']);
+	$page_title = elgg_echo('search_advanced:results:empty:title');
 } else {
 	$page_title = elgg_echo('search:results', ["\"$display_query\""]);
 }
@@ -59,7 +59,7 @@ if (search_advanced_get_list_type() == 'compact') {
 }
 
 // set up search params
-$params = array(
+$params = [
 	'query' => $query,
 	'offset' => ($search_type == 'all') ? 0 : get_input('offset', 0),
 	'limit' => $limit,
@@ -72,7 +72,7 @@ $params = array(
 	'container_guid' => get_input('container_guid'),
 	'pagination' => ($search_type == 'all') ? false : true,
 	'search_filter' => (array) get_input('filter', []),
-);
+];
 
 $params = elgg_trigger_plugin_hook('search_params', 'search', $params, $params);
 
@@ -98,19 +98,27 @@ $current_params['search_type'] = 'entities';
 
 $combine_search_results = elgg_get_plugin_setting('combine_search_results', 'search_advanced', 'no');
 
+$query_required = (bool) (elgg_get_plugin_setting('query_required', 'search_advanced') !== 'no');
+
 // start the actual search
 $search_result_counters = [];
 $results_html = [];
 
 foreach ($types as $type => $subtypes) {
 	if ($type !== "object") {
-		if ($type !== "user" && empty($params["query"])) {
-			continue;
+		
+		if ($query_required) {
+			if ($type == 'user') {
+				if (empty($params["query"]) && empty($params['search_filter']['profile_fields'])) {
+					continue;
+				}
+			} else {
+				if (empty($params['query'])) {
+					continue;
+				}
+			}
 		}
-
-		if ($type == "user" && empty($params["query"]) && empty($params['search_filter']['profile_fields'])) {
-			continue;
-		}
+		
 		// pull in default type entities with no subtypes
 		$current_params['type'] = $type;
 		$current_params['subtype'] = ELGG_ENTITIES_ANY_VALUE;
@@ -162,7 +170,7 @@ foreach ($types as $type => $subtypes) {
 		continue;
 	}
 	
-	if (empty($params['query'])) {
+	if ($query_required && empty($params['query'])) {
 		continue;
 	}
 	
@@ -230,7 +238,7 @@ if (!empty($combined_result) && isset($combined_result['content'])) {
 
 // call custom searches
 $custom_types = (array) elgg_trigger_plugin_hook('search_types', 'get_types', $params, []);
-if (!empty($params['query'])) {
+if (!empty($params['query']) || !$query_required) {
 	foreach ($custom_types as $type) {
 
 		$custom_result = search_advanced_search_index_custom_search($type, $params, $combine_search_results);

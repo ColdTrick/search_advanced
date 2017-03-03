@@ -11,6 +11,9 @@ if (!empty($query)) {
 		$query = search_highlight_words($searched_words, $query);
 	}
 	$query = "\"$query\"";
+	
+	echo elgg_echo('search_advanced:results:title', [$count, $query]);
+} else {
+	echo elgg_echo('search_advanced:results:empty:title');
 }
 
-echo elgg_echo('search_advanced:results:title', [$count, $query]);
