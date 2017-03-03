@@ -120,6 +120,9 @@ function search_advanced_register_menu_items($params) {
 		if (!$count && ($type_subtype !== $searched_typesubtype)) {
 			continue;
 		}
+		// always convert to a number
+		$count = (int) $count;
+		
 		$label = $type_subtype;
 		
 		$type_subtype_parts = explode(':', $type_subtype);
