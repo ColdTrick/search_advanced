@@ -38,8 +38,15 @@ elgg.search_advanced.init = function() {
 			return;
 		}
 		
-		var href = elgg.normalize_url('search?' + $sidebar_input.serialize());
-		$(this).append($sidebar_input.clone().hide());
+		// fix select, jquery clone doesn't keep value for select
+		var $clone = $sidebar_input.clone();
+		var $clone_selects = $clone.filter('select');
+		
+		$sidebar_input.filter('select').each(function(index, elem) {
+			$clone_selects.eq(index).val($(elem).val());
+		});
+		
+		$(this).append($clone.hide());
 	});
 	
 	$(document).on('keypress', '.elgg-sidebar [name^="filter"]', function(event) {
