@@ -8,9 +8,12 @@ echo elgg_view_menu('search_types', $menu_vars);
 
 $filter = elgg_view('search/filter', $vars);
 if ($filter) {
-	echo $filter;
-	echo elgg_view('input/button', [
+	
+	$body = $filter;
+	$body .= elgg_view('input/button', [
 		'class' => 'search-advanced-search-sidebar-button elgg-button-submit',
 		'value' => elgg_echo('search'),
 	]);
+	
+	echo elgg_view_module('aside', '', $body);
 }
