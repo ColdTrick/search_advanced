@@ -27,6 +27,7 @@ return array (
   'search_advanced:menu:search_list:compact' => 'Compact',
   'search_advanced:filter:refine' => 'Verfijn de resultaten',
   'search:filter:entities:user:title' => 'Profielvelden',
+  'search_advanced:forms:search:query:placeholder' => 'Voer een zoekopdracht in',
   'menu:search_types:header:object' => 'Content',
   'search_advanced:settings:search_with_loader' => 'Maak gebruik van vertraagd zoeken',
   'search_advanced:settings:search_with_loader:info' => 'Toon direct een laad scherm en de zoekresultaten worden via AJAX geladen',

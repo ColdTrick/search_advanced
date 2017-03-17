@@ -40,6 +40,7 @@ return array(
 	'search_advanced:content:last_updated' => "Last updated",
 	'search_advanced:content:created' => "Created",
 	'search_advanced:searchbox' => "Search",
+	'search_advanced:forms:search:query:placeholder' => "Enter a query to limit the results",
 	'search_advanced:autocomplete:all' => "Search in all content",
 	'search_advanced:widgets:search:edit:submit_behaviour' => "Submit behaviour",
 	'search_advanced:widgets:search:edit:submit_behaviour:show_in_widget' => "Show in widget",

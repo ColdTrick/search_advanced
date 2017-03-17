@@ -18,7 +18,13 @@ if ($subtype) {
 	echo elgg_view("input/hidden", ["name" => "entity_subtype", "value" => $subtype]);
 }
 
-echo elgg_view("input/text", ["name" => "q", "value" => $query , "class" => "ui-front mbs"]);
+echo elgg_view("input/text", [
+	"name" => "q",
+	"value" => $query ,
+	"class" => "ui-front mbs",
+	"placeholder" => elgg_echo('search_advanced:forms:search:query:placeholder'),
+	
+]);
 
 if ($container_guid) {
 	$container_entity = get_entity($container_guid);
