@@ -67,7 +67,7 @@ function search_advanced_objects_hook($hook, $type, $value, $params) {
 	if ($tag_name_ids) {
 		// look up value ids to save a join
 		if (!isset($tag_value_ids)) {
-			$tag_value_ids = search_advanced_get_metastring_ids($query_parts);
+			$tag_value_ids = search_advanced_get_metastring_ids($query_parts, false);
 		}
 		
 		if (empty($tag_value_ids)) {
@@ -212,7 +212,7 @@ function search_advanced_combined_all_hook($hook, $type, $value, $params) {
 	if ($tag_name_ids) {
 		// look up value ids to save a join
 		if (!isset($tag_value_ids)) {
-			$tag_value_ids = search_advanced_get_metastring_ids($query_parts);
+			$tag_value_ids = search_advanced_get_metastring_ids($query_parts, false);
 		}
 		
 		if (empty($tag_value_ids)) {
