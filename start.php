@@ -5,7 +5,6 @@
 
 require_once(dirname(__FILE__) . '/lib/functions.php');
 require_once(dirname(__FILE__) . '/lib/hooks.php');
-require_once(dirname(__FILE__) . '/lib/page_handlers.php');
 
 // register default Elgg event
 elgg_register_event_handler('init','system','search_advanced_init');
@@ -17,8 +16,8 @@ elgg_register_event_handler('init','system','search_advanced_init');
  */
 function search_advanced_init() {
 	// page handler for search actions and results
-	elgg_register_page_handler('search_advanced', 'search_advanced_page_handler');
-	elgg_register_page_handler('search', 'search_advanced_search_page_handler');
+	elgg_register_page_handler('search_advanced', '\ColdTrick\SearchAdvanced\PageHandler::searchAdvanced');
+	elgg_register_page_handler('search', '\ColdTrick\SearchAdvanced\PageHandler::search');
 	
 	search_advanced_prepare_search_hooks();
 		
