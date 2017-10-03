@@ -1,6 +1,16 @@
 Version history
 ===============
 
+4.0 (2017-10-03):
+
+- added: placeholder text to search form
+- added: plugin setting to control if a query is required
+- changed: moved pages to resource views
+- changed: updated minimal Elgg requirement to 2.3
+- fixed: select filters in sidebar retain value
+- fixed: tag matching in objects and combined search hook case insensitive
+- fixed: type_subtype menu item always should show a number
+
 3.1 (2017-02-27):
 
 - added: added a flag to track searchresults shown in the searchwidget
