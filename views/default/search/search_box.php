@@ -12,12 +12,11 @@ if (elgg_extract('search_autocomplete', $vars, true)) {
 
 $placeholder = elgg_extract('placeholder', $vars, elgg_echo('search_advanced:searchbox'));
 $container_entity = elgg_extract('container_entity', $vars);
+$action = elgg_extract('action', $vars, 'search');
 
 $value = elgg_extract('value', $vars, get_input('q', get_input('tag', NULL)));
 
-$vars['class'] = (array) elgg_extract('class', $vars, []);
-$vars['class'][] = 'elgg-search';
-$vars['class'][] = 'ui-front';
+$vars['class'] = elgg_extract_class($vars, ['elgg-search', 'ui-front']);
 
 // @todo - why the strip slashes?
 $value = stripslashes($value);
@@ -53,16 +52,21 @@ $form_body .= elgg_view('input/button', [
 $form_body .= '</td>';
 $form_body .= '</tr></table>';
 
-if (elgg_instanceof($container_entity, 'group')) {
+$container_guid = elgg_extract('container_guid', $vars, get_input('container_guid'));
+if ($container_entity instanceof ElggEntity) {
+	$container_guid = $container_entity->guid;
+}
+
+if (!empty($container_guid)) {
 	$form_body .= elgg_view('input/hidden', array(
 		'name' => 'container_guid',
-		'value' => $container_entity->guid
+		'value' => $container_guid
 	));
 }
 		
 echo elgg_view('input/form', [
 	'class' => $vars['class'],
-	'action' => 'search',
+	'action' => $action,
 	'method' => 'GET',
 	'disable_security' => true,
 	'body' => $form_body,
