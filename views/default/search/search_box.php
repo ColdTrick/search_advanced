@@ -70,4 +70,5 @@ echo elgg_view('input/form', [
 	'method' => 'GET',
 	'disable_security' => true,
 	'body' => $form_body,
+	'data-disable-ajax-submit' => elgg_extract('disable_ajax_submit', $vars, false),
 ]);

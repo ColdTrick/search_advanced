@@ -26,10 +26,14 @@ elgg.search_advanced.init_ajax_submit = function() {
 	});
 		
 	$(document).on('submit', 'form.elgg-search-header, form.elgg-form-search-advanced-search', function(event) {
+		$form = $(this);
+		if ($form.data().disableAjaxSubmit) {
+			return;
+		}
+		
 		event.stopPropagation();
 		event.preventDefault();
 		
-		$form = $(this);
 		var url = elgg.normalize_url('search?' + $form.serialize());
 		
 		elgg.search_advanced.ajax_load_url(url);
