@@ -372,7 +372,7 @@ function search_advanced_search_index_custom_search($type, $params, $combine_sea
 		return $result;
 	}
 	
-	if ($current_params['count'] == true) {
+	if (elgg_extract('count', $current_params) === true) {
 		return $result;
 	}
 	
