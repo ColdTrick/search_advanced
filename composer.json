@@ -3,7 +3,7 @@
 	"description": "This plugin provides additional search features",
 	"type": "elgg-plugin",
 	"keywords": ["elgg", "plugin", "search"],
-	"license": "GPL-2.0",
+	"license": "GPL-2.0-only",
 	"support": {
 		"source": "https://github.com/ColdTrick/search_advanced",
 		"issues": "https://github.com/ColdTrick/search_advanced/issues"
