@@ -1,6 +1,11 @@
 Version history
 ===============
 
+4.1 (2018-02-12):
+
+- added: option to disable ajax submit in forms searchbox
+- changed: container search no longer limited to groups
+
 4.0 (2017-10-03):
 
 - added: placeholder text to search form
