@@ -18,9 +18,7 @@ function search_advanced_prepare_search_hooks() {
 	elgg_register_plugin_hook_handler('search', 'user', 'search_advanced_users_hook');
 	elgg_register_plugin_hook_handler('search', 'group', 'search_advanced_groups_hook');
 	elgg_register_plugin_hook_handler('search', 'combined:all', 'search_advanced_combined_all_hook');
-	
-	elgg_register_plugin_hook_handler('search_types', 'get_types', 'search_advanced_custom_types_hook', 9999);
-	
+		
 	// register fallback to default search hooks
 	elgg_register_plugin_hook_handler('search', 'object', 'search_advanced_fallback_search_hook', 9000);
 	elgg_register_plugin_hook_handler('search', 'user', 'search_advanced_fallback_search_hook', 9000);

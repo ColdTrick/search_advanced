@@ -4,20 +4,6 @@
  */
 
 /**
- * Adjust the custom types used in search
- *
- * @param string       $hook   name of hook
- * @param string       $type   type of hook
- * @param unknown_type $value  current value
- * @param array        $params parameters
- *
- * @return array
- */
-function search_advanced_custom_types_hook($hook, $type, $value, $params) {
-
-}
-
-/**
  * Return default results for searches on objects.
  *
  * @param string       $hook   name of hook
@@ -538,7 +524,7 @@ function search_advanced_users_hook($hook, $type, $value, $params) {
 	$params['subtype'] = ELGG_ENTITIES_ANY_VALUE;
 
 	$params['count'] = true;
-	$count = elgg_get_entities_from_relationship($params);
+	$count = elgg_get_entities($params);
 
 	// no need to continue if nothing here.
 	if (!$count || $return_only_count) {
@@ -546,7 +532,7 @@ function search_advanced_users_hook($hook, $type, $value, $params) {
 	}
 	
 	$params['count'] = false;
-	$entities = elgg_get_entities_from_relationship($params);
+	$entities = elgg_get_entities($params);
 
 	$query = sanitise_string($params['query']);
 	
@@ -721,30 +707,4 @@ function search_advanced_register_menu_list($hook, $type, $value, $params) {
 	]);
 	
 	return $result;
-}
-
-/**
- * Search in both page and page_top entities
- *
- * @param string $hook   the name of the hook
- * @param string $type   the type of the hook
- * @param mixed  $value  the current return value
- * @param array  $params supplied params
- */
-function search_advanced_search_page($hook, $type, $value, $params) {
-
-	if (empty($params) || !is_array($params)) {
-		return $value;
-	}
-
-	$subtype = elgg_extract("subtype", $params);
-	if (empty($subtype) || ($subtype !== "page")) {
-		return $value;
-	}
-
-	unset($params["subtype"]);
-	$params["subtypes"] = ["page", "page_top"];
-
-	// trigger the 'normal' object search as it can handle the added options
-	return elgg_trigger_plugin_hook('search', 'object', $params, []);
 }

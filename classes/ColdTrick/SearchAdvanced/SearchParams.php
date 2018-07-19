@@ -32,12 +32,7 @@ class SearchParams {
 					// add discussion replies
 					$subtypes[] = 'discussion_reply';
 				}
-				
-				if (in_array('page', $subtypes)) {
-					// add top pages
-					$subtypes[] = 'page_top';
-				}
-				
+								
 				$return_value['subtype'] = $subtypes;
 				break;
 			case 'all':
@@ -50,12 +45,7 @@ class SearchParams {
 					// add discussion replies
 					$type_subtype_pairs['object'][] = 'discussion_reply';
 				}
-				
-				if (in_array('page', $type_subtype_pairs['object'])) {
-					// add top pages
-					$type_subtype_pairs['object'][] = 'page_top';
-				}
-				
+								
 				$return_value['type_subtype_pairs'] = $type_subtype_pairs;
 				
 				break;
