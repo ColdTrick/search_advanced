@@ -10,8 +10,6 @@ class Bootstrap extends DefaultPluginBootstrap {
 	 * {@inheritdoc}
 	 */
 	public function init() {
-		
-				
 		$this->registerViews();
 		$this->registerHooks();
 	}
@@ -20,11 +18,6 @@ class Bootstrap extends DefaultPluginBootstrap {
 // 		elgg_extend_view('css/elgg', 'css/search_advanced/site');
 		elgg_extend_view('js/elgg', 'js/search_advanced/site.js');
 		elgg_extend_view('js/elgg', 'js/search_advanced/ajax_submit.js');
-		
-		elgg_define_js('browserstate-history', [
-			'src' => '/mod/search_advanced/vendors/browserstate-history.js/jquery.history.js',
-			'exports' => 'History',
-		]);
 	}
 	
 	protected function registerHooks() {
