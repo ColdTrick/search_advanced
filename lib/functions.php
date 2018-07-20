@@ -4,17 +4,6 @@
  */
 
 /**
- * Function to (un)register various search hooks
- */
-function search_advanced_prepare_search_hooks() {
-	// register search advanced search hooks
-	elgg_register_plugin_hook_handler('search', 'object', 'search_advanced_objects_hook');
-	elgg_register_plugin_hook_handler('search', 'user', 'search_advanced_users_hook');
-	elgg_register_plugin_hook_handler('search', 'group', 'search_advanced_groups_hook');
-	elgg_register_plugin_hook_handler('search', 'combined:all', 'search_advanced_combined_all_hook');
-}
-
-/**
 * Returns a where clause for a search query.
 *
 * Search Advanced: added the ability to use a wildcard in full text search

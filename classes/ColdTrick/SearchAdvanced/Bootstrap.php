@@ -11,10 +11,6 @@ class Bootstrap extends DefaultPluginBootstrap {
 	 */
 	public function init() {
 		
-		elgg_register_page_handler('search_advanced', '\ColdTrick\SearchAdvanced\PageHandler::searchAdvanced');
-		elgg_register_page_handler('search', '\ColdTrick\SearchAdvanced\PageHandler::search');
-		
-		search_advanced_prepare_search_hooks();
 				
 		$this->registerViews();
 		$this->registerHooks();
@@ -39,5 +35,12 @@ class Bootstrap extends DefaultPluginBootstrap {
 		$hooks->registerHandler('search_params', 'search:combined', '\ColdTrick\SearchAdvanced\SearchParams::combinedParams');
 		$hooks->registerHandler('setting', 'plugin', '\ColdTrick\SearchAdvanced\Settings::saveArrayTypeSetting');
 		$hooks->registerHandler('setting', 'plugin', '\ColdTrick\SearchAdvanced\Settings::flushCache');
+		$hooks->registerHandler('view_vars', 'resources/search/index', '\ColdTrick\SearchAdvanced\Views::updateListType');
+		
+		// register search advanced search hooks
+		$hooks->registerHandler('search', 'object', 'search_advanced_objects_hook');
+		$hooks->registerHandler('search', 'user', 'search_advanced_users_hook');
+		$hooks->registerHandler('search', 'group', 'search_advanced_groups_hook');
+		$hooks->registerHandler('search', 'combined:all', 'search_advanced_combined_all_hook');
 	}
 }
