@@ -1,6 +1,6 @@
-elgg.provide("elgg.search_advanced");
+define(function(require) {
+	var $ = require('jquery');
 
-elgg.search_advanced.init_widget_search = function() {
 	$(document).on('submit', '.search-advanced-widget-search-form', function(e) {
 		var $target = $(this).next();
 		
@@ -12,9 +12,8 @@ elgg.search_advanced.init_widget_search = function() {
 		var data = $(this).serialize();
 		data += '&widget_search=1';
 
+		// @todo replace with elgg/ajax.view
 		$target.load($(this).attr("action"), data).addClass("mtm");
 		e.preventDefault();
 	});
-};
-
-elgg.register_hook_handler('init', 'system', elgg.search_advanced.init_widget_search);
+});
