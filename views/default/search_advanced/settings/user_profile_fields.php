@@ -18,13 +18,13 @@ if (!empty($profile_field_metadata_search_values)) {
 }
 
 echo "<table class='elgg-table'>";
-echo "<tr>";
+echo "<thead><tr>";
 echo "<th>" . elgg_echo("search_advanced:settings:profile_fields:field") . "</th>";
 echo "<th class='center'>" . elgg_echo("search_advanced:settings:user_profile_fields:show_on_form") . "*";
 echo elgg_view("input/hidden", array("name" => "params[user_profile_fields]", "value" => 0)) . "</th>";
 echo "<th class='center'>" . elgg_echo("search_advanced:settings:user_profile_fields:use_soundex") . "</th>";
 echo "<th class='center'>" . elgg_echo("search_advanced:settings:profile_fields:metadata_search") . "</th>";
-echo "</tr>";
+echo "</tr></thead>";
 
 foreach ($profile_fields as $metadata_name => $type) {
 	

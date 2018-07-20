@@ -102,31 +102,26 @@ echo '</div>';
 
 $body = '';
 
-$body .= elgg_format_element('div',['class' => 'elgg-admin-notices'], elgg_autop(elgg_echo('search_advanced:settings:profile_fields:disclaimer')));
+$body .= elgg_view_message('notice', elgg_echo('search_advanced:settings:profile_fields:disclaimer'), ['title' => false]);
 
-if (elgg_is_active_plugin('groups')) {
-	elgg_require_js('search_advanced/settings');
+$user_profile_fields = elgg_view('search_advanced/settings/user_profile_fields', $vars);
 
-	$body .= elgg_view('navigation/tabs', [
+if (!elgg_is_active_plugin('groups')) {
+	$body .= $user_profile_fields;
+} else {
+	$body .= elgg_view('page/components/tabs', [
 		'tabs' => [
 			[
 				'text' => elgg_echo('search_advanced:settings:profile_fields:user'),
-				'href' => '#',
+				'content' => $user_profile_fields,
 				'selected' => true,
 			],
 			[
 				'text' => elgg_echo('search_advanced:settings:profile_fields:group'),
-				'href' => '#',
+				'content' => elgg_view('search_advanced/settings/group_profile_fields', $vars),
 			],
 		],
-		'class' => 'search-advanced-settings-tabs',
 	]);
 }
 
-$body .= elgg_format_element('div', ['class'=> 'search-advanced-settings-profile-fields'], elgg_view('search_advanced/settings/user_profile_fields', $vars));
-
-if (elgg_is_active_plugin('groups')) {
-	$body .= elgg_format_element('div', ['class'=> 'search-advanced-settings-profile-fields hidden'], elgg_view('search_advanced/settings/group_profile_fields', $vars));
-}
-
-echo elgg_view_module('inline', elgg_echo('search_advanced:settings:profile_fields'), $body);
+echo elgg_view_module('info', elgg_echo('search_advanced:settings:profile_fields'), $body);
