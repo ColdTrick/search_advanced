@@ -18,5 +18,5 @@ if ($form_body) {
 		'class' => 'search-advanced-user-search'
 	]);
 } else {
-	echo elgg_echo('search_advanced:widgets:search_user:no_results');
+	echo elgg_echo('widgets:search_user:no_results');
 }

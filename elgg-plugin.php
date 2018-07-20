@@ -17,13 +17,18 @@ return [
 		'search_hooks_enabled' => 'yes',
 		'query_required' => 'yes',
 	],
-	'actions' => [
-		
-	],
 	'routes' => [
 		
 	],
 	'widgets' => [
-		
+		'search' => [
+			'name' => elgg_echo('search'),
+			'description' => elgg_echo('search'),
+			'context' => ['admin', 'profile', 'dashboard', 'index', 'groups'],
+			'multiple' => true,
+		],
+		'search_user' => [
+			'context' => ['admin', 'dashboard', 'index'],
+		],
 	],
 ];

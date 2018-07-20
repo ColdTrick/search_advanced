@@ -39,9 +39,9 @@ return array(
 	'search_advanced:widgets:search:edit:submit_behaviour' => "Verhalten speichern",
 	'search_advanced:widgets:search:edit:submit_behaviour:show_in_widget' => "Zeige in Widget",
 	'search_advanced:widgets:search:edit:submit_behaviour:go_to_search' => "Gehe zur Suche",
-	'search_advanced:widgets:search_user:title' => "Benutzer suchen",
-	'search_advanced:widgets:search_user:description' => "Suche Benutzer mit den speziellen Profil-Metadaten-Suchfeldern",
-	'search_advanced:widgets:search_user:no_results' => "Dieses Widget kann nicht verwendet werden, weil keine Profilfelder für die Benutzersuche konfiguriert sind.",
+	'widgets:search_user:name' => "Benutzer suchen",
+	'widgets:search_user:description' => "Suche Benutzer mit den speziellen Profil-Metadaten-Suchfeldern",
+	'widgets:search_user:no_results' => "Dieses Widget kann nicht verwendet werden, weil keine Profilfelder für die Benutzersuche konfiguriert sind.",
 
 	'search_advanced:results:title' => "%s ergebnisse für %s",
 	'search_advanced:results:container:title' => "Zeige Ergebnis in der Gruppe: %s",

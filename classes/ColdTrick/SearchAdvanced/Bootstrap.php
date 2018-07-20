@@ -15,10 +15,6 @@ class Bootstrap extends DefaultPluginBootstrap {
 		elgg_register_page_handler('search', '\ColdTrick\SearchAdvanced\PageHandler::search');
 		
 		search_advanced_prepare_search_hooks();
-							
-		// widgets
-		elgg_register_widget_type('search', elgg_echo('search'), elgg_echo('search'), ['profile', 'dashboard', 'index', 'groups'], true);
-		elgg_register_widget_type('search_user', elgg_echo('search_advanced:widgets:search_user:title'), elgg_echo('search_advanced:widgets:search_user:description'), ['dashboard', 'index']);
 				
 		$this->registerViews();
 		$this->registerEvents();
