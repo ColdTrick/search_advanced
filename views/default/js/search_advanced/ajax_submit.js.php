@@ -1,3 +1,11 @@
+<?php
+
+if (elgg_get_plugin_setting('search_with_loader', 'search_advanced') !== 'yes') {
+	return;
+}
+
+?>
+
 elgg.provide('elgg.search_advanced');
 
 elgg.search_advanced.init_ajax_submit = function() {
@@ -21,7 +29,7 @@ elgg.search_advanced.init_ajax_submit = function() {
 	        		spinner.stop();
 	        		$(window).scrollTop(0);
 	        	});
-	        });	        	
+	        });
 	    });
 	});
 		
@@ -65,7 +73,7 @@ elgg.search_advanced.ajax_load_url = function (url) {
 		
 		var href_parts = url.split('?');
 		var new_url = '/search?loader=1&' + href_parts[1];
-		new_url = elgg.normalize_url(new_url);		
+		new_url = elgg.normalize_url(new_url);
 		
 		$('.elgg-page > .elgg-page-body > .elgg-inner').load(new_url, function() {
 			spinner.stop();

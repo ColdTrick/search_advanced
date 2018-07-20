@@ -24,13 +24,12 @@ class Bootstrap extends DefaultPluginBootstrap {
 	protected function registerViews() {
 		elgg_extend_view('css/elgg', 'css/search_advanced/site');
 		elgg_extend_view('js/elgg', 'js/search_advanced/site.js');
+		elgg_extend_view('js/elgg', 'js/search_advanced/ajax_submit.js');
 		
 		elgg_define_js('browserstate-history', [
 			'src' => '/mod/search_advanced/vendors/browserstate-history.js/jquery.history.js',
 			'exports' => 'History',
 		]);
-		
-		elgg_extend_view('page/elements/foot', 'search_advanced/foot', 400);
 	}
 	
 	protected function registerEvents() {
@@ -44,5 +43,6 @@ class Bootstrap extends DefaultPluginBootstrap {
 		$hooks->registerHandler('register', 'menu:search_list', 'search_advanced_register_menu_list');
 		$hooks->registerHandler('search_params', 'search:combined', '\ColdTrick\SearchAdvanced\SearchParams::combinedParams');
 		$hooks->registerHandler('setting', 'plugin', '\ColdTrick\SearchAdvanced\Settings::saveArrayTypeSetting');
+		$hooks->registerHandler('setting', 'plugin', '\ColdTrick\SearchAdvanced\Settings::flushCache');
 	}
 }
