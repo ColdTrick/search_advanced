@@ -19,12 +19,7 @@ class Bootstrap extends DefaultPluginBootstrap {
 		// widgets
 		elgg_register_widget_type('search', elgg_echo('search'), elgg_echo('search'), ['profile', 'dashboard', 'index', 'groups'], true);
 		elgg_register_widget_type('search_user', elgg_echo('search_advanced:widgets:search_user:title'), elgg_echo('search_advanced:widgets:search_user:description'), ['dashboard', 'index']);
-		
-		// actions
-		elgg_register_action('search_advanced/settings/save', dirname(__FILE__) . '/actions/plugins/settings/save.php', 'admin');
-		
-		
-		
+				
 		$this->registerViews();
 		$this->registerEvents();
 		$this->registerHooks();
@@ -52,6 +47,6 @@ class Bootstrap extends DefaultPluginBootstrap {
 		$hooks->registerHandler('register', 'menu:search_type_selection', 'search_advanced_register_menu_type_selection');
 		$hooks->registerHandler('register', 'menu:search_list', 'search_advanced_register_menu_list');
 		$hooks->registerHandler('search_params', 'search:combined', '\ColdTrick\SearchAdvanced\SearchParams::combinedParams');
-		
+		$hooks->registerHandler('setting', 'plugin', '\ColdTrick\SearchAdvanced\Settings::saveArrayTypeSetting');
 	}
 }

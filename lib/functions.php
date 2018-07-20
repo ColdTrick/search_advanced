@@ -224,7 +224,7 @@ function search_advanced_tag_query_to_array($query) {
 	}
 
 	$separator = '\s';
-	if (elgg_get_plugin_setting("multi_tag_separator", "search_advanced", "comma") == 'comma') {
+	if (elgg_get_plugin_setting("multi_tag_separator", "search_advanced") == 'comma') {
 		$separator = ',';
 	}
 	

@@ -2,17 +2,10 @@
 
 $plugin = elgg_extract('entity', $vars);
 
-$yesno_options = [
-	'yes' => elgg_echo('option:yes'),
-	'no' => elgg_echo('option:no')
-];
-$noyes_options = array_reverse($yesno_options);
-
 echo elgg_view_field([
 	'#type' => 'select',
 	'#label' => elgg_echo('search_advanced:settings:filter_position'),
 	'#help' => elgg_echo('search_advanced:settings:filter_position:info'),
-	
 	'name' => 'params[filter_position]',
 	'options_values' => [
 		'content' => elgg_echo('search_advanced:settings:filter_position:content'),
@@ -25,7 +18,6 @@ echo elgg_view_field([
 	'#type' => 'select',
 	'#label' => elgg_echo('search_advanced:settings:search_types_menu_format'),
 	'#help' => elgg_echo('search_advanced:settings:search_types_menu_format:info'),
-	
 	'name' => 'params[search_types_menu_format]',
 	'options_values' => [
 		'menu' => elgg_echo('search_advanced:settings:search_types_menu_format:menu'),
@@ -38,7 +30,6 @@ echo elgg_view_field([
 	'#type' => 'select',
 	'#label' => elgg_echo('search_advanced:settings:combine_search_results'),
 	'#help' => elgg_echo('search_advanced:settings:combine_search_results:info'),
-
 	'name' => 'params[combine_search_results]',
 	'options_values' => [
 		'no' => elgg_echo('option:no'),
@@ -49,53 +40,56 @@ echo elgg_view_field([
 ]);
 
 echo elgg_view_field([
-	'#type' => 'select',
+	'#type' => 'checkbox',
 	'#label' => elgg_echo('search_advanced:settings:query_required'),
 	'#help' => elgg_echo('search_advanced:settings:query_required:help'),
-
 	'name' => 'params[query_required]',
-	'options_values' => $yesno_options,
-	'value' => $plugin->query_required,
+	'checked' => $plugin->query_required === 'yes',
+	'switch' => true,
+	'default' => 'no',
+	'value' => 'yes',
 ]);
 
 echo elgg_view_field([
-	'#type' => 'select',
+	'#type' => 'checkbox',
 	'#label' => elgg_echo('search_advanced:settings:search_with_loader'),
 	'#help' => elgg_echo('search_advanced:settings:search_with_loader:info'),
-	
 	'name' => 'params[search_with_loader]',
-	'options_values' => $noyes_options,
-	'value' => $plugin->search_with_loader,
+	'checked' => $plugin->search_with_loader === 'yes',
+	'switch' => true,
+	'default' => 'no',
+	'value' => 'yes',
 ]);
 
 // search hooks settings
 echo elgg_view_field([
-	'#type' => 'select',
+	'#type' => 'checkbox',
 	'#label' => elgg_echo('search_advanced:settings:search_hooks_enabled'),
 	'#help' => elgg_echo('search_advanced:settings:search_hooks_enabled:info'),
-	
 	'name' => 'params[search_hooks_enabled]',
-	'options_values' => $yesno_options,
-	'value' => $plugin->search_hooks_enabled,
+	'checked' => $plugin->search_hooks_enabled === 'yes',
+	'switch' => true,
+	'default' => 'no',
+	'value' => 'yes',
 ]);
 
 echo '<div class="mls plm mbm elgg-divide-left">';
 
 echo elgg_view_field([
-	'#type' => 'select',
+	'#type' => 'checkbox',
 	'#label' => elgg_echo('search_advanced:settings:enable_multi_tag'),
 	'#help' => elgg_echo('search_advanced:settings:enable_multi_tag:info'),
-	
 	'name' => 'params[enable_multi_tag]',
-	'options_values' => $noyes_options,
-	'value' => $plugin->enable_multi_tag,
+	'checked' => $plugin->enable_multi_tag === 'yes',
+	'switch' => true,
+	'default' => 'no',
+	'value' => 'yes',
 ]);
 
 echo elgg_view_field([
 	'#type' => 'select',
 	'#label' => elgg_echo('search_advanced:settings:multi_tag_separator'),
 	'#help' => elgg_echo('search_advanced:settings:multi_tag_separator:info'),
-	
 	'name' => 'params[multi_tag_separator]',
 	'options_values' => [
 		'comma' => elgg_echo('search_advanced:settings:multi_tag_separator:comma'),

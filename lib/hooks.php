@@ -18,7 +18,7 @@ function search_advanced_objects_hook($hook, $type, $value, $params) {
 		return;
 	}
 	
-	if (elgg_get_plugin_setting('search_hooks_enabled', 'search_advanced', 'yes') == 'no') {
+	if (elgg_get_plugin_setting('search_hooks_enabled', 'search_advanced') == 'no') {
 		return;
 	}
 
@@ -140,7 +140,7 @@ function search_advanced_combined_all_hook($hook, $type, $value, $params) {
 		return;
 	}
 	
-	if (elgg_get_plugin_setting('search_hooks_enabled', 'search_advanced', 'yes') == 'no') {
+	if (elgg_get_plugin_setting('search_hooks_enabled', 'search_advanced') == 'no') {
 		return;
 	}
 
@@ -285,7 +285,7 @@ function search_advanced_groups_hook($hook, $type, $value, $params) {
 		return;
 	}
 	
-	if (elgg_get_plugin_setting('search_hooks_enabled', 'search_advanced', 'yes') == 'no') {
+	if (elgg_get_plugin_setting('search_hooks_enabled', 'search_advanced') == 'no') {
 		return;
 	}
 	
@@ -389,7 +389,7 @@ function search_advanced_users_hook($hook, $type, $value, $params) {
 		return;
 	}
 	
-	if (elgg_get_plugin_setting('search_hooks_enabled', 'search_advanced', 'yes') == 'no') {
+	if (elgg_get_plugin_setting('search_hooks_enabled', 'search_advanced') == 'no') {
 		return;
 	}
 	

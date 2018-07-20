@@ -96,7 +96,7 @@ $current_params['search_type'] = 'entities';
 // if a plugin returns NULL or '' for subtype, pass to generic type search function.
 // if still NULL or '' or empty(array()) no results found. (== don't show??)
 
-$combine_search_results = elgg_get_plugin_setting('combine_search_results', 'search_advanced', 'no');
+$combine_search_results = elgg_get_plugin_setting('combine_search_results', 'search_advanced');
 
 $query_required = (bool) (elgg_get_plugin_setting('query_required', 'search_advanced') !== 'no');
 

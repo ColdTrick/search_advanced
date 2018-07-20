@@ -24,7 +24,7 @@ $vars = array_merge($vars, $params);
 
 $filter_position = elgg_extract('filter_position', $vars, 'content');
 
-if ($filter_position !== elgg_get_plugin_setting('filter_position', 'search_advanced', 'content')) {
+if ($filter_position !== elgg_get_plugin_setting('filter_position', 'search_advanced')) {
 	return;
 }
 

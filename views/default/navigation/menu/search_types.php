@@ -1,6 +1,6 @@
 <?php
 
-$display_format = elgg_get_plugin_setting('search_types_menu_format', 'search_advanced', 'menu');
+$display_format = elgg_get_plugin_setting('search_types_menu_format', 'search_advanced');
 $menu = elgg_extract('menu', $vars);
 $selected_item = elgg_extract('selected_item', $vars);
 
