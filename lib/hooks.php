@@ -411,13 +411,8 @@ function search_advanced_users_hook($hook, $type, $value, $params) {
 		$params["inverse_relationship"] = false;
 		
 		unset($params["container_guid"]);
-	} else {
-		// check for site relation ship
-		$params["relationship"] = "member_of_site";
-		$params["relationship_guid"] = elgg_get_site_entity()->getGUID();
-		$params["inverse_relationship"] = true;
 	}
-	
+		
 	$i = 0;
 	
 	if (!empty($params["query"])) {
@@ -575,136 +570,6 @@ function search_advanced_simple_hook_return($params) {
 	
 	$params['count'] = false;
 	$result['entities'] = elgg_get_entities($params);
-	
-	return $result;
-}
-
-/**
- * Return the data from the default search hook
- *
- * @param string       $hook   name of hook
- * @param string       $type   type of hook
- * @param unknown_type $value  current value
- * @param array        $params parameters
- *
- * @return array
- */
-function search_advanced_fallback_search_hook($hook, $type, $value, $params) {
-	if (!empty($value)) {
-		return;
-	}
-	
-	if (!in_array($type, ['object', 'user', 'group', 'tags'])) {
-		return;
-	}
-	
-	switch ($type) {
-		case 'object':
-			return search_objects_hook($hook, $type, $value, $params);
-		case 'user':
-			return search_users_hook($hook, $type, $value, $params);
-		case 'group':
-			return search_groups_hook($hook, $type, $value, $params);
-		case 'tags':
-			return search_tags_hook($hook, $type, $value, $params);
-	}
-}
-
-/**
- * Registers menu type selection menu items
- *
- * @param string       $hook   name of hook
- * @param string       $type   type of hook
- * @param unknown_type $value  current value
- * @param array        $params parameters
- *
- * @return array
- */
-function search_advanced_register_menu_type_selection($hook, $type, $value, $params) {
-	$result = $value;
-	
-	$types = get_registered_entity_types();
-	$custom_types = elgg_trigger_plugin_hook("search_types", "get_types", array(), array());
-	
-	$result[] = ElggMenuItem::factory(array(
-		"name" => "all",
-		"text" => "<a>" . elgg_echo("all") . "</a>",
-		"href" => false
-	));
-	$result[] = ElggMenuItem::factory(array(
-		"name" => "item:user",
-		"text" => "<a rel='user'>" . elgg_echo("item:user") . "</a>",
-		"href" => false
-	));
-	$result[] = ElggMenuItem::factory(array(
-		"name" => "item:group",
-		"text" => "<a rel='group'>" . elgg_echo("item:group") . "</a>",
-		"href" => false
-	));
-	
-	foreach ($types["object"] as $subtype) {
-		$result[] = ElggMenuItem::factory(array(
-			"name" => "item:object:$subtype",
-			"text" => "<a rel='object " . $subtype . "'>" . elgg_echo("item:object:" . $subtype) . "</a>",
-			"href" => false,
-			"title" => elgg_echo("item:object:$subtype")
-		));
-	}
-	
-	foreach ($custom_types as $type) {
-		$result[] = ElggMenuItem::factory(array(
-			"name" => "search_types:$type",
-			"text" => "<a rel='" . $type . "'>" . elgg_echo("search_types:$type") . "</a>",
-			"href" => false,
-			"title" => elgg_echo("search_types:$type")
-		));
-	}
-	
-	return $result;
-}
-
-/**
- * Registers menu items related to search results listing
- *
- * @param string       $hook   name of hook
- * @param string       $type   type of hook
- * @param unknown_type $value  current value
- * @param array        $params parameters
- *
- * @return array
- */
-function search_advanced_register_menu_list($hook, $type, $value, $params) {
-	$result = $value;
-	
-	$url = search_advanced_get_search_url();
-	$current_list_type = search_advanced_get_list_type();
-	$title = elgg_echo('search_advanced:menu:search_list:list:title');
-	
-	$result[] = ElggMenuItem::factory([
-		'name' => 'list',
-		'text' => elgg_view_icon('list'),
-		'href' => '#',
-		'title' => $title,
-		'priority' => 999
-	]);
-
-	$result[] = ElggMenuItem::factory([
-		'name' => 'list_entity',
-		'text' => elgg_echo('search_advanced:menu:search_list:entity'),
-		'href' => elgg_http_add_url_query_elements($url, ['list_type' => 'entity']),
-		'parent_name' => 'list',
-		'selected' => ($current_list_type === 'entity'),
-		'title' => $title
-	]);
-
-	$result[] = ElggMenuItem::factory([
-		'name' => 'list_compact',
-		'text' => elgg_echo('search_advanced:menu:search_list:compact'),
-		'href' => elgg_http_add_url_query_elements($url, ['list_type' => 'compact']),
-		'parent_name' => 'list',
-		'selected' => ($current_list_type === 'compact'),
-		'title' => $title
-	]);
 	
 	return $result;
 }

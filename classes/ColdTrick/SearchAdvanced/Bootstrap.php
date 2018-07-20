@@ -17,12 +17,11 @@ class Bootstrap extends DefaultPluginBootstrap {
 		search_advanced_prepare_search_hooks();
 				
 		$this->registerViews();
-		$this->registerEvents();
 		$this->registerHooks();
 	}
 	
 	protected function registerViews() {
-		elgg_extend_view('css/elgg', 'css/search_advanced/site');
+// 		elgg_extend_view('css/elgg', 'css/search_advanced/site');
 		elgg_extend_view('js/elgg', 'js/search_advanced/site.js');
 		elgg_extend_view('js/elgg', 'js/search_advanced/ajax_submit.js');
 		
@@ -32,15 +31,11 @@ class Bootstrap extends DefaultPluginBootstrap {
 		]);
 	}
 	
-	protected function registerEvents() {
-
-	}
-	
 	protected function registerHooks() {
 		$hooks = $this->elgg()->hooks;
 		
-		$hooks->registerHandler('register', 'menu:search_type_selection', 'search_advanced_register_menu_type_selection');
-		$hooks->registerHandler('register', 'menu:search_list', 'search_advanced_register_menu_list');
+		$hooks->registerHandler('register', 'menu:search_type_selection', '\ColdTrick\SearchAdvanced\SearchParams::registerSearchTypeSelectionItems');
+		$hooks->registerHandler('register', 'menu:search_list', '\ColdTrick\SearchAdvanced\SearchParams::registerSearchListItems');
 		$hooks->registerHandler('search_params', 'search:combined', '\ColdTrick\SearchAdvanced\SearchParams::combinedParams');
 		$hooks->registerHandler('setting', 'plugin', '\ColdTrick\SearchAdvanced\Settings::saveArrayTypeSetting');
 		$hooks->registerHandler('setting', 'plugin', '\ColdTrick\SearchAdvanced\Settings::flushCache');
