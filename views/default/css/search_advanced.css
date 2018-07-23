@@ -1,0 +1,25 @@
+.elgg-page-topbar .elgg-nav-search {
+	flex-grow: 1;
+	
+	.elgg-menu-search-type-selection-container {
+		position: absolute;
+		top: 0.5rem;
+		right: 50px;
+		
+		.elgg-menu:not(.elgg-child-menu) > li > a {
+			padding-top: 0;
+			padding-bottom: 0;
+			line-height: 2.5rem;
+		}
+		
+		.elgg-menu li {
+			.elgg-child-menu {
+				top: 2.5rem;
+			}
+			
+			&:hover > .elgg-child-menu:before {
+				margin-right: 1rem;
+			}
+		}
+	}
+}

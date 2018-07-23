@@ -13,41 +13,69 @@ class Menus {
 	 */
 	public static function registerSearchTypeSelectionItems(\Elgg\Hook $hook) {
 		$result = $hook->getValue();
+		$service = new \Elgg\Search\Search();
 		
-		$types = get_registered_entity_types();
-		$custom_types = elgg_trigger_plugin_hook("search_types", "get_types", array(), array());
-		
-		$result[] = ElggMenuItem::factory([
-			"name" => "all",
-			"text" => "<a>" . elgg_echo("all") . "</a>",
-			"href" => false,
+		$result[] = \ElggMenuItem::factory([
+			'name' => '_selected',
+			'text' => elgg_echo('all'),
+			'href' => false,
+			'deps' => ['search_advanced/type_selection'],
 		]);
-		$result[] = ElggMenuItem::factory([
-			"name" => "item:user",
-			"text" => "<a rel='user'>" . elgg_echo("item:user") . "</a>",
-			"href" => false,
+		$result[] = \ElggMenuItem::factory([
+			'name' => 'all',
+			'text' => elgg_echo('all'),
+			'href' => false,
+			'parent_name' => '_selected',
+			'data-search-type' => 'all',
+			'data-entity-type' => '',
+			'data-entity-subtype' => '',
 		]);
-		$result[] = ElggMenuItem::factory([
-			"name" => "item:group",
-			"text" => "<a rel='group'>" . elgg_echo("item:group") . "</a>",
-			"href" => false,
-		]);
-		
-		foreach ($types["object"] as $subtype) {
-			$result[] = ElggMenuItem::factory([
-				"name" => "item:object:$subtype",
-				"text" => "<a rel='object " . $subtype . "'>" . elgg_echo("item:object:" . $subtype) . "</a>",
-				"href" => false,
-				"title" => elgg_echo("item:object:$subtype"),
+				
+		$types = $service->getTypeSubtypePairs();
+		foreach (elgg_extract('user', $types, []) as $subtype) {
+			$result[] = \ElggMenuItem::factory([
+				'name' => "item:user:{$subtype}",
+				'text' => elgg_echo("item:user:{$subtype}"),
+				'href' => false,
+				'parent_name' => '_selected',
+				'data-search-type' => 'entities',
+				'data-entity-type' => 'user',
+				'data-entity-subtype' => $subtype,
+			]);
+		}
+		foreach (elgg_extract('group', $types, []) as $subtype) {
+			$result[] = \ElggMenuItem::factory([
+				'name' => "item:group:{$subtype}",
+				'text' => elgg_echo("item:group:{$subtype}"),
+				'href' => false,
+				'parent_name' => '_selected',
+				'data-search-type' => 'entities',
+				'data-entity-type' => 'group',
+				'data-entity-subtype' => $subtype,
+			]);
+		}
+		foreach (elgg_extract('object', $types, []) as $subtype) {
+			$result[] = \ElggMenuItem::factory([
+				'name' => "item:object:{$subtype}",
+				'text' => elgg_echo("item:object:{$subtype}"),
+				'href' => false,
+				'parent_name' => '_selected',
+				'data-search-type' => 'entities',
+				'data-entity-type' => 'object',
+				'data-entity-subtype' => $subtype,
 			]);
 		}
 		
+		$custom_types = $service->getSearchTypes();
 		foreach ($custom_types as $type) {
-			$result[] = ElggMenuItem::factory([
-				"name" => "search_types:$type",
-				"text" => "<a rel='" . $type . "'>" . elgg_echo("search_types:$type") . "</a>",
-				"href" => false,
-				"title" => elgg_echo("search_types:$type"),
+			$result[] = \ElggMenuItem::factory([
+				'name' => "search_types:{$type}",
+				'text' => elgg_echo("search_types:{$type}"),
+				'href' => false,
+				'parent_name' => '_selected',
+				'data-search-type' => $type,
+				'data-entity-type' => '',
+				'data-entity-subtype' => '',
 			]);
 		}
 		
@@ -64,11 +92,12 @@ class Menus {
 	public static function registerSearchListItems(\Elgg\Hook $hook) {
 		$result = $hook->getValue();
 		
-		$url = search_advanced_get_search_url();
+		$url = current_page_url();
 		$current_list_type = search_advanced_get_list_type();
+
 		$title = elgg_echo('search_advanced:menu:search_list:list:title');
 		
-		$result[] = ElggMenuItem::factory([
+		$result[] = \ElggMenuItem::factory([
 			'name' => 'list',
 			'text' => elgg_view_icon('list'),
 			'href' => '#',
@@ -76,7 +105,7 @@ class Menus {
 			'priority' => 999,
 		]);
 	
-		$result[] = ElggMenuItem::factory([
+		$result[] = \ElggMenuItem::factory([
 			'name' => 'list_entity',
 			'text' => elgg_echo('search_advanced:menu:search_list:entity'),
 			'href' => elgg_http_add_url_query_elements($url, ['list_type' => 'entity']),
@@ -85,7 +114,7 @@ class Menus {
 			'title' => $title,
 		]);
 	
-		$result[] = ElggMenuItem::factory([
+		$result[] = \ElggMenuItem::factory([
 			'name' => 'list_compact',
 			'text' => elgg_echo('search_advanced:menu:search_list:compact'),
 			'href' => elgg_http_add_url_query_elements($url, ['list_type' => 'compact']),

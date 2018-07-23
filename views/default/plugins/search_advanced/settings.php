@@ -4,30 +4,6 @@ $plugin = elgg_extract('entity', $vars);
 
 echo elgg_view_field([
 	'#type' => 'select',
-	'#label' => elgg_echo('search_advanced:settings:filter_position'),
-	'#help' => elgg_echo('search_advanced:settings:filter_position:info'),
-	'name' => 'params[filter_position]',
-	'options_values' => [
-		'content' => elgg_echo('search_advanced:settings:filter_position:content'),
-		'sidebar' => elgg_echo('search_advanced:settings:filter_position:sidebar'),
-	],
-	'value' => $plugin->filter_position,
-]);
-
-echo elgg_view_field([
-	'#type' => 'select',
-	'#label' => elgg_echo('search_advanced:settings:search_types_menu_format'),
-	'#help' => elgg_echo('search_advanced:settings:search_types_menu_format:info'),
-	'name' => 'params[search_types_menu_format]',
-	'options_values' => [
-		'menu' => elgg_echo('search_advanced:settings:search_types_menu_format:menu'),
-		'dropdown' => elgg_echo('search_advanced:settings:search_types_menu_format:dropdown'),
-	],
-	'value' => $plugin->search_types_menu_format,
-]);
-
-echo elgg_view_field([
-	'#type' => 'select',
 	'#label' => elgg_echo('search_advanced:settings:combine_search_results'),
 	'#help' => elgg_echo('search_advanced:settings:combine_search_results:info'),
 	'name' => 'params[combine_search_results]',
@@ -104,7 +80,7 @@ $body = '';
 
 $body .= elgg_view_message('notice', elgg_echo('search_advanced:settings:profile_fields:disclaimer'), ['title' => false]);
 
-$user_profile_fields = elgg_view('search_advanced/settings/user_profile_fields', $vars);
+$user_profile_fields = elgg_view('plugins/search_advanced/settings/user_profile_fields', $vars);
 
 if (!elgg_is_active_plugin('groups')) {
 	$body .= $user_profile_fields;
@@ -118,7 +94,7 @@ if (!elgg_is_active_plugin('groups')) {
 			],
 			[
 				'text' => elgg_echo('search_advanced:settings:profile_fields:group'),
-				'content' => elgg_view('search_advanced/settings/group_profile_fields', $vars),
+				'content' => elgg_view('plugins/search_advanced/settings/group_profile_fields', $vars),
 			],
 		],
 	]);

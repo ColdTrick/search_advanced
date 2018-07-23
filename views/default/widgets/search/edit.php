@@ -16,37 +16,29 @@ foreach ($types as $type => $subtypes) {
 			} else {
 				$option = elgg_echo("item:$type:$subtype");
 			}
-			$value = "$type:$subtype";
-			$options_values[$value] = $option;
-		}
 			
+			$options_values["{$type}:{$subtype}"] = $option;
+		}
 	} else {
-		$option = elgg_echo("item:$type");
-		$value = "$type";
-		$options_values[$value] = $option;
+		$options_values[$type] = elgg_echo("item:{$type}");
 	}
 }
 
-$submit_behaviour_options = [
-	'show_in_widget' => elgg_echo('search_advanced:widgets:search:edit:submit_behaviour:show_in_widget'),
-	'go_to_search' => elgg_echo('search_advanced:widgets:search:edit:submit_behaviour:go_to_search'),
-];
-
-
-$filter_body = elgg_echo('filter') . '&nbsp;';
-$filter_body .= elgg_view('input/dropdown', [
+echo elgg_view_field([
+	'#type' => 'select',
+	'#label' => elgg_echo('filter'),
 	'name' => 'params[types]',
 	'value' => $widget->types,
-	'options_values' => $options_values
+	'options_values' => $options_values,
 ]);
 
-echo elgg_format_element('div', [], $filter_body);
-
-$submit_behaviour_body = elgg_echo('search_advanced:widgets:search:edit:submit_behaviour') . '&nbsp;';
-$submit_behaviour_body .= elgg_view('input/dropdown', [
+echo elgg_view_field([
+	'#type' => 'select',
+	'#label' => elgg_echo('search_advanced:widgets:search:edit:submit_behaviour'),
 	'name' => 'params[submit_behaviour]',
 	'value' => $widget->submit_behaviour,
-	'options_values' => $submit_behaviour_options
+	'options_values' => [
+		'show_in_widget' => elgg_echo('search_advanced:widgets:search:edit:submit_behaviour:show_in_widget'),
+		'go_to_search' => elgg_echo('search_advanced:widgets:search:edit:submit_behaviour:go_to_search'),
+	],
 ]);
-
-echo elgg_format_element('div', [], $submit_behaviour_body);

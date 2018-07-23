@@ -40,14 +40,12 @@ $default_params = [
 $query_params = (array) elgg_extract('query_params', $vars, []);
 $query_params = array_merge($default_params, $query_params);
 
-$url = search_advanced_get_search_url();
-
 $more_items = $vars['results']['count'] - ($vars['params']['offset'] + $vars['params']['limit']);
 
 // get pagination
 if (array_key_exists('pagination', $vars['params']) && $vars['params']['pagination']) {
 	$nav = elgg_view('navigation/pagination', array(
-		'base_url' => $url,
+		'base_url' => current_page_url(),
 		'offset' => $vars['params']['offset'],
 		'count' => $vars['results']['count'],
 		'limit' => $vars['params']['limit'],
@@ -99,8 +97,7 @@ foreach ($entities as $entity) {
 		'results' => $vars['results']
 	];
 	
-	$list_item = elgg_view('search_advanced/search/floating_tag', $entity_params);
-	$list_item .= elgg_view($view, $entity_params);
+	$list_item = elgg_view($view, $entity_params);
 	
 	$list_items .= elgg_format_element('li', [
 		'id' => "elgg-{$entity->getType()}-{$entity->getGUID()}",
@@ -110,7 +107,7 @@ foreach ($entities as $entity) {
 
 $header = elgg_format_element('h3', [], $title);
 if ($show_more) {
-	$url = search_advanced_get_search_url([
+	$url = elgg_http_add_url_query_elements(current_page_url(), [
 		'limit' => null,
 		'search_type' => $search_type,
 		'entity_type' => $type,

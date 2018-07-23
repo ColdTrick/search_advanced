@@ -22,11 +22,5 @@ if (!elgg_view_exists($view)) {
 // sometimes params contain stuff that should be in vars
 $vars = array_merge($vars, $params);
 
-$filter_position = elgg_extract('filter_position', $vars, 'content');
-
-if ($filter_position !== elgg_get_plugin_setting('filter_position', 'search_advanced')) {
-	return;
-}
-
 echo elgg_view($view, $vars);
 

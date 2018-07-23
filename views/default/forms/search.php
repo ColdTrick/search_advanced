@@ -39,9 +39,6 @@ $values = [
 ];
 
 foreach ($values as $name => $value) {
-	if (!$value) {
-		continue;
-	}
 	echo elgg_view_field([
 		'#type' => 'hidden',
 		'name' => $name,

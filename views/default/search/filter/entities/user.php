@@ -13,14 +13,10 @@ $profile_field_values = json_decode($profile_field_values, true);
 $profile_field_soundex_submit_values = elgg_extract('profile_fields_soundex', $search_filter, []);
 $profile_field_soundex_values = json_decode($profile_field_soundex_values, true);
 
-$show_placeholder_default = false;
-$show_label_default = true;
-$module_type_default = false;
-if (elgg_extract('filter_position', $vars) === 'sidebar') {
-	$show_placeholder_default = true;
-	$show_label_default = false;
-	$module_type_default = 'aside';
-}
+$show_placeholder_default = true;
+$show_label_default = false;
+$module_type_default = 'aside';
+
 $show_placeholder = (bool) elgg_extract('show_placeholder', $vars, $show_placeholder_default);
 $show_label = (bool) elgg_extract('show_label', $vars, $show_label_default);
 

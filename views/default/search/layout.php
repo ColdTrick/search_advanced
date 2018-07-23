@@ -18,9 +18,6 @@ $content = elgg_extract('body', $vars);
 $class = elgg_extract('class', $vars);
 $search_params = (array) elgg_extract('params', $vars, []);
 
-// register menu items
-search_advanced_register_menu_items($vars);
-
 if (is_array($content)) {
 	$content = implode('', $content);
 }

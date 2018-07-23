@@ -33,12 +33,10 @@ if ($container_guid) {
 			'text' => $container_entity->name,
 			'href' => $container_entity->getURL(),
 		]);
-		
-		$undo_url = search_advanced_get_search_url(['container_guid' => null]);
-		
+				
 		$undo_container_link = elgg_view('output/url', [
 			'text' => elgg_view_icon('delete'),
-			'href' => $undo_url,
+			'href' => elgg_http_add_url_query_elements(current_page_url(), ['container_guid' => null]),
 			'title' => elgg_echo('search_advanced:results:container:undo')
 		]);
 		
@@ -50,10 +48,6 @@ if ($container_guid) {
 	}
 	echo elgg_view("input/hidden", ["name" => "container_guid", "value" => $container_guid]);
 }
-
-
-$vars['filter_position'] = 'content';
-$filter = elgg_view('search/filter', $vars);
 
 $submit_options = [
 	'value' => elgg_echo('submit'),
