@@ -23,7 +23,10 @@ echo elgg_view_field([
 	'placeholder' => elgg_echo('search_advanced:searchbox'),
 ]);
 
-echo elgg_view_menu('search_type_selection');
+if (!elgg_extract('inline_form', $vars, false)) {
+	echo elgg_view_menu('search_type_selection');
+}
+unset($vars['inline_form']);
 
 echo elgg_view_field([
 	'#type' => 'submit',

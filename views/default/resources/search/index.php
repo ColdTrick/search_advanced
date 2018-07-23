@@ -30,6 +30,8 @@ if (empty($query)) {
 	$title = elgg_echo('search:results', ["\"$highlighted_query\""]);
 }
 
+$params['inline_form'] = true;
+
 $form = elgg_view_form('search', [
 	'action' => elgg_normalize_url('search'),
 	'method' => 'get',
