@@ -11,7 +11,7 @@ elgg_register_rss_link();
 // but have /search/<query1>?q=<query2> as <query2> be the main search query
 set_input('q', get_input('q', elgg_extract('route_query', $vars, null, false)));
 
-$service = new \Elgg\Search\Search();
+$service = new \ColdTrick\SearchAdvanced\SearchHelper();
 $params = $service->getParams();
 
 $container_guid = elgg_extract('container_guid', $params);
@@ -51,9 +51,19 @@ if (empty($query) && $query != "0") {
 	return;
 }
 
-$use_type = function ($search_type, $type = null, $subtype = null) use ($params) {
+$combine_results = elgg_get_plugin_setting('combine_search_results', 'search_advanced');
+
+$use_type = function ($search_type, $type = null, $subtype = null) use ($params, $combine_results) {
 
 	if ($params['search_type'] == 'all') {
+		if ($search_type === 'entities') {
+			if ($combine_results === 'all') {
+				return false;
+			} elseif ($combine_results === 'objects' && ($type == 'object')) {
+				return false;
+			}
+		}
+		
 		return true;
 	}
 
@@ -101,6 +111,25 @@ foreach ($types as $type => $subtypes) {
 		if ($use_type('entities', $type, $subtype)) {
 			$results .= $service->listResults('entities', $type, $subtype);
 		}
+	}
+}
+
+if ($combine_results !== 'no') {
+	if ($combine_results === 'objects') {
+		$object_subtypes = elgg_extract('object', $types);
+		if (!empty($object_subtypes)) {
+			$extra_params = [
+				'type_subtype_pairs' => ['object' => $object_subtypes],
+				'limit' => 10,
+			];
+			$results .= $service->listResults('combined:objects', null, null, false, $extra_params);
+		}
+	} else {
+		$extra_params = [
+			'type_subtype_pairs' => $types,
+			'limit' => 10,
+		];
+		$results .= $service->listResults('combined:all', null, null, false, $extra_params);
 	}
 }
 
