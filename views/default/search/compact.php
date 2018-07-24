@@ -2,28 +2,19 @@
 
 $entity = elgg_extract('entity', $vars);
 
-if (!$entity) {
+if (!$entity instanceof \ElggEntity) {
 	return;
 }
 
-$title = $entity->getVolatileData('search_matched_title');
+$title = elgg_extract('title', $vars, $entity->getVolatileData('search_matched_title'));
 
 if (empty($title)) {
-	$title = $entity->title;
-	if ($title === null) {
-		$title = $entity->name;
-	}
+	$title = $entity->getDisplayName();
 }
-
-if (empty($title)) {
-	$title = elgg_extract('title', $vars, $title);
-}
-
-$url = $entity->getURL();
 
 $link = elgg_view('output/url', [
 	'text' => $title,
-	'href' => $url
+	'href' => $entity->getURL(),
 ]);
 
 echo elgg_format_element('p', [], $link);

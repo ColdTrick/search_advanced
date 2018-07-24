@@ -23,3 +23,7 @@
 		}
 	}
 }
+
+.elgg-menu-filter-search-alt {
+	justify-content: flex-end;
+}

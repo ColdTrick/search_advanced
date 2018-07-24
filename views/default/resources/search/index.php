@@ -11,6 +11,9 @@ elgg_register_rss_link();
 // but have /search/<query1>?q=<query2> as <query2> be the main search query
 set_input('q', get_input('q', elgg_extract('route_query', $vars, null, false)));
 
+// setting list_type input so elgg_view_entity_list can use it
+set_input('list_type', get_input('list_type', search_advanced_get_list_type()));
+
 $service = new \ColdTrick\SearchAdvanced\SearchHelper();
 $params = $service->getParams();
 
@@ -114,7 +117,7 @@ foreach ($types as $type => $subtypes) {
 	}
 }
 
-if ($combine_results !== 'no') {
+if (($combine_results !== 'no') && ($params['search_type'] === 'all')) {
 	if ($combine_results === 'objects') {
 		$object_subtypes = elgg_extract('object', $types);
 		if (!empty($object_subtypes)) {
@@ -170,10 +173,12 @@ if (empty($results)) {
 	], elgg_echo('notfound'));
 }
 
+$filter = elgg_view('page/layouts/elements/filter', ['filter_id' => 'search']);
+
 $layout = elgg_view_layout('content', [
 	'title' => $title,
-	'content' => $form . $results,
-	'filter' => '',
+	'content' => $results,
+	'filter' => $form . $filter,
 ]);
 
 echo elgg_view_page(elgg_echo('search'), $layout);

@@ -25,7 +25,7 @@ class Bootstrap extends DefaultPluginBootstrap {
 		$hooks = $this->elgg()->hooks;
 		
 		$hooks->registerHandler('register', 'menu:search_type_selection', '\ColdTrick\SearchAdvanced\Menus::registerSearchTypeSelectionItems');
-		$hooks->registerHandler('register', 'menu:search_list', '\ColdTrick\SearchAdvanced\Menus::registerSearchListItems');
+		$hooks->registerHandler('register', 'menu:filter:search', '\ColdTrick\SearchAdvanced\Menus::registerSearchListItems');
 		$hooks->registerHandler('setting', 'plugin', '\ColdTrick\SearchAdvanced\Settings::saveArrayTypeSetting');
 		$hooks->registerHandler('setting', 'plugin', '\ColdTrick\SearchAdvanced\Settings::flushCache');
 		$hooks->registerHandler('search:params', 'all', '\ColdTrick\SearchAdvanced\Search::getParams');

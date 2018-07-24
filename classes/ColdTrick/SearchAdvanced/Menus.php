@@ -95,34 +95,37 @@ class Menus {
 		$url = current_page_url();
 		$current_list_type = search_advanced_get_list_type();
 
-		$title = elgg_echo('search_advanced:menu:search_list:list:title');
+		$list_compact = (bool) ($current_list_type === 'compact');
 		
 		$result[] = \ElggMenuItem::factory([
-			'name' => 'list',
-			'text' => elgg_view_icon('list'),
-			'href' => '#',
-			'title' => $title,
+			'name' => 'selected-list-type',
+			'text' => $list_compact ? elgg_echo('search_advanced:menu:search_list:compact') : elgg_echo('search_advanced:menu:search_list:entity'),
+			'icon' => $list_compact ? 'list' : 'th-list',
+			'href' => false,
+			'child_menu' => [
+				'display' => 'dropdown',
+				'data-position' => json_encode([
+					'my' => 'right top',
+					'at' => 'right bottom',
+					'collision' => 'fit fit',
+				]),
+			],
+			'section' => 'alt',
+			'title' => elgg_echo('search_advanced:menu:search_list:list:title'),
 			'priority' => 999,
 		]);
 	
 		$result[] = \ElggMenuItem::factory([
-			'name' => 'list_entity',
-			'text' => elgg_echo('search_advanced:menu:search_list:entity'),
-			'href' => elgg_http_add_url_query_elements($url, ['list_type' => 'entity']),
-			'parent_name' => 'list',
-			'selected' => ($current_list_type === 'entity'),
-			'title' => $title,
+			'name' => 'other-list-type',
+			'text' => !$list_compact ? elgg_echo('search_advanced:menu:search_list:compact') : elgg_echo('search_advanced:menu:search_list:entity'),
+			'icon' => !$list_compact ? 'list' : 'th-list',
+			'href' => elgg_http_add_url_query_elements($url, [
+				'list_type' => $list_compact ? 'list' : 'compact',
+			]),
+			'section' => 'alt',
+			'parent_name' => 'selected-list-type',
 		]);
 	
-		$result[] = \ElggMenuItem::factory([
-			'name' => 'list_compact',
-			'text' => elgg_echo('search_advanced:menu:search_list:compact'),
-			'href' => elgg_http_add_url_query_elements($url, ['list_type' => 'compact']),
-			'parent_name' => 'list',
-			'selected' => ($current_list_type === 'compact'),
-			'title' => $title,
-		]);
-		
 		return $result;
 	}
 }
