@@ -45,12 +45,7 @@ class Search {
 	 * @return array
 	 */
 	public static function getOptions(\Elgg\Hook $hook) {
-		if (elgg_get_plugin_setting('search_hooks_enabled', 'search_advanced') == 'no') {
-			return;
-		}
-		
-		
-		
+
 	}
 
 	/**
@@ -61,10 +56,6 @@ class Search {
 	 * @return array
 	 */
 	public static function getResults(\Elgg\Hook $hook) {
-		if (elgg_get_plugin_setting('search_hooks_enabled', 'search_advanced') == 'no') {
-			return;
-		}
-		
 		
 	}
 }

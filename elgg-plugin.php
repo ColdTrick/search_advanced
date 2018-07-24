@@ -7,11 +7,8 @@ require_once(dirname(__FILE__) . '/lib/functions.php');
 return [
 	'bootstrap' => Bootstrap::class,
 	'settings' => [
-		'multi_tag_separator' => 'comma',
-		'enable_multi_tag' => 'no',
 		'combine_search_results' => 'no',
 		'search_with_loader' => 'no',
-		'search_hooks_enabled' => 'yes',
 		'query_required' => 'yes',
 	],
 	'routes' => [

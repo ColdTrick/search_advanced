@@ -37,45 +37,6 @@ echo elgg_view_field([
 	'value' => 'yes',
 ]);
 
-// search hooks settings
-echo elgg_view_field([
-	'#type' => 'checkbox',
-	'#label' => elgg_echo('search_advanced:settings:search_hooks_enabled'),
-	'#help' => elgg_echo('search_advanced:settings:search_hooks_enabled:info'),
-	'name' => 'params[search_hooks_enabled]',
-	'checked' => $plugin->search_hooks_enabled === 'yes',
-	'switch' => true,
-	'default' => 'no',
-	'value' => 'yes',
-]);
-
-echo '<div class="mls plm mbm elgg-divide-left">';
-
-echo elgg_view_field([
-	'#type' => 'checkbox',
-	'#label' => elgg_echo('search_advanced:settings:enable_multi_tag'),
-	'#help' => elgg_echo('search_advanced:settings:enable_multi_tag:info'),
-	'name' => 'params[enable_multi_tag]',
-	'checked' => $plugin->enable_multi_tag === 'yes',
-	'switch' => true,
-	'default' => 'no',
-	'value' => 'yes',
-]);
-
-echo elgg_view_field([
-	'#type' => 'select',
-	'#label' => elgg_echo('search_advanced:settings:multi_tag_separator'),
-	'#help' => elgg_echo('search_advanced:settings:multi_tag_separator:info'),
-	'name' => 'params[multi_tag_separator]',
-	'options_values' => [
-		'comma' => elgg_echo('search_advanced:settings:multi_tag_separator:comma'),
-		'space' => elgg_echo('search_advanced:settings:multi_tag_separator:space'),
-	],
-	'value' => $plugin->multi_tag_separator,
-]);
-
-echo '</div>';
-
 $body = '';
 
 $body .= elgg_view_message('notice', elgg_echo('search_advanced:settings:profile_fields:disclaimer'), ['title' => false]);
