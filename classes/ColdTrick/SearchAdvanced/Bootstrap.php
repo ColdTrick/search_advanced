@@ -15,7 +15,6 @@ class Bootstrap extends DefaultPluginBootstrap {
 	}
 	
 	protected function registerViews() {
-// 		elgg_extend_view('css/elgg', 'css/search_advanced/site');
 		elgg_extend_view('css/elgg', 'css/search_advanced.css');
 		elgg_extend_view('js/elgg', 'js/search_advanced/site.js');
 		elgg_extend_view('js/elgg', 'js/search_advanced/ajax_submit.js');
