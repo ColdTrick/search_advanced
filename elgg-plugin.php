@@ -1,6 +1,7 @@
 <?php
 
 use ColdTrick\SearchAdvanced\Bootstrap;
+use Elgg\Router\Middleware\AjaxGatekeeper;
 
 require_once(dirname(__FILE__) . '/lib/functions.php');
 
@@ -12,7 +13,13 @@ return [
 		'query_required' => 'yes',
 	],
 	'routes' => [
-		
+		'autocomplete:search_advanced' => [
+			'path' => 'search_advanced/autocomplete',
+			'resource' => 'search_advanced/autocomplete',
+			'middleware' => [
+				AjaxGatekeeper::class,
+			],
+		],
 	],
 	'widgets' => [
 		'search' => [

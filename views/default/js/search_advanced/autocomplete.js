@@ -1,7 +1,7 @@
 elgg.provide("elgg.search_advanced");
 
 elgg.search_advanced.init_autocomplete = function() {
-	$(".elgg-search .search-input").each(function() {
+	$(".elgg-form-search .search-input").each(function() {
 		$(this)
 		// don't navigate away from the field on tab when selecting an item
 		.bind( "keydown", function(event) {
