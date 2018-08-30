@@ -28,9 +28,10 @@
 	justify-content: flex-end;
 }
 
-.search-advanced-autocomplete-placeholder {
+.search-advanced-autocomplete-placeholder {	
 	> label {
 		display: flex;
+		cursor: pointer;
 		
 		.elgg-icon {
 			margin-right: 0.5rem;
