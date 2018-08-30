@@ -32,19 +32,20 @@
 	> label {
 		display: flex;
 		cursor: pointer;
+		justify-content: space-between;
 		
 		.elgg-icon {
 			margin-right: 0.5rem;
 		}
 		
-		> div:first-child {
-			width: 80%;
-		}
-		> div:last-child {
-			width: 20%;
+		> div {
 			white-space: nowrap;
 			overflow: hidden;
-			text-align: right;
+			
+			&:last-child {
+				margin-left: 0.5rem;
+				text-overflow: ellipsis;
+			}
 		}
 	}	
 }
