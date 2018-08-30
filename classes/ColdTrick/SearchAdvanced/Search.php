@@ -162,7 +162,8 @@ class Search {
 			'type' => 'placeholder',
 			'content' => self::formatAutocompletePlaceholder([
 				'icon' => 'search',
-				'text' => elgg_echo('search_advanced:autocomplete:placeholder:all'),
+				'text' => $hook->getParam('query'),
+				'info' => elgg_echo('search_advanced:autocomplete:placeholder:all'),
 			]),
 			'href' => elgg_normalize_url('search?q=' . $hook->getParam('query')),
 		];
