@@ -27,3 +27,29 @@
 .elgg-menu-filter-search-alt {
 	justify-content: flex-end;
 }
+
+.search-advanced-autocomplete-placeholder {
+	> label {
+		display: flex;
+		
+		.elgg-icon {
+			margin-right: 0.5rem;
+		}
+		
+		> div:first-child {
+			width: 80%;
+		}
+		> div:last-child {
+			width: 20%;
+			white-space: nowrap;
+			overflow: hidden;
+			text-align: right;
+		}
+	}	
+}
+
+.search-autocomplete {
+	.elgg-autocomplete-item-remove {
+		display: none;
+	}	
+}

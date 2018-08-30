@@ -66,6 +66,117 @@ class Search {
 	 *
 	 * @return array
 	 */
+	public static function getAutocompleteHelpers(\Elgg\Hook $hook) {
+		
+		$result = $hook->getValue();
+		
+		$query = $hook->getParam('query');
+		
+		$owner = null;
+		$container = null;
+		$type = null;
+		$subtype = null;
+		
+		$route_parts = explode(':', $hook->getParam('route_name', ''));
+		
+		$entity = get_entity($hook->getParam('entity_guid'));
+		if ((elgg_extract(0, $route_parts) !== 'collection') && $entity instanceof \ElggEntity) {
+			$type = $entity->getType();
+			$subtype = $entity->getSubtype();
+			
+			$owner = $entity->getOwnerEntity();
+			$container = $entity->getContainerEntity();
+		} else {
+			$page_owner = get_entity($hook->getParam('page_owner_guid'));
+			if ($page_owner instanceof \ElggGroup) {
+				$container = $page_owner;
+			} elseif ($page_owner instanceof \ElggUser) {
+				$owner = $page_owner;
+			}
+		
+			if (elgg_extract(0, $route_parts) == 'collection') {
+				$type = elgg_extract(1, $route_parts);
+				$subtype = elgg_extract(2, $route_parts);
+			}
+		}
+		
+		// validate searchable types
+		if ($type && $subtype) {
+			$searchable_subtypes = get_registered_entity_types($type);
+			if (in_array($subtype, $searchable_subtypes)) {
+				$result[] = [
+					'type' => 'placeholder',
+					'content' => self::formatAutocompletePlaceholder([
+						'icon' => 'search',
+						'text' => $query,
+						'info' => elgg_echo('search_advanced:autocomplete:placeholder:type', [elgg_echo("item:{$type}:{$subtype}")]),
+					]),
+					'href' => elgg_normalize_url('search?entity_type=user&search_type=entities&q=' . $query),
+				];
+			}
+		}
+		
+		if ($owner instanceof \ElggUser) {
+			$result[] = [
+				'type' => 'placeholder',
+				'content' => self::formatAutocompletePlaceholder([
+					'icon' => 'search',
+					'text' => $query,
+					'info' => elgg_echo('search_advanced:autocomplete:placeholder:owner', [$owner->getDisplayName()]),
+				]),
+				'href' => elgg_normalize_url('search?entity_type=user&search_type=entities&q=' . $query),
+			];
+		}
+		
+		if ($container instanceof \ElggGroup) {
+			$result[] = [
+				'type' => 'placeholder',
+				'content' => self::formatAutocompletePlaceholder([
+					'icon' => 'search',
+					'text' => $query,
+					'info' => elgg_echo('search_advanced:autocomplete:placeholder:container', [$container->getDisplayName()]),
+				]),
+				'href' => elgg_normalize_url('search?entity_type=user&search_type=entities&q=' . $query),
+			];
+		}
+						
+		return $result;
+	}
+
+	/**
+	 * Returns the 'search all' link in the autocomplete
+	 *
+	 * @param \Elgg\Hook $hook 'autocomplete', 'search_advanced'
+	 *
+	 * @return array
+	 */
+	public static function getAutocompleteSearchAll(\Elgg\Hook $hook) {
+		
+		$result = $hook->getValue();
+	
+		if (empty($result)) {
+			return;
+		}
+		
+		$result[] = [
+			'type' => 'placeholder',
+			'content' => self::formatAutocompletePlaceholder([
+				'icon' => 'search',
+				'text' => elgg_echo('search_advanced:autocomplete:placeholder:all'),
+			]),
+			'href' => elgg_normalize_url('search?q=' . $hook->getParam('query')),
+		];
+						
+		return $result;
+	}
+
+	/**
+	 * Returns the search results for users used in the autocomplete
+	 *
+	 * @param \Elgg\Hook $hook 'autocomplete', 'search_advanced'
+	 *
+	 * @return array
+	 */
 	public static function getAutocompleteUsers(\Elgg\Hook $hook) {
 		
 		$user_options = [
@@ -90,8 +201,11 @@ class Search {
 		
 		$result[] = [
 			'type' => 'placeholder',
-			'content' => '<label>' . elgg_echo('item:user') . " ({$users_count})</label>",
-			'href' => elgg_normalize_url('search?entity_type=user&search_type=entities&q=' . $q),
+			'content' => self::formatAutocompletePlaceholder([
+				'text' => elgg_echo('item:user'),
+				'count' => $users_count,
+			]),
+			'href' => elgg_normalize_url('search?entity_type=user&search_type=entities&q=' . $hook->getParam('query')),
 		];
 		
 		foreach ($users as $user) {
@@ -118,6 +232,10 @@ class Search {
 	 */
 	public static function getAutocompleteGroups(\Elgg\Hook $hook) {
 		
+		if (!elgg_is_active_plugin('groups')) {
+			return;
+		}
+		
 		$group_options = [
 			'query' => $hook->getParam('query'),
 			'limit' => $hook->getParam('limit'),
@@ -140,8 +258,11 @@ class Search {
 		
 		$result[] = [
 			'type' => 'placeholder',
-			'content' => '<label>' . elgg_echo('item:group') . ' (' . $groups_count . ')</label>',
-			'href' => elgg_normalize_url('search?entity_type=group&search_type=entities&q=' . $q),
+			'content' => self::formatAutocompletePlaceholder([
+				'text' => elgg_echo('item:group'),
+				'count' => $groups_count,
+			]),
+			'href' => elgg_normalize_url('search?entity_type=group&search_type=entities&q=' . $hook->getParam('query')),
 		];
 		
 		foreach ($groups as $group) {
@@ -157,5 +278,34 @@ class Search {
 		}
 		
 		return $result;
+	}
+	
+	/**
+	 * Formats some information into contents for an autocomplete placeholder
+	 * @param array $params
+	 * @return string
+	 */
+	protected static function formatAutocompletePlaceholder(array $params) {
+		
+		$icon = elgg_extract('icon', $params);
+		$text = elgg_extract('text', $params);
+		$count = elgg_extract('count', $params);
+		$info = elgg_extract('info', $params);
+		
+		if ($icon) {
+			$text = elgg_view_icon($icon) . $text;
+		}
+		
+		if ($count) {
+			$text .= " ({$count})";
+		}
+		
+		if ($info) {
+			$content = "<div>{$text}</div><div>{$info}</div>";
+		} else {
+			$content = $text;
+		}
+
+		return elgg_format_element('label', [], $content);
 	}
 }

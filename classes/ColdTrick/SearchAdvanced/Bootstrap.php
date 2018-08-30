@@ -25,6 +25,8 @@ class Bootstrap extends DefaultPluginBootstrap {
 		
 		$hooks->registerHandler('autocomplete', 'search_advanced', '\ColdTrick\SearchAdvanced\Search::getAutocompleteUsers', 100);
 		$hooks->registerHandler('autocomplete', 'search_advanced', '\ColdTrick\SearchAdvanced\Search::getAutocompleteGroups', 200);
+		$hooks->registerHandler('autocomplete', 'search_advanced', '\ColdTrick\SearchAdvanced\Search::getAutocompleteHelpers', 900);
+		$hooks->registerHandler('autocomplete', 'search_advanced', '\ColdTrick\SearchAdvanced\Search::getAutocompleteSearchAll', 9999);
 		$hooks->registerHandler('register', 'menu:search_type_selection', '\ColdTrick\SearchAdvanced\Menus::registerSearchTypeSelectionItems');
 		$hooks->registerHandler('register', 'menu:filter:search', '\ColdTrick\SearchAdvanced\Menus::registerSearchListItems');
 		$hooks->registerHandler('setting', 'plugin', '\ColdTrick\SearchAdvanced\Settings::saveArrayTypeSetting');
