@@ -1,6 +1,7 @@
-elgg.provide("elgg.search_advanced");
-
-elgg.search_advanced.init_autocomplete = function() {
+define(function(require) {
+	var $ = require('jquery');
+	var elgg = require('elgg');
+	
 	$(".elgg-form-search .search-input").each(function() {
 		$(this)
 		// don't navigate away from the field on tab when selecting an item
@@ -55,9 +56,9 @@ elgg.search_advanced.init_autocomplete = function() {
 		}).data( "ui-autocomplete" )._renderItem = function(ul, item) {
 			
 			return $("<li></li>")
-			.data("item.autocomplete", item)
-			.append("<a class='search-advanced-autocomplete-" + item.type + "'>" + item.content + "</a>")
-			.appendTo(ul);
+				.data("item.autocomplete", item)
+				.append("<a class='search-advanced-autocomplete-" + item.type + "'>" + item.content + "</a>")
+				.appendTo(ul);
 		};
 	});
 
@@ -68,6 +69,4 @@ elgg.search_advanced.init_autocomplete = function() {
 			}
 		});
 	});
-};
-
-elgg.register_hook_handler('init', 'system', elgg.search_advanced.init_autocomplete);
+});

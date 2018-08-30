@@ -23,6 +23,8 @@ class Bootstrap extends DefaultPluginBootstrap {
 	protected function registerHooks() {
 		$hooks = $this->elgg()->hooks;
 		
+		$hooks->registerHandler('autocomplete', 'search_advanced', '\ColdTrick\SearchAdvanced\Search::getAutocompleteUsers', 100);
+		$hooks->registerHandler('autocomplete', 'search_advanced', '\ColdTrick\SearchAdvanced\Search::getAutocompleteGroups', 200);
 		$hooks->registerHandler('register', 'menu:search_type_selection', '\ColdTrick\SearchAdvanced\Menus::registerSearchTypeSelectionItems');
 		$hooks->registerHandler('register', 'menu:filter:search', '\ColdTrick\SearchAdvanced\Menus::registerSearchListItems');
 		$hooks->registerHandler('setting', 'plugin', '\ColdTrick\SearchAdvanced\Settings::saveArrayTypeSetting');
