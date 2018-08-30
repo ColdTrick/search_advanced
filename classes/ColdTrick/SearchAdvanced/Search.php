@@ -111,7 +111,12 @@ class Search {
 						'text' => $query,
 						'info' => elgg_echo('search_advanced:autocomplete:placeholder:type', [elgg_echo("item:{$type}:{$subtype}")]),
 					]),
-					'href' => elgg_normalize_url('search?entity_type=user&search_type=entities&q=' . $query),
+					'href' => elgg_generate_url('default:search', [
+						'q' => $hook->getParam('query'),
+						'entity_type' => $type,
+						'entity_subtype' => $subtype,
+						'search_type' => 'entities',
+					]),
 				];
 			}
 		}
@@ -124,7 +129,10 @@ class Search {
 					'text' => $query,
 					'info' => elgg_echo('search_advanced:autocomplete:placeholder:owner', [$owner->getDisplayName()]),
 				]),
-				'href' => elgg_normalize_url('search?entity_type=user&search_type=entities&q=' . $query),
+				'href' => elgg_generate_url('default:search', [
+					'q' => $hook->getParam('query'),
+					'owner_guid' => $owner->guid,
+				]),
 			];
 		}
 		
@@ -136,7 +144,10 @@ class Search {
 					'text' => $query,
 					'info' => elgg_echo('search_advanced:autocomplete:placeholder:container', [$container->getDisplayName()]),
 				]),
-				'href' => elgg_normalize_url('search?entity_type=user&search_type=entities&q=' . $query),
+				'href' => elgg_generate_url('default:search', [
+					'q' => $hook->getParam('query'),
+					'container_guid' => $container->guid,
+				]),
 			];
 		}
 						
@@ -165,7 +176,9 @@ class Search {
 				'text' => $hook->getParam('query'),
 				'info' => elgg_echo('search_advanced:autocomplete:placeholder:all'),
 			]),
-			'href' => elgg_normalize_url('search?q=' . $hook->getParam('query')),
+			'href' => elgg_generate_url('default:search', [
+				'q' => $hook->getParam('query'),
+			]),
 		];
 						
 		return $result;
@@ -206,7 +219,11 @@ class Search {
 				'text' => elgg_echo('item:user'),
 				'count' => $users_count,
 			]),
-			'href' => elgg_normalize_url('search?entity_type=user&search_type=entities&q=' . $hook->getParam('query')),
+			'href' => elgg_generate_url('default:search', [
+				'entity_type' => 'user',
+				'search_type' => 'entities',
+				'q' => $hook->getParam('query'),
+			]),
 		];
 		
 		foreach ($users as $user) {
@@ -263,7 +280,11 @@ class Search {
 				'text' => elgg_echo('item:group'),
 				'count' => $groups_count,
 			]),
-			'href' => elgg_normalize_url('search?entity_type=group&search_type=entities&q=' . $hook->getParam('query')),
+			'href' => elgg_generate_url('default:search', [
+				'entity_type' => 'group',
+				'search_type' => 'entities',
+				'q' => $hook->getParam('query'),
+			]),
 		];
 		
 		foreach ($groups as $group) {
