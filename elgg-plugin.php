@@ -12,6 +12,9 @@ return [
 		'search_with_loader' => 'no',
 		'query_required' => 'yes',
 		'enable_search_type_selection' => 'yes',
+		'enable_autocomplete' => 'yes',
+		'enable_autocomplete_content' => 'yes',
+		'enable_autocomplete_helpers' => 'yes',
 	],
 	'routes' => [
 		'autocomplete:search_advanced' => [

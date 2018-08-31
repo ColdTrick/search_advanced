@@ -25,6 +25,14 @@ return array(
 	'search_advanced:settings:search_with_loader:info' => "Directly show a loader on the search page and get the results AJAX loaded.",
 	'search_advanced:settings:enable_search_type_selection' => "Enable type selection",
 	'search_advanced:settings:enable_search_type_selection:info' => "Directly show a type selection dropdown in the searchbox.",
+
+	'search_advanced:settings:enable_autocomplete' => "Enable searchbox autocomplete",
+	'search_advanced:settings:enable_autocomplete:info' => "Start typing in the searchbox will give you some quick suggestions.",
+	'search_advanced:settings:enable_autocomplete_content' => "Enable autocomplete content",
+	'search_advanced:settings:enable_autocomplete_content:info' => "Add content links to the autocomplete results.",
+	'search_advanced:settings:enable_autocomplete_helpers' => "Enable autocomplete helpers",
+	'search_advanced:settings:enable_autocomplete_helpers:info' => "Add contextual helpers links to the autocomplete results.",
+	
 	'search_advanced:settings:profile_fields:disclaimer' => "The settings below only apply to compatible search engines. If Search Advanced is not controlling the search results, these settings could have no function.",
 	'search_advanced:settings:profile_fields' => "Configure profile field specific settings",
 	'search_advanced:settings:profile_fields:user' => "User Profile Fields",

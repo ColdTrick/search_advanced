@@ -15,7 +15,9 @@ if ($route) {
 	$route_name = $route->getName();
 }
 
-if (elgg_extract('search_autocomplete', $vars, true)) {
+$enable_autocomplete = (bool) (elgg_get_plugin_setting('enable_autocomplete', 'search_advanced') === 'yes');
+$enable_autocomplete = elgg_extract('search_autocomplete', $vars, $enable_autocomplete);
+if ($enable_autocomplete) {
 	elgg_require_js('search_advanced/autocomplete');
 }
 
@@ -28,6 +30,7 @@ echo elgg_view_field([
 	'name' => 'q',
 	'autocapitalize' => 'off',
 	'autocorrect' => 'off',
+	'autocomplete' => $enable_autocomplete ? 'off' : null,
 	'required' => true,
 	'value' => _elgg_get_display_query($value),
 	'placeholder' => elgg_echo('search_advanced:searchbox'),

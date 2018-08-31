@@ -68,6 +68,10 @@ class Search {
 	 */
 	public static function getAutocompleteHelpers(\Elgg\Hook $hook) {
 		
+		if (elgg_get_plugin_setting('enable_autocomplete_helpers', 'search_advanced') === 'no') {
+			return;
+		}
+				
 		$result = $hook->getValue();
 		
 		$query = $hook->getParam('query');
@@ -193,6 +197,10 @@ class Search {
 	 */
 	public static function getAutocompleteUsers(\Elgg\Hook $hook) {
 		
+		if (elgg_get_plugin_setting('enable_autocomplete_content', 'search_advanced') === 'no') {
+			return;
+		}
+		
 		$user_options = [
 			'query' => $hook->getParam('query'),
 			'limit' => $hook->getParam('limit'),
@@ -251,6 +259,10 @@ class Search {
 	public static function getAutocompleteGroups(\Elgg\Hook $hook) {
 		
 		if (!elgg_is_active_plugin('groups')) {
+			return;
+		}
+	
+		if (elgg_get_plugin_setting('enable_autocomplete_content', 'search_advanced') === 'no') {
 			return;
 		}
 		
