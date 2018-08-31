@@ -21,7 +21,14 @@ class SearchHelper extends \Elgg\Search\Search {
 		$current_params['search_type'] = $search_type;
 		$current_params['type'] = $type;
 		$current_params['subtype'] = $subtype;
-
+		
+		if (in_array($search_type, ['combined:objects', 'combined:all'])) {
+			// fix params for combined searches
+			$current_params['limit'] = max((int) get_input('limit'), elgg_get_config('default_limit'));
+			$current_params['offset'] = get_input('offset', 0);
+			$current_params['pagination'] = true;
+		}
+		
 		switch ($search_type) {
 			case 'entities' :
 				if ($subtype && _elgg_services()->hooks->hasHandler('search', "$type:$subtype")) {
@@ -67,6 +74,11 @@ class SearchHelper extends \Elgg\Search\Search {
 			return '';
 		}
 
+		if (in_array($search_type, ['combined:objects', 'combined:all'])) {
+			// restore search_type param for pagination
+			$current_params['search_type'] = 'all';
+		}
+		
 		return elgg_view('search/list', [
 			'results' => $results,
 			'params' => $current_params,

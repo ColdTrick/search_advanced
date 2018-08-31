@@ -127,14 +127,12 @@ if (($combine_results !== 'no') && ($params['search_type'] === 'all')) {
 		if (!empty($object_subtypes)) {
 			$extra_params = [
 				'type_subtype_pairs' => ['object' => $object_subtypes],
-				'limit' => 10,
 			];
 			$results .= $service->listResults('combined:objects', null, null, false, $extra_params);
 		}
 	} else {
 		$extra_params = [
 			'type_subtype_pairs' => $types,
-			'limit' => 10,
 		];
 		$results .= $service->listResults('combined:all', null, null, false, $extra_params);
 	}
