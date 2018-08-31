@@ -89,6 +89,8 @@ $use_type = function ($search_type, $type = null, $subtype = null) use ($params,
 $total = 0;
 $results = '';
 
+$register_menu_items = elgg_extract('register_menu_items', $vars, true);
+
 $types = $service->getTypeSubtypePairs();
 foreach ($types as $type => $subtypes) {
 	if (empty($subtypes) || !is_array($subtypes)) {
@@ -96,21 +98,23 @@ foreach ($types as $type => $subtypes) {
 	}
 	
 	foreach ($subtypes as $subtype) {
-		$count = $service->listResults('entities', $type, $subtype, true);
-		$total += $count;
-		elgg_register_menu_item('page', [
-			'name' => "item:$type:$subtype",
-			'text' => elgg_echo("item:$type:$subtype"),
-			'href' => elgg_http_add_url_query_elements('search', [
-				'q' => $params['query'],
-				'entity_type' => $type,
-				'entity_subtype' => $subtype,
-				'owner_guid' => $params['owner_guid'],
-				'search_type' => 'entities',
-			]),
-			'badge' => $count,
-		]);
-
+		if ($register_menu_items) {
+			$count = $service->listResults('entities', $type, $subtype, true);
+			$total += $count;
+			elgg_register_menu_item('page', [
+				'name' => "item:$type:$subtype",
+				'text' => elgg_echo("item:$type:$subtype"),
+				'href' => elgg_http_add_url_query_elements('search', [
+					'q' => $params['query'],
+					'entity_type' => $type,
+					'entity_subtype' => $subtype,
+					'owner_guid' => $params['owner_guid'],
+					'search_type' => 'entities',
+				]),
+				'badge' => $count,
+			]);
+		}
+		
 		if ($use_type('entities', $type, $subtype)) {
 			$results .= $service->listResults('entities', $type, $subtype);
 		}
@@ -138,34 +142,38 @@ if (($combine_results !== 'no') && ($params['search_type'] === 'all')) {
 
 $custom_types = $service->getSearchTypes();
 foreach ($custom_types as $search_type) {
-	$count = $service->listResults($search_type, null, null, true);
-	$total += $count;
-	elgg_register_menu_item('page', [
-		'name' => "search_types:$type",
-		'text' => elgg_echo("search_types:$type"),
-		'href' => elgg_http_add_url_query_elements('search', [
-			'q' => $params['query'],
-			'search_type' => $type,
-		]),
-		'badge' => $count,
-	]);
+	if ($register_menu_items) {
+		$count = $service->listResults($search_type, null, null, true);
+		$total += $count;
+		elgg_register_menu_item('page', [
+			'name' => "search_types:$type",
+			'text' => elgg_echo("search_types:$type"),
+			'href' => elgg_http_add_url_query_elements('search', [
+				'q' => $params['query'],
+				'search_type' => $type,
+			]),
+			'badge' => $count,
+		]);
+	}
 
 	if ($use_type($search_type)) {
 		$results .= $service->listResults($search_type);
 	}
 }
 
-elgg_register_menu_item('page', [
-	'name' => 'all',
-	'text' => elgg_echo('all'),
-	'href' => elgg_http_add_url_query_elements('search', [
-		'q' => $params['query'],
-		'owner_guid' => $params['owner_guid'],
-		'search_type' => 'all',
-	]),
-	'badge' => $total,
-	'priority' => 1,
-]);
+if ($register_menu_items) {
+	elgg_register_menu_item('page', [
+		'name' => 'all',
+		'text' => elgg_echo('all'),
+		'href' => elgg_http_add_url_query_elements('search', [
+			'q' => $params['query'],
+			'owner_guid' => $params['owner_guid'],
+			'search_type' => 'all',
+		]),
+		'badge' => $total,
+		'priority' => 1,
+	]);
+}
 
 if (empty($results)) {
 	$results = elgg_format_element('p', [
