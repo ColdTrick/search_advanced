@@ -37,6 +37,17 @@ echo elgg_view_field([
 	'value' => 'yes',
 ]);
 
+echo elgg_view_field([
+	'#type' => 'checkbox',
+	'#label' => elgg_echo('search_advanced:settings:enable_search_type_selection'),
+	'#help' => elgg_echo('search_advanced:settings:enable_search_type_selection:info'),
+	'name' => 'params[enable_search_type_selection]',
+	'checked' => $plugin->enable_search_type_selection === 'yes',
+	'switch' => true,
+	'default' => 'no',
+	'value' => 'yes',
+]);
+
 $body = '';
 
 $body .= elgg_view_message('notice', elgg_echo('search_advanced:settings:profile_fields:disclaimer'), ['title' => false]);

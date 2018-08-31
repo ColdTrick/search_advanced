@@ -11,6 +11,7 @@ return [
 		'combine_search_results' => 'no',
 		'search_with_loader' => 'no',
 		'query_required' => 'yes',
+		'enable_search_type_selection' => 'yes',
 	],
 	'routes' => [
 		'autocomplete:search_advanced' => [

@@ -36,7 +36,7 @@ echo elgg_view_field([
 	'data-route-name' => $route_name,
 ]);
 
-if (!elgg_extract('inline_form', $vars, false)) {
+if (!elgg_extract('inline_form', $vars, false) && (elgg_get_plugin_setting('enable_search_type_selection', 'search_advanced') === 'yes')) {
 	echo elgg_view_menu('search_type_selection');
 }
 unset($vars['inline_form']);

@@ -23,6 +23,8 @@ return array(
 	'search_advanced:settings:multi_tag_separator:space' => "Space",
 	'search_advanced:settings:search_with_loader' => "Use delayed search",
 	'search_advanced:settings:search_with_loader:info' => "Directly show a loader on the search page and get the results AJAX loaded.",
+	'search_advanced:settings:enable_search_type_selection' => "Enable type selection",
+	'search_advanced:settings:enable_search_type_selection:info' => "Directly show a type selection dropdown in the searchbox.",
 	'search_advanced:settings:profile_fields:disclaimer' => "The settings below only apply to compatible search engines. If Search Advanced is not controlling the search results, these settings could have no function.",
 	'search_advanced:settings:profile_fields' => "Configure profile field specific settings",
 	'search_advanced:settings:profile_fields:user' => "User Profile Fields",
