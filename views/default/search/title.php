@@ -10,8 +10,6 @@ if (empty($query) || empty($count)) {
 	echo elgg_echo('search_advanced:results:empty:title');
 	return;
 }
-
-$title = elgg_echo('search:results', ["\"$highlighted_query\""]);
 	
 if ($highlight_query && $service) {
 	$query = $service->getHighlighter()->highlightWords($query);
