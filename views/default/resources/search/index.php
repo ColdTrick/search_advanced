@@ -25,13 +25,6 @@ if ($container_guid && !is_array($container_guid)) {
 }
 
 $query = elgg_extract('query', $params);
-if (empty($query)) {
-	$title = elgg_echo('search_advanced:results:empty:title');
-} else {
-	$highlighted_query = $service->getHighlighter()->highlightWords($query);
-
-	$title = elgg_echo('search:results', ["\"$highlighted_query\""]);
-}
 
 $params['inline_form'] = true;
 
@@ -116,6 +109,10 @@ foreach ($types as $type => $subtypes) {
 		}
 		
 		if ($use_type('entities', $type, $subtype)) {
+			if (!$register_menu_items) {
+				$count = $service->listResults('entities', $type, $subtype, true);
+				$total += $count;
+			}
 			$results .= $service->listResults('entities', $type, $subtype);
 		}
 	}
@@ -128,12 +125,20 @@ if (($combine_results !== 'no') && ($params['search_type'] === 'all')) {
 			$extra_params = [
 				'type_subtype_pairs' => ['object' => $object_subtypes],
 			];
+			
+			$count = $service->listResults('combined:objects', null, null, true, $extra_params);
+			$total += $count;
+			
 			$results .= $service->listResults('combined:objects', null, null, false, $extra_params);
 		}
 	} else {
 		$extra_params = [
 			'type_subtype_pairs' => $types,
 		];
+		
+		$count = $service->listResults('combined:all', null, null, true, $extra_params);
+		$total += $count;
+			
 		$results .= $service->listResults('combined:all', null, null, false, $extra_params);
 	}
 }
@@ -155,6 +160,10 @@ foreach ($custom_types as $search_type) {
 	}
 
 	if ($use_type($search_type)) {
+		if (!$register_menu_items) {
+			$count = $service->listResults($search_type, null, null, true);
+			$total += $count;
+		}
 		$results .= $service->listResults($search_type);
 	}
 }
@@ -180,6 +189,12 @@ if (empty($results)) {
 }
 
 $filter = elgg_view('page/layouts/elements/filter', ['filter_id' => 'search']);
+
+$title = elgg_view('search/title', [
+	'query' => $query,
+	'service' => $service,
+	'count' => $total,
+]);
 
 $layout = elgg_view_layout('content', [
 	'title' => $title,
