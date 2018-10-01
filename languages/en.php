@@ -62,7 +62,7 @@ return array(
 	'widgets:search_user:description' => "Search users with the dedicated profile metadata search fields",
 	'widgets:search_user:no_results' => "This widget can not be used, because there are no profile fields configured for user search.",
 
-	'search_advanced:results:title' => "%s results for %s",
+	'search_advanced:results:title' => "%s results for '%s'",
 	'search_advanced:results:empty:title' => "Results",
 	'search_advanced:results:container:title' => "Showing result in the group: %s",
 	'search_advanced:results:container:undo' => "Undo group filter",
