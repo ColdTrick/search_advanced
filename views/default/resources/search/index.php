@@ -26,13 +26,16 @@ if ($container_guid && !is_array($container_guid)) {
 
 $query = elgg_extract('query', $params);
 
-$params['inline_form'] = true;
-
-$form = elgg_view_form('search', [
-	'action' => elgg_normalize_url('search'),
-	'method' => 'get',
-	'disable_security' => true,
-], $params);
+$form = '';
+if (elgg_extract('show_inline_form', $vars, true)) {
+	$params['inline_form'] = true;
+	
+	$form = elgg_view_form('search', [
+		'action' => elgg_normalize_url('search'),
+		'method' => 'get',
+		'disable_security' => true,
+	], $params);
+}
 
 if (empty($query) && $query != "0") {
 	// display a search form if there is no query
