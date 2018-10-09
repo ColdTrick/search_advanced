@@ -37,7 +37,7 @@ if (elgg_extract('show_inline_form', $vars, true)) {
 	], $params);
 }
 
-if (empty($query) && $query != "0") {
+if (elgg_is_empty($query)) {
 	// display a search form if there is no query
 	$layout = elgg_view_layout('content', [
 		'title' => elgg_echo('search'),
