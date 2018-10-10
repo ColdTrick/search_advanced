@@ -1,6 +1,10 @@
 <?php
 
 return array(
+	
+	'search_types:combined:objects' => "Content",
+	'search_types:combined:all' => "All results",
+	
 	'search_advanced:settings:search_hooks_enabled' => "Search Advanced should control the search results",
 	'search_advanced:settings:search_hooks_enabled:info' => "This way you can control if this plugin is providing the search results",
 	'search_advanced:settings:search_types_menu_format' => "How to display search types",

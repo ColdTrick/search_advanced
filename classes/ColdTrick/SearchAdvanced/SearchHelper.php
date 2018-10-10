@@ -11,12 +11,11 @@ class SearchHelper extends \Elgg\Search\Search {
 	 * @param string $type        Entity type
 	 * @param string $subtype     Subtype
 	 * @param bool   $count       Count
-	 * @param array  $params      Extra params for this specific list
 	 *
 	 * @return int|string
-	 * @throws InvalidParameterException
+	 * @throws \InvalidParameterException
 	 */
-	public function listResults($search_type, $type = null, $subtype = null, $count = false, $params = []) {
+	public function listResults($search_type, $type = null, $subtype = null, $count = false) {
 		$current_params = array_merge($this->params, $params);
 		$current_params['search_type'] = $search_type;
 		$current_params['type'] = $type;
@@ -27,6 +26,20 @@ class SearchHelper extends \Elgg\Search\Search {
 			$current_params['limit'] = max((int) get_input('limit'), elgg_get_config('default_limit'));
 			$current_params['offset'] = get_input('offset', 0);
 			$current_params['pagination'] = true;
+			
+			unset($current_params['type']);
+			unset($current_params['subtype']);
+			
+			switch ($search_type) {
+				case 'combined:objects':
+					$current_params['type_subtype_pairs'] = [
+						'object' => get_registered_entity_types('object'),
+					];
+					break;
+				case 'combined:all':
+					$current_params['type_subtype_pairs'] = get_registered_entity_types();
+					break;
+			}
 		}
 		
 		switch ($search_type) {
@@ -72,11 +85,6 @@ class SearchHelper extends \Elgg\Search\Search {
 
 		if (empty($results['entities'])) {
 			return '';
-		}
-
-		if (in_array($search_type, ['combined:objects', 'combined:all'])) {
-			// restore search_type param for pagination
-			$current_params['search_type'] = 'all';
 		}
 		
 		return elgg_view('search/list', [

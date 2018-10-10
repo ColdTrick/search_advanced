@@ -121,42 +121,17 @@ foreach ($types as $type => $subtypes) {
 	}
 }
 
-if (($combine_results !== 'no') && ($params['search_type'] === 'all')) {
-	if ($combine_results === 'objects') {
-		$object_subtypes = elgg_extract('object', $types);
-		if (!empty($object_subtypes)) {
-			$extra_params = [
-				'type_subtype_pairs' => ['object' => $object_subtypes],
-			];
-			
-			$count = $service->listResults('combined:objects', null, null, true, $extra_params);
-			$total += $count;
-			
-			$results .= $service->listResults('combined:objects', null, null, false, $extra_params);
-		}
-	} else {
-		$extra_params = [
-			'type_subtype_pairs' => $types,
-		];
-		
-		$count = $service->listResults('combined:all', null, null, true, $extra_params);
-		$total += $count;
-			
-		$results .= $service->listResults('combined:all', null, null, false, $extra_params);
-	}
-}
-
 $custom_types = $service->getSearchTypes();
 foreach ($custom_types as $search_type) {
-	if ($register_menu_items) {
+	if ($register_menu_items && !in_array($search_type, ['combined:objects', 'combined:all'])) {
 		$count = $service->listResults($search_type, null, null, true);
 		$total += $count;
 		elgg_register_menu_item('page', [
-			'name' => "search_types:$type",
-			'text' => elgg_echo("search_types:$type"),
+			'name' => "search_types:{$search_type}",
+			'text' => elgg_echo("search_types:{$search_type}"),
 			'href' => elgg_http_add_url_query_elements('search', [
 				'q' => $params['query'],
-				'search_type' => $type,
+				'search_type' => $search_type,
 			]),
 			'badge' => $count,
 		]);

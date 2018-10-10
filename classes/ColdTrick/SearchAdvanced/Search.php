@@ -35,10 +35,23 @@ class Search {
 	 */
 	public static function getSearchTypes(\Elgg\Hook $hook) {
 		
+		$result = $hook->getValue();
+		
+		$combine_results = elgg_get_plugin_setting('combine_search_results', 'search_advanced');
+		switch ($combine_results) {
+			case 'objects':
+				$result[] = 'combined:objects';
+				break;
+			case 'all':
+				$result[] = 'combined:all';
+				break;
+		}
+		
+		return $result;
 	}
 
 	/**
-	 * Returns the search results
+	 * Returns the search options
 	 *
 	 * @param \Elgg\Hook $hook 'search:options', 'all'
 	 *
