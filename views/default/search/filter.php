@@ -2,7 +2,7 @@
 
 $params = elgg_extract('params', $vars, $vars);
 
-$search_type = elgg_extract('search_type', $params);
+$search_type = elgg_extract('search_type', $params, 'all');
 $type = elgg_extract('type', $params);
 $subtype = elgg_extract('subtype', $params);
 
