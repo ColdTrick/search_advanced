@@ -20,7 +20,7 @@ class SearchHelper extends \Elgg\Search\Search {
 		$current_params['search_type'] = $search_type;
 		$current_params['type'] = $type;
 		$current_params['subtype'] = $subtype;
-		
+				
 		if (in_array($search_type, ['combined:objects', 'combined:all'])) {
 			// fix params for combined searches
 			$current_params['limit'] = max((int) get_input('limit'), elgg_get_config('default_limit'));
@@ -92,5 +92,19 @@ class SearchHelper extends \Elgg\Search\Search {
 			'params' => $current_params,
 		]);
 
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 * @see \Elgg\Search\Search::initParams()
+	 */
+	protected function initParams(array $params = []) {
+		$defaults = [
+			'search_filter' => (array) get_input('filter', []),
+		];
+		
+		$params = array_merge($defaults, $params);
+		return parent::initParams($params);
+		
 	}
 }
