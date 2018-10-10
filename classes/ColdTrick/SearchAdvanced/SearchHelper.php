@@ -16,7 +16,6 @@ class SearchHelper extends \Elgg\Search\Search {
 	 * @throws \InvalidParameterException
 	 */
 	public function listResults($search_type, $type = null, $subtype = null, $count = false) {
-		$current_params = array_merge($this->params, $params);
 		$current_params['search_type'] = $search_type;
 		$current_params['type'] = $type;
 		$current_params['subtype'] = $subtype;
