@@ -1,6 +1,7 @@
 <?php
 
 $q = get_input('q');
+$limit = max(elgg_extract('limit', $vars, (int) get_input('limit', 5)), 1);
 
 header('Content-Type: application/json');
 
@@ -12,7 +13,7 @@ if (empty($q)) {
 
 $params = [
 	'query' => $q,
-	'limit' => max((int) get_input('limit', 5), 1),
+	'limit' => $limit,
 	'page_owner_guid' => (int) get_input('page_owner_guid'),
 	'entity_guid' => (int) get_input('entity_guid'),
 	'route_name' => get_input('route_name'),
