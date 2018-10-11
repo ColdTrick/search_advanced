@@ -158,7 +158,7 @@ foreach ($custom_types as $search_type) {
 
 if ($register_menu_items) {
 	elgg_register_menu_item('page', [
-		'name' => 'all',
+		'name' => '_all',
 		'text' => elgg_echo('all'),
 		'href' => elgg_http_add_url_query_elements('search', [
 			'q' => $params['query'],
