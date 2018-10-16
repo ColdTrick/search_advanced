@@ -52,14 +52,17 @@ echo elgg_view_field([
 ]);
 
 $values = [
-	'entity_subtype' => get_input('entity_subtype', ''),
-	'entity_type' => get_input('entity_type', ''),
+	'entity_subtype' => get_input('entity_subtype'),
+	'entity_type' => get_input('entity_type'),
 	'owner_guid' => get_input('owner_guid'),
 	'container_guid' => get_input('container_guid'),
 	'search_type' => get_input('search_type', 'all'),
 ];
 
 foreach ($values as $name => $value) {
+	if (!isset($value)) {
+		continue;
+	}
 	echo elgg_view_field([
 		'#type' => 'hidden',
 		'name' => $name,
