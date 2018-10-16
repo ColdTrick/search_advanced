@@ -5,14 +5,55 @@ namespace ColdTrick\SearchAdvanced;
 class Search {
 	
 	/**
-	 * Updates params
+	 * Allow searches with empty queries
 	 *
 	 * @param \Elgg\Hook $hook 'search:params', 'all'
 	 *
-	 * @return array
+	 * @return void|array
 	 */
-	public static function getParams(\Elgg\Hook $hook) {
+	public static function allowEmptyQuery(\Elgg\Hook $hook) {
 		
+		if (elgg_get_plugin_setting('query_required', 'search_advanced') !== 'no') {
+			return;
+		}
+		
+		$result = $hook->getValue();
+		
+		$query = elgg_extract('query', $result);
+		if (!elgg_is_empty($query)) {
+			return;
+		}
+		
+		// set dummy search query
+		$result['query'] = '_search_advanced_empty_query_placeholder';
+		
+		// register hook to unset the dummy query
+		$entity_type = elgg_extract('type', $result, 'all', false);
+		
+		elgg_register_plugin_hook_handler('search:options', $entity_type, __NAMESPACE__ . '\Search::unsetEmptyQueryPlaceholder', 1);
+		
+		return $result;
+	}
+	
+	/**
+	 * Unset empty query placeholder
+	 *
+	 * @param \Elgg\Hook $hook 'search:options', '*'
+	 *
+	 * @return void|array
+	 */
+	public static function unsetEmptyQueryPlaceholder(\Elgg\Hook $hook) {
+		
+		$result = $hook->getValue();
+		$query = elgg_extract('query', $result);
+		if ($query !== '_search_advanced_empty_query_placeholder') {
+			return;
+		}
+		
+		unset($result['query']);
+		unset($result['query_parts']);
+		
+		return $result;
 	}
 	
 	/**

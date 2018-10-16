@@ -31,7 +31,7 @@ class Bootstrap extends DefaultPluginBootstrap {
 		$hooks->registerHandler('register', 'menu:filter:search', '\ColdTrick\SearchAdvanced\Menus::registerSearchListItems');
 		$hooks->registerHandler('setting', 'plugin', '\ColdTrick\SearchAdvanced\Settings::saveArrayTypeSetting');
 		$hooks->registerHandler('setting', 'plugin', '\ColdTrick\SearchAdvanced\Settings::flushCache');
-		$hooks->registerHandler('search:params', 'all', '\ColdTrick\SearchAdvanced\Search::getParams');
+		$hooks->registerHandler('search:params', 'all', '\ColdTrick\SearchAdvanced\Search::allowEmptyQuery');
 		$hooks->registerHandler('search:config', 'type_subtype_pairs', '\ColdTrick\SearchAdvanced\Search::getTypeSubtypePairs');
 		$hooks->registerHandler('search:config', 'search_types', '\ColdTrick\SearchAdvanced\Search::getSearchTypes');
 		$hooks->registerHandler('search:fields', 'combined:all', \Elgg\Search\UserSearchFieldsHandler::class);
