@@ -2,9 +2,9 @@
 
 $params = elgg_extract('params', $vars, $vars);
 
-$search_type = elgg_extract('search_type', $params, 'all');
-$type = elgg_extract('type', $params);
-$subtype = elgg_extract('subtype', $params);
+$search_type = elgg_extract('search_type', $params, get_input('search_type', 'all'));
+$type = elgg_extract('type', $params, get_input('entity_type'));
+$subtype = elgg_extract('subtype', $params, get_input('entity_subtype'));
 
 $view_parts = [$search_type, $type, $subtype];
 $view = rtrim(implode('/', $view_parts), '/');

@@ -83,6 +83,7 @@ $use_type = function ($search_type, $type = null, $subtype = null) use ($params,
 };
 
 $total = 0;
+$result_total = 0;
 $results = '';
 
 $register_menu_items = elgg_extract('register_menu_items', $vars, true);
@@ -94,6 +95,7 @@ foreach ($types as $type => $subtypes) {
 	}
 	
 	foreach ($subtypes as $subtype) {
+		$count = 0;
 		if ($register_menu_items) {
 			$count = $service->listResults('entities', $type, $subtype, true);
 			$total += $count;
@@ -116,25 +118,31 @@ foreach ($types as $type => $subtypes) {
 				$count = $service->listResults('entities', $type, $subtype, true);
 				$total += $count;
 			}
+			
 			$results .= $service->listResults('entities', $type, $subtype);
+			$result_total += $count;
 		}
 	}
 }
 
 $custom_types = $service->getSearchTypes();
 foreach ($custom_types as $search_type) {
-	if ($register_menu_items && !in_array($search_type, ['combined:objects', 'combined:all'])) {
+	$count = 0;
+	if ($register_menu_items) {
 		$count = $service->listResults($search_type, null, null, true);
-		$total += $count;
-		elgg_register_menu_item('page', [
-			'name' => "search_types:{$search_type}",
-			'text' => elgg_echo("search_types:{$search_type}"),
-			'href' => elgg_http_add_url_query_elements('search', [
-				'q' => $params['query'],
-				'search_type' => $search_type,
-			]),
-			'badge' => $count,
-		]);
+		
+		if (!in_array($search_type, ['combined:objects', 'combined:all'])) {
+			$total += $count;
+			elgg_register_menu_item('page', [
+				'name' => "search_types:{$search_type}",
+				'text' => elgg_echo("search_types:{$search_type}"),
+				'href' => elgg_http_add_url_query_elements('search', [
+					'q' => $params['query'],
+					'search_type' => $search_type,
+				]),
+				'badge' => $count,
+			]);
+		}
 	}
 
 	if ($use_type($search_type)) {
@@ -142,13 +150,15 @@ foreach ($custom_types as $search_type) {
 			$count = $service->listResults($search_type, null, null, true);
 			$total += $count;
 		}
+		
 		$results .= $service->listResults($search_type);
+		$result_total += $count;
 	}
 }
 
 if ($register_menu_items) {
 	elgg_register_menu_item('page', [
-		'name' => 'all',
+		'name' => '_all',
 		'text' => elgg_echo('all'),
 		'href' => elgg_http_add_url_query_elements('search', [
 			'q' => $params['query'],
@@ -171,7 +181,7 @@ $filter = elgg_view('page/layouts/elements/filter', ['filter_id' => 'search']);
 $title = elgg_view('search/title', [
 	'query' => $query,
 	'service' => $service,
-	'count' => $total,
+	'count' => $result_total,
 ]);
 
 $layout = elgg_view_layout('content', [
