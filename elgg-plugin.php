@@ -33,7 +33,7 @@ return [
 			'multiple' => true,
 		],
 		'search_user' => [
-			'context' => ['admin', 'dashboard', 'index'],
+			'context' => ['admin', 'dashboard', 'index', 'groups'],
 		],
 	],
 ];
