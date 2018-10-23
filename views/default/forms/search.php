@@ -70,3 +70,23 @@ foreach ($values as $name => $value) {
 	]);
 }
 
+$filter = (array) get_input('filter');
+if (!empty($filter)) {
+	foreach ($filter as $key => $value) {
+		if (is_array($value)) {
+			foreach ($value as $sub_key => $sub_value) {
+				echo elgg_view_field([
+					'#type' => 'hidden',
+					'name' => "filter[$key][$sub_key]",
+					'value' => $sub_value,
+				]);
+			}
+		} else {
+			echo elgg_view_field([
+				'#type' => 'hidden',
+				'name' => "filter[$key]",
+				'value' => $value,
+			]);
+		}
+	}
+}
