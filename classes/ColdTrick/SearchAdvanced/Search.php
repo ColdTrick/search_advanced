@@ -52,6 +52,7 @@ class Search {
 		
 		unset($result['query']);
 		unset($result['query_parts']);
+		unset($result['wheres']['search']);
 		
 		return $result;
 	}
