@@ -1,6 +1,6 @@
 <?php
 
-$search_filter = elgg_extract('search_filter', $vars, []);
+$search_filter = elgg_extract('search_filter', $vars, get_input('filter', []));
 $profile_fields = elgg_get_config('profile_fields');
 $profile_field_values = elgg_get_plugin_setting('user_profile_fields_search_form', 'search_advanced');
 $profile_field_soundex_values = elgg_get_plugin_setting('user_profile_fields_search_form_soundex', 'search_advanced');
