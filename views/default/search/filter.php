@@ -23,4 +23,3 @@ if (!elgg_view_exists($view)) {
 $vars = array_merge($vars, $params);
 
 echo elgg_view($view, $vars);
-

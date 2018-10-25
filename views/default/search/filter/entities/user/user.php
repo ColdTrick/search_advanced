@@ -1,9 +1,9 @@
 <?php
 
 $search_filter = elgg_extract('search_filter', $vars, []);
-$profile_fields = elgg_get_config("profile_fields");
-$profile_field_values = elgg_get_plugin_setting("user_profile_fields_search_form", "search_advanced");
-$profile_field_soundex_values = elgg_get_plugin_setting("user_profile_fields_search_form_soundex", "search_advanced");
+$profile_fields = elgg_get_config('profile_fields');
+$profile_field_values = elgg_get_plugin_setting('user_profile_fields_search_form', 'search_advanced');
+$profile_field_soundex_values = elgg_get_plugin_setting('user_profile_fields_search_form_soundex', 'search_advanced');
 if (empty($profile_field_values) || empty($profile_fields)) {
 	return;
 }
@@ -20,7 +20,7 @@ $module_type_default = 'aside';
 $show_placeholder = (bool) elgg_extract('show_placeholder', $vars, $show_placeholder_default);
 $show_label = (bool) elgg_extract('show_label', $vars, $show_label_default);
 
-$output = array();
+$output = [];
 foreach ($profile_fields as $profile_field => $field_type) {
 	if (!in_array($profile_field, $profile_field_values)) {
 		continue;
@@ -34,24 +34,22 @@ foreach ($profile_fields as $profile_field => $field_type) {
 	$row = new stdClass();
 	$row->label = $name;
 	$row->class = "search-filter-profile-field-{$profile_field}";
-	$row->input = elgg_view("input/text", array(
-		"name" => "filter[profile_fields][" . $profile_field . "]",
-		"value" => elgg_extract($profile_field, $submit_values),
-		"placeholder" => $show_placeholder ? $name : '',
-	));
+	$row->input = elgg_view('input/text', [
+		'name' => "filter[profile_fields][{$profile_field}]",
+		'value' => elgg_extract($profile_field, $submit_values),
+		'placeholder' => $show_placeholder ? $name : '',
+	]);
 	if (in_array($profile_field, $profile_field_soundex_values)) {
-		$soundex_options = array(
-			"name" => "filter[profile_fields_soundex][" . $profile_field . "]",
-			"value" => $profile_field,
-			"label" => elgg_echo("search_advanced:users:profile_field:soundex")
-		);
-		if (in_array($profile_field, $profile_field_soundex_submit_values)) {
-			$soundex_options["checked"] = "checked";
-		}
-			
-		$row->soundex = elgg_view("input/checkbox", $soundex_options);
+		$soundex_options = [
+			'name' => "filter[profile_fields_soundex][{$profile_field}]",
+			'value' => $profile_field,
+			'label' => elgg_echo('search_advanced:users:profile_field:soundex'),
+			'checked' => in_array($profile_field, $profile_field_soundex_submit_values),
+		];
+		
+		$row->soundex = elgg_view('input/checkbox', $soundex_options);
 	}
-
+	
 	$output[] = $row;
 }
 
@@ -72,19 +70,19 @@ foreach ($output as $row) {
 	
 	$result .= $row->input;
 	
-	if ($row->soundex) {
+	if (!empty($row->soundex)) {
 		if ($soundex_newline) {
 			$result .= '<br />';
 		}
-
+		
 		$result .= $row->soundex;
 	}
-			
+		
 	$body .= elgg_format_element('div', ['class' => $row->class], $result);
 }
 
 if ($show_button) {
-	$body .= elgg_format_element('div', [], elgg_view("input/submit", ["value" => elgg_echo("search")]));
+	$body .= elgg_format_element('div', [], elgg_view('input/submit', ['value' => elgg_echo('search')]));
 }
 
 $module_type = elgg_extract('module_type', $vars, $module_type_default);
