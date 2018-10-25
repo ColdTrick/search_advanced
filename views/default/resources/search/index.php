@@ -1,8 +1,9 @@
 <?php
-
 /**
  * Elgg search page
  */
+
+use ColdTrick\SearchAdvanced\Search;
 
 // Search supports RSS
 elgg_register_rss_link();
@@ -48,6 +49,14 @@ if (elgg_is_empty($query)) {
 	echo elgg_view_page(elgg_echo('search'), $layout);
 
 	return;
+}
+
+// undo query placeholder
+if ($query === Search::QUERY_PLACEHOLDER) {
+	$query = null;
+	unset($params['query']);
+	unset($params['query_parts']);
+	unset($params['wheres']['search']);
 }
 
 $combine_results = elgg_get_plugin_setting('combine_search_results', 'search_advanced');

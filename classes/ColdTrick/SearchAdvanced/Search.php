@@ -4,6 +4,8 @@ namespace ColdTrick\SearchAdvanced;
 
 class Search {
 	
+	const QUERY_PLACEHOLDER = '_search_advanced_empty_query_placeholder';
+	
 	/**
 	 * Allow searches with empty queries
 	 *
@@ -25,7 +27,7 @@ class Search {
 		}
 		
 		// set dummy search query
-		$result['query'] = '_search_advanced_empty_query_placeholder';
+		$result['query'] = self::QUERY_PLACEHOLDER;
 		
 		// register hook to unset the dummy query
 		$entity_type = elgg_extract('type', $result, 'all', false);
@@ -46,7 +48,7 @@ class Search {
 		
 		$result = $hook->getValue();
 		$query = elgg_extract('query', $result);
-		if ($query !== '_search_advanced_empty_query_placeholder') {
+		if ($query !== self::QUERY_PLACEHOLDER) {
 			return;
 		}
 		
