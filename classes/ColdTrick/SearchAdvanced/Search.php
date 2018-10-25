@@ -397,4 +397,74 @@ class Search {
 
 		return elgg_format_element('label', [], $content);
 	}
+	
+	/**
+	 * Remove configured fields from allowed user profile fields
+	 *
+	 * @param \Elgg\Hook $hook 'search:fields', 'user'
+	 *
+	 * @return void|array
+	 */
+	public static function cleanupUserMetadataFields(\Elgg\Hook $hook) {
+		
+		$remove_fields = elgg_get_plugin_setting('user_profile_fields_metadata_search', 'search_advanced');
+		if (empty($remove_fields)) {
+			return;
+		}
+		
+		$fields = $hook->getValue();
+		if (empty($fields)) {
+			return;
+		}
+		
+		$remove_fields = json_decode($remove_fields, true);
+		
+		foreach (['metadata', 'annotations'] as $section) {
+			if (empty($fields[$section])) {
+				continue;
+			}
+			
+			foreach ($fields[$section] as $index => $field_name) {
+				if (!in_array($field_name, $remove_fields)) {
+					continue;
+				}
+				
+				unset($fields[$section][$index]);
+			}
+		}
+		
+		return $fields;
+	}
+	
+	/**
+	 * Remove configured metadata fields from allowed group metadata fields
+	 *
+	 * @param \Elgg\Hook $hook 'search:fields', 'group'
+	 *
+	 * @return void|array
+	 */
+	public static function cleanupGroupMetadataFields(\Elgg\Hook $hook) {
+		
+		$remove_fields = elgg_get_plugin_setting('group_profile_fields_metadata_search', 'search_advanced');
+		if (empty($remove_fields)) {
+			return;
+		}
+		
+		$fields = $hook->getValue();
+		if (empty($fields) || empty($fields['metadata'])) {
+			return;
+		}
+		
+		$remove_fields = json_decode($remove_fields, true);
+		
+		foreach ($fields['metadata'] as $index => $metadata_name) {
+			if (!in_array($metadata_name, $remove_fields)) {
+				continue;
+			}
+			
+			unset($fields['metadata'][$index]);
+		}
+		
+		return $fields;
+	}
 }
