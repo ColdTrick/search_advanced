@@ -477,6 +477,12 @@ class Search {
 				unset($filter_fields[$name]);
 				continue;
 			}
+			
+			if (elgg_is_empty($value)) {
+				// no sumbitted value
+				unset($filter_fields[$name]);
+				continue;
+			}
 		}
 		
 		if (empty($filter_fields)) {
