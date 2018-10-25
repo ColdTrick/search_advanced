@@ -467,4 +467,111 @@ class Search {
 		
 		return $fields;
 	}
+	
+	/**
+	 * Sanitize the profile fields filter to only allow configured profile fields
+	 *
+	 * @param \Elgg\Hook $hook 'search:options', 'user'
+	 *
+	 * @return void|array
+	 */
+	public static function sanitizeProfileFieldFilter(\Elgg\Hook $hook) {
+		
+		$search_params = $hook->getValue();
+		
+		$filter = elgg_extract('search_filter', $search_params);
+		if (empty($filter)) {
+			return;
+		}
+		
+		$filter_fields = elgg_extract('profile_fields', $filter);
+		if (empty($filter_fields)) {
+			return;
+		}
+		
+		$profile_fields = elgg_get_config('profile_fields');
+		$configured_fields = elgg_get_plugin_setting('user_profile_fields_search_form', 'search_advanced');
+		
+		if (empty($profile_fields) || empty($configured_fields)) {
+			unset($filter['profile_fields']);
+			
+			$search_params['search_filter'] = $filter;
+			return $search_params;
+		}
+		
+		$configured_fields = json_decode($configured_fields, true);
+		
+		foreach ($filter_fields as $name => $value) {
+			if (!array_key_exists($name, $profile_fields)) {
+				// not a profile filed
+				unset($filter_fields[$name]);
+				continue;
+			}
+			
+			if (!in_array($name, $configured_fields)) {
+				// not configured as allowed field
+				unset($filter_fields[$name]);
+				continue;
+			}
+		}
+		
+		if (empty($filter_fields)) {
+			// nothing left
+			unset($filter['profile_fields']);
+			
+			$search_params['search_filter'] = $filter;
+			return $search_params;
+		}
+		
+		$filter['profile_fields'] = $filter_fields;
+		
+		$search_params['search_filter'] = $filter;
+		return $search_params;
+	}
+	
+	/**
+	 * Apply profile search filter on user search
+	 *
+	 * @param \Elgg\Hook $hook 'search:options', 'user'
+	 *
+	 * @return void|array
+	 */
+	public static function searchUserProfileFilter(\Elgg\Hook $hook) {
+		
+		$search_params = $hook->getValue();
+		
+		$filter = elgg_extract('search_filter', $search_params);
+		if (empty($filter)) {
+			return;
+		}
+		
+		$profile_fields = elgg_extract('profile_fields', $filter);
+		if (empty($profile_fields)) {
+			return;
+		}
+		
+		$soundex = elgg_extract('profile_fields_soundex', $filter);
+		
+		foreach ($profile_fields as $profile_field => $value) {
+			
+			$value = elgg()->db->sanitizeString($value);
+			if (elgg_is_empty($value)) {
+				continue;
+			}
+			
+			if (!isset($search_params['annotation_name_value_pairs'])) {
+				$search_params['annotation_name_value_pairs'] = [];
+			}
+			
+			// @todo implement soundex
+			$search_params['annotation_name_value_pairs'][] = [
+				'name' => "profile:{$profile_field}",
+				'value' => "%{$value}%",
+				'operand' => 'LIKE',
+				'type' => ELGG_VALUE_STRING,
+			];
+		}
+		
+		return $search_params;
+	}
 }
