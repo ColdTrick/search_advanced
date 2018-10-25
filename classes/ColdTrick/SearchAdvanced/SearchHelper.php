@@ -91,6 +91,13 @@ class SearchHelper extends \Elgg\Search\Search {
 			return '';
 		}
 		
+		// empty query placeholder cleanup
+		if ($current_params['query'] === Search::QUERY_PLACEHOLDER) {
+			unset($current_params['query']);
+			unset($current_params['query_parts']);
+			unset($current_params['wheres']['search']);
+		}
+		
 		return elgg_view('search/list', [
 			'results' => $results,
 			'params' => $current_params,
