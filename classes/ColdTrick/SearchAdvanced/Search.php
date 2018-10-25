@@ -189,7 +189,7 @@ class Search {
 		}
 		
 		if (empty($result)) {
-			return;
+			return $return;
 		}
 		
 		$result[] = [
