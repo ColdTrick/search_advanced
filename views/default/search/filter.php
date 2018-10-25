@@ -4,18 +4,29 @@ $params = elgg_extract('params', $vars, $vars);
 
 $search_type = elgg_extract('search_type', $params, get_input('search_type', 'all'));
 $type = elgg_extract('type', $params, get_input('entity_type'));
-$subtype = elgg_extract('subtype', $params, get_input('entity_subtype'));
+$subtype = elgg_extract('subtype', $params, get_input('entity_subtype', $type));
 
-$view_parts = [$search_type, $type, $subtype];
-$view = rtrim(implode('/', $view_parts), '/');
+// try different views
+$views = [
+	"search/filter/{$search_type}/{$type}/{$subtype}",
+	"search/filter/{$search_type}/{$type}/default",
+	"search/filter/{$search_type}/default",
+	"search/filter/{$type}/{$subtype}",
+	"search/filter/{$type}/default",
+];
 
-if (empty($view)) {
-	return;
+$view = false;
+foreach ($views as $check_view) {
+	$check_view = trim($check_view, '/');
+	if (!elgg_view_exists($check_view)) {
+		continue;
+	}
+	
+	$view = $check_view;
+	break;
 }
 
-$view = "search/filter/$view";
-
-if (!elgg_view_exists($view)) {
+if (empty($view)) {
 	return;
 }
 
