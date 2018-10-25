@@ -25,21 +25,17 @@ class Bootstrap extends DefaultPluginBootstrap {
 		
 		$hooks->registerHandler('autocomplete', 'search_advanced', '\ColdTrick\SearchAdvanced\Search::getAutocompleteUsers', 100);
 		$hooks->registerHandler('autocomplete', 'search_advanced', '\ColdTrick\SearchAdvanced\Search::getAutocompleteGroups', 200);
-		$hooks->registerHandler('autocomplete', 'search_advanced', '\ColdTrick\SearchAdvanced\Search::getAutocompleteHelpers', 900);
-		$hooks->registerHandler('autocomplete', 'search_advanced', '\ColdTrick\SearchAdvanced\Search::getAutocompleteSearchAll', 9999);
+		$hooks->registerHandler('elgg.data', 'page', '\ColdTrick\SearchAdvanced\Search::getAutocompleteHelpers');
 		$hooks->registerHandler('register', 'menu:search_type_selection', '\ColdTrick\SearchAdvanced\Menus::registerSearchTypeSelectionItems');
 		$hooks->registerHandler('register', 'menu:filter:search', '\ColdTrick\SearchAdvanced\Menus::registerSearchListItems');
 		$hooks->registerHandler('setting', 'plugin', '\ColdTrick\SearchAdvanced\Settings::saveArrayTypeSetting');
 		$hooks->registerHandler('setting', 'plugin', '\ColdTrick\SearchAdvanced\Settings::flushCache');
 		$hooks->registerHandler('search:params', 'all', '\ColdTrick\SearchAdvanced\Search::allowEmptyQuery');
-		$hooks->registerHandler('search:config', 'type_subtype_pairs', '\ColdTrick\SearchAdvanced\Search::getTypeSubtypePairs');
 		$hooks->registerHandler('search:config', 'search_types', '\ColdTrick\SearchAdvanced\Search::getSearchTypes');
 		$hooks->registerHandler('search:fields', 'combined:all', \Elgg\Search\UserSearchFieldsHandler::class);
 		$hooks->registerHandler('search:fields', 'combined:all', \Elgg\Search\ObjectSearchFieldsHandler::class);
 		$hooks->registerHandler('search:fields', 'combined:all', \Elgg\Search\GroupSearchFieldsHandler::class);
 		$hooks->registerHandler('search:fields', 'combined:objects', \Elgg\Search\ObjectSearchFieldsHandler::class);
-		$hooks->registerHandler('search:options', 'all', '\ColdTrick\SearchAdvanced\Search::getOptions');
-		$hooks->registerHandler('search:results', 'all', '\ColdTrick\SearchAdvanced\Search::getResults');
 		$hooks->registerHandler('view_vars', 'resources/search/index', '\ColdTrick\SearchAdvanced\Views::showSearchIndexLoader');
 		$hooks->registerHandler('view_vars', 'resources/search/index', '\ColdTrick\SearchAdvanced\Views::updateListType');
 	}

@@ -56,18 +56,7 @@ class Search {
 		
 		return $result;
 	}
-	
-	/**
-	 * Gets type/subtype pairs
-	 *
-	 * @param \Elgg\Hook $hook 'search:config', 'type_subtype_pairs'
-	 *
-	 * @return array
-	 */
-	public static function getTypeSubtypePairs(\Elgg\Hook $hook) {
 		
-	}
-	
 	/**
 	 * Gets search types
 	 *
@@ -93,52 +82,39 @@ class Search {
 	}
 
 	/**
-	 * Returns the search options
-	 *
-	 * @param \Elgg\Hook $hook 'search:options', 'all'
-	 *
-	 * @return array
-	 */
-	public static function getOptions(\Elgg\Hook $hook) {
-
-	}
-
-	/**
-	 * Returns the search results
-	 *
-	 * @param \Elgg\Hook $hook 'search:results', 'all'
-	 *
-	 * @return array
-	 */
-	public static function getResults(\Elgg\Hook $hook) {
-		
-	}
-
-	/**
 	 * Returns the search results for users used in the autocomplete
 	 *
-	 * @param \Elgg\Hook $hook 'autocomplete', 'search_advanced'
+	 * @param \Elgg\Hook $hook 'elgg.data', 'page'
 	 *
 	 * @return array
 	 */
 	public static function getAutocompleteHelpers(\Elgg\Hook $hook) {
-		
+		$return = $hook->getValue();
+		$return['search_advanced']['helpers'] = [];
+
 		if (elgg_get_plugin_setting('enable_autocomplete_helpers', 'search_advanced') === 'no') {
-			return;
+			return $return;
 		}
 				
-		$result = $hook->getValue();
+		$result = [];
 		
-		$query = $hook->getParam('query');
+		$query = '___PLACEHOLDER___';
+		
+		$route = _elgg_services()->request->getRoute();
+		$route_name = '';
+		if ($route) {
+			$entity_guid = elgg_extract('guid', $route->getMatchedParameters());
+			$route_name = $route->getName();
+		}
 		
 		$owner = null;
 		$container = null;
 		$type = null;
 		$subtype = null;
 		
-		$route_parts = explode(':', $hook->getParam('route_name', ''));
+		$route_parts = explode(':', $route_name);
 		
-		$entity = get_entity($hook->getParam('entity_guid'));
+		$entity = get_entity($entity_guid);
 		if ((elgg_extract(0, $route_parts) !== 'collection') && $entity instanceof \ElggEntity) {
 			$type = $entity->getType();
 			$subtype = $entity->getSubtype();
@@ -146,7 +122,7 @@ class Search {
 			$owner = $entity->getOwnerEntity();
 			$container = $entity->getContainerEntity();
 		} else {
-			$page_owner = get_entity($hook->getParam('page_owner_guid'));
+			$page_owner = elgg_get_page_owner_entity();
 			if ($page_owner instanceof \ElggGroup) {
 				$container = $page_owner;
 			} elseif ($page_owner instanceof \ElggUser) {
@@ -171,7 +147,7 @@ class Search {
 						'info' => elgg_echo('search_advanced:autocomplete:placeholder:type', [elgg_echo("item:{$type}:{$subtype}")]),
 					]),
 					'href' => elgg_generate_url('default:search', [
-						'q' => $hook->getParam('query'),
+						'q' => $query,
 						'entity_type' => $type,
 						'entity_subtype' => $subtype,
 						'search_type' => 'entities',
@@ -189,7 +165,7 @@ class Search {
 					'info' => elgg_echo('search_advanced:autocomplete:placeholder:owner', [$owner->getDisplayName()]),
 				]),
 				'href' => elgg_generate_url('default:search', [
-					'q' => $hook->getParam('query'),
+					'q' => $query,
 					'owner_guid' => $owner->guid,
 				]),
 			];
@@ -204,26 +180,12 @@ class Search {
 					'info' => elgg_echo('search_advanced:autocomplete:placeholder:container', [$container->getDisplayName()]),
 				]),
 				'href' => elgg_generate_url('default:search', [
-					'q' => $hook->getParam('query'),
+					'q' => $query,
 					'container_guid' => $container->guid,
 				]),
 			];
 		}
-						
-		return $result;
-	}
-
-	/**
-	 * Returns the 'search all' link in the autocomplete
-	 *
-	 * @param \Elgg\Hook $hook 'autocomplete', 'search_advanced'
-	 *
-	 * @return array
-	 */
-	public static function getAutocompleteSearchAll(\Elgg\Hook $hook) {
 		
-		$result = $hook->getValue();
-	
 		if (empty($result)) {
 			return;
 		}
@@ -232,15 +194,17 @@ class Search {
 			'type' => 'placeholder',
 			'content' => self::formatAutocompletePlaceholder([
 				'icon' => 'search',
-				'text' => $hook->getParam('query'),
+				'text' => $query,
 				'info' => elgg_echo('search_advanced:autocomplete:placeholder:all'),
 			]),
 			'href' => elgg_generate_url('default:search', [
-				'q' => $hook->getParam('query'),
+				'q' => $query,
 			]),
 		];
-						
-		return $result;
+		
+		$return['search_advanced']['helpers'] = $result;
+		
+		return $return;
 	}
 
 	/**

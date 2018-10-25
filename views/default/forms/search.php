@@ -5,16 +5,6 @@
  * @uses $vars['value'] Current search query
  */
 
-$entity_guid = 0;
-$page_owner_guid = elgg_get_page_owner_guid();
-
-$route = _elgg_services()->request->getRoute();
-$route_name = '';
-if ($route) {
-	$entity_guid = elgg_extract('guid', $route->getMatchedParameters());
-	$route_name = $route->getName();
-}
-
 $is_inline_form = elgg_extract('inline_form', $vars, false);
 
 $enable_autocomplete = (bool) (elgg_get_plugin_setting('enable_autocomplete', 'search_advanced') === 'yes');
@@ -36,9 +26,6 @@ echo elgg_view_field([
 	'required' => true,
 	'value' => _elgg_get_display_query($value),
 	'placeholder' => elgg_echo('search_advanced:searchbox'),
-	'data-entity-guid' => $entity_guid,
-	'data-page-owner-guid' => $page_owner_guid,
-	'data-route-name' => $route_name,
 ]);
 
 if (!$is_inline_form && (elgg_get_plugin_setting('enable_search_type_selection', 'search_advanced') === 'yes')) {

@@ -2,6 +2,19 @@ define(function(require) {
 	var $ = require('jquery');
 	var elgg = require('elgg');
 	
+	var getAutocompleteHelpers = function(query) {
+		// make a clone of the original helpers
+		var helpers = JSON.parse(JSON.stringify(elgg.data.search_advanced.helpers));
+		var placeholder_text = '___PLACEHOLDER___';
+		
+		$.each(helpers, function() {
+			this.content = this.content.replace(placeholder_text, query);
+			this.href = this.href.replace(placeholder_text, query);
+		});
+		
+		return helpers;
+	};
+	
 	$(".elgg-form-search .search-input").each(function() {
 		$data = $(this).data();
 		
@@ -15,12 +28,16 @@ define(function(require) {
 		})
 		.autocomplete({
 			source: function( request, response ) {
+				
+				var helpers = getAutocompleteHelpers(request.term);
+				
 				$.getJSON( "/search_advanced/autocomplete", {
 					q: request.term,
-					entity_guid: $data.entityGuid,
-					route_name: $data.routeName,
-					page_owner_guid: $data.pageOwnerGuid,
-				}, response );
+				}).done(function(data) {					
+					response(helpers.concat(data));
+				});
+				
+				response(helpers);
 			},
 			search: function() {
 				// custom minLength
