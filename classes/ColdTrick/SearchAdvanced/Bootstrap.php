@@ -36,6 +36,10 @@ class Bootstrap extends DefaultPluginBootstrap {
 		$hooks->registerHandler('search:fields', 'combined:all', \Elgg\Search\ObjectSearchFieldsHandler::class);
 		$hooks->registerHandler('search:fields', 'combined:all', \Elgg\Search\GroupSearchFieldsHandler::class);
 		$hooks->registerHandler('search:fields', 'combined:objects', \Elgg\Search\ObjectSearchFieldsHandler::class);
+		$hooks->registerHandler('search:fields', 'group', __NAMESPACE__ . '\Search::cleanupGroupMetadataFields', 999);
+		$hooks->registerHandler('search:fields', 'user', __NAMESPACE__ . '\Search::cleanupUserMetadataFields', 999);
+		$hooks->registerHandler('search:options', 'user', __NAMESPACE__ . '\Search::sanitizeProfileFieldFilter', 1);
+		$hooks->registerHandler('search:options', 'user', __NAMESPACE__ . '\Search::searchUserProfileFilter');
 		$hooks->registerHandler('view_vars', 'resources/search/index', '\ColdTrick\SearchAdvanced\Views::showSearchIndexLoader');
 		$hooks->registerHandler('view_vars', 'resources/search/index', '\ColdTrick\SearchAdvanced\Views::updateListType');
 	}

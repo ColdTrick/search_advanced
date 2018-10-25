@@ -34,7 +34,7 @@ return array (
   'search_advanced:settings:profile_fields' => 'Configureer specifieke instellingen voor profiel velden',
   'search_advanced:settings:profile_fields:user' => 'Gebruikers profiel velden',
   'search_advanced:settings:profile_fields:group' => 'Groep profiel velden',
-  'search_advanced:settings:profile_fields:metadata_search' => 'Niet gebruiken in metadata zoekopdracht',
+  'search_advanced:settings:profile_fields:metadata_search' => 'Niet gebruiken in profiel zoekopdracht',
   'search_advanced:settings:profile_fields:field' => 'Profiel veld',
   'widgets:search_user:name' => 'Gebruikers zoekformulier',
   'widgets:search_user:description' => 'Zoek gebruikers op basis van profiel metadata velden',

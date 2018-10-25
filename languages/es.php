@@ -31,7 +31,6 @@ return array (
   'search_advanced:settings:profile_fields' => 'Configurar configuraciones específicas del campo de perfil',
   'search_advanced:settings:profile_fields:user' => 'Campos del perfil de usuario',
   'search_advanced:settings:profile_fields:group' => 'Campos del perfil del grupo',
-  'search_advanced:settings:profile_fields:metadata_search' => 'No utilizar en la búsqueda de metadatos',
   'search_advanced:settings:profile_fields:field' => 'Campo de perfil',
   'search_advanced:settings:user_profile_fields:show_on_form' => 'Mostrar en el formulario de búsqueda',
   'search_advanced:settings:user_profile_fields:use_soundex' => 'Utilizar Soundex',

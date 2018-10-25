@@ -25,7 +25,6 @@ return array(
 	'search_advanced:settings:profile_fields' => "Einstellungen für Profilfelder",
 	'search_advanced:settings:profile_fields:user' => "Eingabefelder für Benutzerprofil",
 	'search_advanced:settings:profile_fields:group' => "Eingabefelder für Gruppenprofil",
-	'search_advanced:settings:profile_fields:metadata_search' => "Nicht für die Suche mit Metadaten verwenden",
 	'search_advanced:settings:profile_fields:field' => "Profilfielder",
 	'search_advanced:settings:user_profile_fields:show_on_form' => "Auf Suchformular anzeigen",
 	'search_advanced:settings:user_profile_fields:use_soundex' => "'soundex' benutzen",

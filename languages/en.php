@@ -41,7 +41,7 @@ return array(
 	'search_advanced:settings:profile_fields' => "Configure profile field specific settings",
 	'search_advanced:settings:profile_fields:user' => "User Profile Fields",
 	'search_advanced:settings:profile_fields:group' => "Group Profile Fields",
-	'search_advanced:settings:profile_fields:metadata_search' => "Do not use in metadata search",
+	'search_advanced:settings:profile_fields:metadata_search' => "Do not use in profile search",
 	'search_advanced:settings:profile_fields:field' => "Profile field",
 	'search_advanced:settings:user_profile_fields:show_on_form' => "Show on search form",
 	'search_advanced:settings:user_profile_fields:use_soundex' => "Use Soundex",
