@@ -7,13 +7,25 @@ $type = elgg_extract('type', $params, get_input('entity_type'));
 $subtype = elgg_extract('subtype', $params, get_input('entity_subtype', $type));
 
 // try different views
-$views = [
-	"search/filter/{$search_type}/{$type}/{$subtype}",
-	"search/filter/{$search_type}/{$type}/default",
-	"search/filter/{$search_type}/default",
-	"search/filter/{$type}/{$subtype}",
-	"search/filter/{$type}/default",
-];
+
+$views = [];
+
+if (!elgg_is_empty($search_type)) {
+	if (!elgg_is_empty($type)) {
+		if (!elgg_is_empty($subtype)) {
+			$views[] = "search/filter/{$search_type}/{$type}/{$subtype}";
+		}
+		$views[] = "search/filter/{$search_type}/{$type}/default";
+	}
+	$views[] = "search/filter/{$search_type}";
+}
+
+if (!elgg_is_empty($type)) {
+	if (!elgg_is_empty($subtype)) {
+		$views[] = "search/filter/{$type}/{$subtype}";
+	}
+	$views[] = "search/filter/{$type}/default";
+}
 
 $view = false;
 foreach ($views as $check_view) {
