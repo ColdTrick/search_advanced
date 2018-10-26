@@ -106,6 +106,8 @@ class Search {
 		$route_name = '';
 		if ($route) {
 			$entity_guid = elgg_extract('guid', $route->getMatchedParameters());
+			$entity = get_entity($entity_guid);
+			
 			$route_name = $route->getName();
 		}
 		
@@ -116,7 +118,6 @@ class Search {
 		
 		$route_parts = explode(':', $route_name);
 		
-		$entity = get_entity($entity_guid);
 		if ((elgg_extract(0, $route_parts) !== 'collection') && $entity instanceof \ElggEntity) {
 			$type = $entity->getType();
 			$subtype = $entity->getSubtype();
