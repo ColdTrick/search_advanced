@@ -118,7 +118,7 @@ class Search {
 		
 		$route_parts = explode(':', $route_name);
 		
-		if ((elgg_extract(0, $route_parts) !== 'collection') && $entity instanceof \ElggEntity) {
+		if ((elgg_extract(0, $route_parts) !== 'collection') && isset($entity) && $entity instanceof \ElggEntity) {
 			$type = $entity->getType();
 			$subtype = $entity->getSubtype();
 			
