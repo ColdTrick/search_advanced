@@ -124,6 +124,10 @@ class Search {
 			
 			$owner = $entity->getOwnerEntity();
 			$container = $entity->getContainerEntity();
+			
+			if ($entity instanceof \ElggGroup) {
+				$container = $entity;
+			}
 		} else {
 			$page_owner = elgg_get_page_owner_entity();
 			if ($page_owner instanceof \ElggGroup) {
