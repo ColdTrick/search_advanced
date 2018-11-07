@@ -6,6 +6,9 @@ $profile_field_metadata_search_values = elgg_get_plugin_setting('group_profile_f
 if (!empty($profile_field_metadata_search_values)) {
 	$profile_field_metadata_search_values = json_decode($profile_field_metadata_search_values, true);
 }
+if (empty($profile_field_metadata_search_values)) {
+	$profile_field_metadata_search_values = [];
+}
 
 echo "<table class='elgg-table'>";
 echo "<thead><tr>";
