@@ -102,7 +102,6 @@ class SearchHelper extends \Elgg\Search\Search {
 			'results' => $results,
 			'params' => $current_params,
 		]);
-
 	}
 	
 	/**
@@ -115,7 +114,7 @@ class SearchHelper extends \Elgg\Search\Search {
 		];
 		
 		$params = array_merge($defaults, $params);
-		return parent::initParams($params);
 		
+		return parent::initParams($params);
 	}
 }

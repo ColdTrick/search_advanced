@@ -7,6 +7,46 @@ class Search {
 	const QUERY_PLACEHOLDER = '_search_advanced_empty_query_placeholder';
 	
 	/**
+	 * Allow searches with empty queries when searching profile fields
+	 *
+	 * @param \Elgg\Hook $hook 'search:params', 'user'
+	 *
+	 * @return void|array
+	 */
+	public static function allowEmptyQueryWithProfileSearch(\Elgg\Hook $hook) {
+		
+		$search_params = $hook->getValue();
+		
+		$allow_empty_query = (bool) elgg_extract('allow_empty_query', $search_params, false);
+		$filter = (array) elgg_extract('search_filter', $search_params, []);
+		if (empty($filter) || $allow_empty_query) {
+			return;
+		}
+		
+		$profile_fields = (array) elgg_extract('profile_fields', $filter, []);
+		if (empty($profile_fields)) {
+			return;
+		}
+		
+		foreach ($profile_fields as $field => $query) {
+			if (elgg_is_empty($query)) {
+				continue;
+			}
+			
+			$allow_empty_query = true;
+			break;
+		}
+		
+		if ($allow_empty_query !== true) {
+			return;
+		}
+		
+		$search_params['allow_empty_query'] = true;
+		
+		return $search_params;
+	}
+	
+	/**
 	 * Allow searches with empty queries
 	 *
 	 * @param \Elgg\Hook $hook 'search:params', 'all'
@@ -15,26 +55,27 @@ class Search {
 	 */
 	public static function allowEmptyQuery(\Elgg\Hook $hook) {
 		
-		if (elgg_get_plugin_setting('query_required', 'search_advanced') !== 'no') {
+		$search_params = $hook->getValue();
+		
+		$allow_empty_query = (bool) elgg_extract('allow_empty_query', $search_params, false);
+		if (!$allow_empty_query && elgg_get_plugin_setting('query_required', 'search_advanced') !== 'no') {
 			return;
 		}
 		
-		$result = $hook->getValue();
-		
-		$query = elgg_extract('query', $result);
+		$query = elgg_extract('query', $search_params);
 		if (!elgg_is_empty($query)) {
 			return;
 		}
 		
 		// set dummy search query
-		$result['query'] = self::QUERY_PLACEHOLDER;
+		$search_params['query'] = self::QUERY_PLACEHOLDER;
 		
 		// register hook to unset the dummy query
-		$entity_type = elgg_extract('type', $result, 'all', false);
+		$entity_type = elgg_extract('type', $search_params, 'all', false);
 		
 		elgg_register_plugin_hook_handler('search:options', $entity_type, __NAMESPACE__ . '\Search::unsetEmptyQueryPlaceholder', 1);
 		
-		return $result;
+		return $search_params;
 	}
 	
 	/**
@@ -503,6 +544,7 @@ class Search {
 		$filter['profile_fields'] = $filter_fields;
 		
 		$search_params['search_filter'] = $filter;
+		
 		return $search_params;
 	}
 	

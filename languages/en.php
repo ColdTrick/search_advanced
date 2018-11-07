@@ -70,6 +70,7 @@ return array(
 	'search_advanced:results:empty:title' => "Results",
 	'search_advanced:results:container:title' => "Showing result in the group: %s",
 	'search_advanced:results:container:undo' => "Undo group filter",
+	'search_advanced:results:empty_query' => "Please provide a search query",
 	
 	'search_advanced:members:sidebar:q:placeholder' => "Search term or name",
 	

@@ -27,6 +27,8 @@ if ($container_guid && !is_array($container_guid)) {
 
 $query = elgg_extract('query', $params);
 
+$filter = elgg_view('page/layouts/elements/filter', ['filter_id' => 'search']);
+
 $form = '';
 if (elgg_extract('show_inline_form', $vars, true)) {
 	$params['inline_form'] = true;
@@ -42,8 +44,8 @@ if (elgg_is_empty($query)) {
 	// display a search form if there is no query
 	$layout = elgg_view_layout('content', [
 		'title' => elgg_echo('search'),
-		'content' => $form,
-		'filter' => '',
+		'content' => elgg_view('page/components/no_results', ['no_results' => elgg_echo('search_advanced:results:empty_query')]),
+		'filter' => $form . $filter,
 	]);
 
 	echo elgg_view_page(elgg_echo('search'), $layout);
@@ -185,7 +187,7 @@ if (empty($results)) {
 	], elgg_echo('notfound'));
 }
 
-$filter = elgg_view('page/layouts/elements/filter', ['filter_id' => 'search']);
+
 
 $title = elgg_view('search/title', [
 	'query' => $query,
