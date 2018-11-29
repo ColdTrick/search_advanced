@@ -46,6 +46,7 @@ if (elgg_is_empty($query)) {
 		'title' => elgg_echo('search'),
 		'content' => elgg_view('page/components/no_results', ['no_results' => elgg_echo('search_advanced:results:empty_query')]),
 		'filter' => $form . $filter,
+		'filter_id' => 'search',
 	]);
 
 	echo elgg_view_page(elgg_echo('search'), $layout);
@@ -187,8 +188,6 @@ if (empty($results)) {
 	], elgg_echo('notfound'));
 }
 
-
-
 $title = elgg_view('search/title', [
 	'query' => $query,
 	'service' => $service,
@@ -199,6 +198,7 @@ $layout = elgg_view_layout('content', [
 	'title' => $title,
 	'content' => $results,
 	'filter' => $form . $filter,
+	'filter_id' => 'search',
 ]);
 
 echo elgg_view_page(elgg_echo('search'), $layout);
