@@ -3,7 +3,7 @@
 $search_filter = elgg_extract('search_filter', $vars, get_input('filter', []));
 $profile_fields = elgg_get_config('profile_fields');
 $profile_field_values = elgg_get_plugin_setting('user_profile_fields_search_form', 'search_advanced');
-$profile_field_soundex_values = elgg_get_plugin_setting('user_profile_fields_search_form_soundex', 'search_advanced');
+$profile_field_soundex_values = elgg_get_plugin_setting('user_profile_fields_search_form_soundex', 'search_advanced', []);
 if (empty($profile_field_values) || empty($profile_fields)) {
 	return;
 }
@@ -11,7 +11,9 @@ if (empty($profile_field_values) || empty($profile_fields)) {
 $submit_values = elgg_extract('profile_fields', $search_filter, []);
 $profile_field_values = json_decode($profile_field_values, true);
 $profile_field_soundex_submit_values = elgg_extract('profile_fields_soundex', $search_filter, []);
-$profile_field_soundex_values = json_decode($profile_field_soundex_values, true);
+if (!is_array($profile_field_soundex_values)) {
+	$profile_field_soundex_values = json_decode($profile_field_soundex_values, true);
+}
 
 $show_placeholder_default = true;
 $show_label_default = false;
