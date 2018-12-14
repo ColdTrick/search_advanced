@@ -1,26 +1,10 @@
 <?php
 /**
- * This file was created by Translation Editor v6.0
- * On 2017-10-07 16:07
+ * This file was created by Translation Editor v7.0-beta
+ * On 2018-12-14 16:10
  */
 
 return array (
-  'search_advanced:settings:enable_multi_tag' => 'Habilitar la búsqueda de etiquetas múltiples',
-  'search_advanced:settings:enable_multi_tag:info' => 'Las consultas de búsqueda se tratarán como dos consultas de búsqueda independientes. Los resultados se combinarán. El separador actúa como una sentencia OR. Esto sólo se aplica a los metadatos.',
-  'search_advanced:settings:multi_tag_separator' => 'Separador',
-  'search_advanced:settings:multi_tag_separator:info' => 'Seleccione el separador que se usará para determinar varias consultas de búsqueda.',
-  'search_advanced:settings:multi_tag_separator:comma' => 'Coma',
-  'search_advanced:settings:multi_tag_separator:space' => 'Espacio',
-  'search_advanced:settings:search_hooks_enabled' => 'Búsqueda avanzada debe controlar los resultados de búsqueda',
-  'search_advanced:settings:search_hooks_enabled:info' => 'De esta manera puedes controlar si este plugin proporciona los resultados de búsqueda',
-  'search_advanced:settings:search_types_menu_format' => 'Cómo mostrar los tipos de búsqueda',
-  'search_advanced:settings:search_types_menu_format:info' => 'Cómo deberían aparecer los tipos de búsqueda en la página de resultados',
-  'search_advanced:settings:search_types_menu_format:menu' => 'Como un menú',
-  'search_advanced:settings:search_types_menu_format:dropdown' => 'Como un menú desplegable',
-  'search_advanced:settings:filter_position' => 'Posición de filtros de contenido adicionales',
-  'search_advanced:settings:filter_position:info' => 'Si hay opciones de filtro adicionales disponibles, esta configuración controla dónde se muestran.',
-  'search_advanced:settings:filter_position:content' => 'En la parte superior de los resultados de la búsqueda',
-  'search_advanced:settings:filter_position:sidebar' => 'En la barra lateral',
   'search_advanced:settings:combine_search_results' => 'Combinar resultados de búsqueda',
   'search_advanced:settings:combine_search_results:info' => 'Esto mostrará una lista combinada del contenido creado más recientemente en función de su consulta de búsqueda. No habrá más agrupaciones en la página \'todo\'. El filtrado con el menú lateral sigue siendo posible.',
   'search_advanced:settings:combine_search_results:objects' => 'Combinar objetos',
@@ -38,27 +22,16 @@ return array (
   'search_advanced:users:profile_field:soundex' => 'El uso suena como',
   'search_advanced:settings:query_required' => 'Se requiere consulta',
   'search_advanced:settings:query_required:help' => '¿Es necesaria una consulta para ejecutar una búsqueda? Si no, la búsqueda mostrará una lista con contenido reciente (si se soporta).',
-  'search_advanced:content:title' => 'Contenido',
-  'search_advanced:content:last_updated' => 'Última actualización',
-  'search_advanced:content:created' => 'Creado',
   'search_advanced:searchbox' => 'Buscar',
-  'search_advanced:autocomplete:all' => 'Buscar en todo el contenido',
-  'search_advanced:forms:search:query:placeholder' => 'Introduzca una consulta para limitar los resultados',
   'search_advanced:widgets:search:edit:submit_behaviour' => 'Comportamiento de envío',
   'search_advanced:widgets:search:edit:submit_behaviour:show_in_widget' => 'Mostrar en widget',
   'search_advanced:widgets:search:edit:submit_behaviour:go_to_search' => 'Ir a la búsqueda',
-  'search_advanced:widgets:search_user:title' => 'Formulario de búsqueda de usuario',
-  'search_advanced:widgets:search_user:description' => 'Buscar usuarios con los campos de búsqueda de metadatos de perfil dedicados',
-  'search_advanced:widgets:search_user:no_results' => 'No se puede utilizar este widget, porque no hay campos de perfil configurados para la búsqueda de usuarios.',
   'search_advanced:results:title' => '%s resultados para %s',
   'search_advanced:results:empty:title' => 'Resultados',
-  'search_advanced:results:container:title' => 'Mostrando resultado en el grupo: %s',
-  'search_advanced:results:container:undo' => 'Deshacer filtro de grupo',
   'search_advanced:members:sidebar:q:placeholder' => 'Nombre o término de búsqueda',
   'search_advanced:menu:search_list:list:title' => 'Cambiar el aspecto de los resultados de búsqueda',
   'search_advanced:menu:search_list:entity' => 'Por defecto',
   'search_advanced:menu:search_list:compact' => 'Compacto',
-  'search_advanced:filter:refine' => 'Refinar los resultados',
   'search:filter:entities:user:title' => 'Campos de perfiles',
   'menu:search_types:header:object' => 'Objetos',
 );
