@@ -41,7 +41,7 @@ foreach ($profile_fields as $profile_field => $field_type) {
 		'value' => elgg_extract($profile_field, $submit_values),
 		'placeholder' => $show_placeholder ? $name : '',
 	]);
-	if (in_array($profile_field, $profile_field_soundex_values)) {
+	if (is_array($profile_field_soundex_values) && in_array($profile_field, $profile_field_soundex_values)) {
 		$soundex_options = [
 			'name' => "filter[profile_fields_soundex][{$profile_field}]",
 			'value' => $profile_field,
