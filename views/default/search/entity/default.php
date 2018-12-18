@@ -43,7 +43,8 @@ if ($extra_info) {
 		'class' => 'search-matched-extra',
 	], $extra_info);
 }
-echo elgg_view("$type/elements/summary", [
+
+$params = [
 	'entity' => $entity,
 	'tags' => false,
 	'title' => $title,
@@ -54,4 +55,7 @@ echo elgg_view("$type/elements/summary", [
 	'show_social_menu' => false,
 	'show_entity_menu' => false,
 	'icon' => $icon,
-]);
+];
+$params = $params + $vars;
+
+echo elgg_view("$type/elements/summary", $params);
