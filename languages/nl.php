@@ -1,10 +1,12 @@
 <?php
 /**
  * This file was created by Translation Editor v7.0-beta
- * On 2018-12-14 16:09
+ * On 2019-01-08 10:22
  */
 
 return array (
+  'widgets:search:name' => 'Zoeken',
+  'widgets:search:description' => 'Zoek naar content op de site',
   'search_types:combined:objects' => 'Content',
   'search_types:combined:all' => 'Alle resultaten',
   'search_advanced:settings:enable_search_type_selection' => 'Activeer type selectie',

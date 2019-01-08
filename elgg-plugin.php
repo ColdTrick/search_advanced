@@ -27,8 +27,6 @@ return [
 	],
 	'widgets' => [
 		'search' => [
-			'name' => elgg_echo('search'),
-			'description' => elgg_echo('search'),
 			'context' => ['admin', 'profile', 'dashboard', 'index', 'groups'],
 			'multiple' => true,
 		],
