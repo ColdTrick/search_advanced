@@ -435,8 +435,14 @@ class Search {
 			if (empty($fields[$section])) {
 				continue;
 			}
-			
+						
 			foreach ($fields[$section] as $index => $field_name) {
+				if ($section === 'annotations') {
+					if (strpos($field_name, 'profile:') === 0) {
+						$field_name = substr($field_name, strlen('profile:'));
+					}
+				}
+				
 				if (!in_array($field_name, $remove_fields)) {
 					continue;
 				}

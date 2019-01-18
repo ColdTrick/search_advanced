@@ -22,9 +22,6 @@ class SearchHelper extends \Elgg\Search\Search {
 		$current_params['type'] = $type;
 		$current_params['subtype'] = $subtype;
 		
-		// normalizing current search params so the listing has better awareness
-		$current_params = _elgg_services()->search->normalizeOptions($current_params);
-		
 		if (in_array($search_type, ['combined:objects', 'combined:all'])) {
 			// fix params for combined searches
 			$current_params['limit'] = max((int) get_input('limit'), elgg_get_config('default_limit'));
@@ -46,6 +43,9 @@ class SearchHelper extends \Elgg\Search\Search {
 			}
 		}
 		
+		// normalizing current search params so the listing has better awareness
+		$current_params = _elgg_services()->search->normalizeOptions($current_params);
+				
 		switch ($search_type) {
 			case 'entities' :
 				if ($subtype && _elgg_services()->hooks->hasHandler('search', "$type:$subtype")) {

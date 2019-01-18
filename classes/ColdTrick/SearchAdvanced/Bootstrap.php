@@ -33,10 +33,6 @@ class Bootstrap extends DefaultPluginBootstrap {
 		$hooks->registerHandler('search:params', 'all', '\ColdTrick\SearchAdvanced\Search::allowEmptyQuery');
 		$hooks->registerHandler('search:params', 'all', '\ColdTrick\SearchAdvanced\Search::allowEmptyQueryWithProfileSearch', 400);
 		$hooks->registerHandler('search:config', 'search_types', '\ColdTrick\SearchAdvanced\Search::getSearchTypes');
-		$hooks->registerHandler('search:fields', 'combined:all', \Elgg\Search\UserSearchFieldsHandler::class);
-		$hooks->registerHandler('search:fields', 'combined:all', \Elgg\Search\ObjectSearchFieldsHandler::class);
-		$hooks->registerHandler('search:fields', 'combined:all', \Elgg\Search\GroupSearchFieldsHandler::class);
-		$hooks->registerHandler('search:fields', 'combined:objects', \Elgg\Search\ObjectSearchFieldsHandler::class);
 		$hooks->registerHandler('search:fields', 'group', __NAMESPACE__ . '\Search::cleanupGroupMetadataFields', 999);
 		$hooks->registerHandler('search:fields', 'user', __NAMESPACE__ . '\Search::cleanupUserMetadataFields', 999);
 		$hooks->registerHandler('search:options', 'user', __NAMESPACE__ . '\Search::sanitizeProfileFieldFilter', 1);
