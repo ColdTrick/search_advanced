@@ -46,11 +46,6 @@ define(function(require) {
 					return false;
 				}
 
-				var search_type = $(".elgg-search input[name='entity_type']").val();
-				if( search_type && search_type != "user" && search_type != "group"){
-					return false;
-				}
-				
 				return true;
 			},
 			focus: function() {
