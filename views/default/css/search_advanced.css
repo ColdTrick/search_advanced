@@ -55,3 +55,7 @@
 		display: none;
 	}	
 }
+
+input[type='search'] {
+	height: 2.5rem;
+}

@@ -17,6 +17,7 @@ $value = elgg_extract('value', $vars, get_input('q', get_input('tag')));
 
 echo elgg_view_field([
 	'#type' => 'text',
+	'type' => 'search',
 	'class' => 'search-input',
 	'size' => '21',
 	'name' => 'q',
