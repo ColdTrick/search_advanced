@@ -1,6 +1,36 @@
 Version history
 ===============
 
+5.0 (2019-04-17):
+
+- added: allowed pagination on combined search pages
+- added: apply pluginsettings about not searching profile fields
+- added: autocomplete search helpers based on context
+- added: option to allow empty query searches by search params
+- added: search_filter params added to default search params
+- added: settings to control autocomplete features
+- added: setting to control availability type selection menu
+- added: Spanish translation
+- added: view var to control if menu items are registered on search page
+- changed: allow passing of variables in search result view
+- changed: autocomplete data now all comes from hooks
+- changed: autocomplete helpers show instant
+- changed: autocomplete suggestions always show on result pages
+- changed: browserstate js now is loaded by composer
+- changed: minimal requirements now Elgg 3.0
+- changed: more intelligent loading of ajax_submit js
+- changed: moved search title output to its own view
+- changed: moved start to bootstrap class
+- changed: moved widget registration to elgg-plugin
+- changed: search_user widget is now also available in groups context
+- changed: user profile search filter
+- changed: use settings defaults in the new way
+- fixed: php warning
+- fixed: search on user profile field works
+- fixed: set group container search helper if looking at a group
+- fixed: title count should only count current results listed
+- removed: obsolete features that are now part of core
+
 4.1 (2018-02-12):
 
 - added: option to disable ajax submit in forms searchbox
