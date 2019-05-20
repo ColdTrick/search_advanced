@@ -188,6 +188,11 @@ if (empty($results)) {
 	], elgg_echo('notfound'));
 }
 
+if (get_input('widget_search')) {
+	echo $results;
+	return;
+}
+
 $title = elgg_view('search/title', [
 	'query' => $query,
 	'service' => $service,
