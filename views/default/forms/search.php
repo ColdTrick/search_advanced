@@ -61,6 +61,11 @@ foreach ($values as $name => $value) {
 $filter = (array) get_input('filter');
 if (!empty($filter)) {
 	foreach ($filter as $key => $value) {
+		if ($key === 'profile_fields') {
+			// don't leave profile fields filter intact when submitting the search form
+			continue;
+		}
+		
 		if (is_array($value)) {
 			foreach ($value as $sub_key => $sub_value) {
 				echo elgg_view_field([
