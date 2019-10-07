@@ -31,7 +31,7 @@ define(function(require) {
 				
 				var helpers = getAutocompleteHelpers(request.term);
 				
-				$.getJSON( "/search_advanced/autocomplete", {
+				$.getJSON(elgg.normalize_url("/search_advanced/autocomplete"), {
 					q: request.term,
 				}).done(function(data) {					
 					response(helpers.concat(data));
