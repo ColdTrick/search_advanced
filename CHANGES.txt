@@ -1,6 +1,10 @@
 Version history
 ===============
 
+5.0.4 (2019-10-15):
+
+- fixed: use a normalized url in the autocomplete
+
 5.0.3 (2019-06-12):
 
 - fixed: do not retain profile fields filter when using search form
