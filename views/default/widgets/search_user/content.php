@@ -3,8 +3,9 @@ $params = $vars;
 $params['show_placeholder'] = true;
 $params['show_label'] = false;
 $params['show_button'] = true;
+$params['module_type'] = false;
 
-$form_body = elgg_view('search/filter/entities/user', $params);
+$form_body = elgg_view('search/filter/entities/user/user', $params);
 if ($form_body) {
 	
 	$form_body .= elgg_view('input/hidden', ['name' => 'search_type', 'value' => 'entities']);
