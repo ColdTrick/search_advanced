@@ -1,6 +1,10 @@
 Version history
 ===============
 
+5.0.5 (2020-04-22):
+
+- fix: show correct user filter view in search_user widget
+
 5.0.4 (2019-10-15):
 
 - fixed: use a normalized url in the autocomplete
