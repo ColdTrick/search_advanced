@@ -4,21 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3cbad5ac56ec7e0c1545fcc25a4c6bfe",
+    "content-hash": "24ce7dd10e10b631b94a1271b4f504e9",
     "packages": [
         {
             "name": "bower-asset/history.js",
             "version": "1.8.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/browserstate/history.js.git",
+                "url": "git@github.com:browserstate/history.js.git",
                 "reference": "6c6c8b951b03fa725adb11b1087d73b0b6f0ac82"
             },
             "dist": {
                 "type": "zip",
                 "url": "https://api.github.com/repos/browserstate/history.js/zipball/6c6c8b951b03fa725adb11b1087d73b0b6f0ac82",
-                "reference": "6c6c8b951b03fa725adb11b1087d73b0b6f0ac82",
-                "shasum": ""
+                "reference": "6c6c8b951b03fa725adb11b1087d73b0b6f0ac82"
             },
             "type": "bower-asset-library",
             "time": "2013-06-21T22:06:45+00:00"
@@ -260,5 +259,6 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": [],
-    "platform-dev": []
+    "platform-dev": [],
+    "plugin-api-version": "1.1.0"
 }

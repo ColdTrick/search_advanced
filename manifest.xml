@@ -11,7 +11,7 @@
  	
  	<requires>
 		<type>elgg_release</type>
-		<version>3.0</version>
+		<version>3.3</version>
 	</requires>
 	
 	<requires>
