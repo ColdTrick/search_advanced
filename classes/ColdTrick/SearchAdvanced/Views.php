@@ -49,10 +49,11 @@ class Views {
 			'class' => 'hidden search-advanced-load-content',
 			'href' => elgg_http_add_url_query_elements(current_page_url(), ['loader' => 1]),
 		]);
-		
-		$page_data = elgg_view_layout('one_column', ['content' => $loader]);
-			
-		$output = elgg_view_page(elgg_echo('search'), $page_data);
+					
+		$output = elgg_view_page(elgg_echo('search'), [
+			'content' => $loader,
+			'title' => false,
+		]);
 		
 		return ['__view_output' => $output];
 	}

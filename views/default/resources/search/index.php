@@ -42,14 +42,11 @@ if (elgg_extract('show_inline_form', $vars, true)) {
 
 if (elgg_is_empty($query)) {
 	// display a search form if there is no query
-	$layout = elgg_view_layout('content', [
-		'title' => elgg_echo('search'),
+	echo elgg_view_page(elgg_echo('search'), [
 		'content' => elgg_view('page/components/no_results', ['no_results' => elgg_echo('search_advanced:results:empty_query')]),
 		'filter' => $form . $filter,
 		'filter_id' => 'search',
 	]);
-
-	echo elgg_view_page(elgg_echo('search'), $layout);
 
 	return;
 }
@@ -115,7 +112,7 @@ foreach ($types as $type => $subtypes) {
 				'name' => "item:$type:$subtype",
 				'text' => elgg_echo("item:$type:$subtype"),
 				'href' => elgg_http_add_url_query_elements('search', [
-					'q' => $params['query'],
+					'q' => elgg_extract('query', $params),
 					'entity_type' => $type,
 					'entity_subtype' => $subtype,
 					'owner_guid' => $params['owner_guid'],
@@ -173,7 +170,7 @@ if ($register_menu_items) {
 		'name' => '_all',
 		'text' => elgg_echo('all'),
 		'href' => elgg_http_add_url_query_elements('search', [
-			'q' => $params['query'],
+			'q' => elgg_extract('query', $params),
 			'owner_guid' => $params['owner_guid'],
 			'search_type' => 'all',
 		]),
@@ -199,11 +196,9 @@ $title = elgg_view('search/title', [
 	'count' => $result_total,
 ]);
 
-$layout = elgg_view_layout('content', [
+echo elgg_view_page(elgg_echo('search'), [
 	'title' => $title,
 	'content' => $results,
 	'filter' => $form . $filter,
 	'filter_id' => 'search',
 ]);
-
-echo elgg_view_page(elgg_echo('search'), $layout);
