@@ -28,7 +28,7 @@ $form_options = [
 ];
 
 if ($container_entity instanceof ElggGroup) {
-	$form_options['action'] .= '?container_guid=' . $container_entity->getGUID();
+	$form_options['action'] .= '?container_guid=' . $container_entity->guid;
 }
 
 if ($widget->submit_behaviour !== 'go_to_search') {

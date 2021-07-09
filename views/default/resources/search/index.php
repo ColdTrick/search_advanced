@@ -12,9 +12,6 @@ elgg_register_rss_link();
 // but have /search/<query1>?q=<query2> as <query2> be the main search query
 set_input('q', get_input('q', elgg_extract('route_query', $vars, null, false)));
 
-// setting list_type input so elgg_view_entity_list can use it
-set_input('list_type', get_input('list_type', search_advanced_get_list_type()));
-
 $service = new \ColdTrick\SearchAdvanced\SearchHelper();
 $params = $service->getParams();
 
@@ -201,4 +198,5 @@ echo elgg_view_page(elgg_echo('search'), [
 	'content' => $results,
 	'filter' => $form . $filter,
 	'filter_id' => 'search',
+	'sidebar' => elgg_view('search/sidebar', $vars),
 ]);

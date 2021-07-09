@@ -4,14 +4,14 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "24ce7dd10e10b631b94a1271b4f504e9",
+    "content-hash": "f01a55f2c479001192c4bf1b7f0097f2",
     "packages": [
         {
             "name": "bower-asset/history.js",
             "version": "1.8.0",
             "source": {
                 "type": "git",
-                "url": "git@github.com:browserstate/history.js.git",
+                "url": "https://github.com/browserstate/history.js.git",
                 "reference": "6c6c8b951b03fa725adb11b1087d73b0b6f0ac82"
             },
             "dist": {
@@ -19,39 +19,42 @@
                 "url": "https://api.github.com/repos/browserstate/history.js/zipball/6c6c8b951b03fa725adb11b1087d73b0b6f0ac82",
                 "reference": "6c6c8b951b03fa725adb11b1087d73b0b6f0ac82"
             },
-            "type": "bower-asset-library",
-            "time": "2013-06-21T22:06:45+00:00"
+            "type": "bower-asset"
         },
         {
             "name": "composer/installers",
-            "version": "v1.5.0",
+            "version": "v1.11.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/composer/installers.git",
-                "reference": "049797d727261bf27f2690430d935067710049c2"
+                "reference": "ae03311f45dfe194412081526be2e003960df74b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/composer/installers/zipball/049797d727261bf27f2690430d935067710049c2",
-                "reference": "049797d727261bf27f2690430d935067710049c2",
+                "url": "https://api.github.com/repos/composer/installers/zipball/ae03311f45dfe194412081526be2e003960df74b",
+                "reference": "ae03311f45dfe194412081526be2e003960df74b",
                 "shasum": ""
             },
             "require": {
-                "composer-plugin-api": "^1.0"
+                "composer-plugin-api": "^1.0 || ^2.0"
             },
             "replace": {
                 "roundcube/plugin-installer": "*",
                 "shama/baton": "*"
             },
             "require-dev": {
-                "composer/composer": "1.0.*@dev",
-                "phpunit/phpunit": "^4.8.36"
+                "composer/composer": "1.6.* || ^2.0",
+                "composer/semver": "^1 || ^3",
+                "phpstan/phpstan": "^0.12.55",
+                "phpstan/phpstan-phpunit": "^0.12.16",
+                "symfony/phpunit-bridge": "^4.2 || ^5",
+                "symfony/process": "^2.3"
             },
             "type": "composer-plugin",
             "extra": {
                 "class": "Composer\\Installers\\Plugin",
                 "branch-alias": {
-                    "dev-master": "1.0-dev"
+                    "dev-main": "1.x-dev"
                 }
             },
             "autoload": {
@@ -81,6 +84,7 @@
                 "Kanboard",
                 "Lan Management System",
                 "MODX Evo",
+                "MantisBT",
                 "Mautic",
                 "Maya",
                 "OXID",
@@ -88,7 +92,9 @@
                 "Porto",
                 "RadPHP",
                 "SMF",
+                "Starbug",
                 "Thelia",
+                "Whmcs",
                 "WolfCMS",
                 "agl",
                 "aimeos",
@@ -111,6 +117,7 @@
                 "installer",
                 "itop",
                 "joomla",
+                "known",
                 "kohana",
                 "laravel",
                 "lavalite",
@@ -119,6 +126,7 @@
                 "majima",
                 "mako",
                 "mediawiki",
+                "miaoxing",
                 "modulework",
                 "modx",
                 "moodle",
@@ -126,6 +134,7 @@
                 "phpbb",
                 "piwik",
                 "ppi",
+                "processwire",
                 "puppet",
                 "pxcms",
                 "reindex",
@@ -133,14 +142,34 @@
                 "shopware",
                 "silverstripe",
                 "sydes",
+                "sylius",
                 "symfony",
+                "tastyigniter",
                 "typo3",
                 "wordpress",
                 "yawik",
                 "zend",
                 "zikula"
             ],
-            "time": "2017-12-29T09:13:20+00:00"
+            "support": {
+                "issues": "https://github.com/composer/installers/issues",
+                "source": "https://github.com/composer/installers/tree/v1.11.0"
+            },
+            "funding": [
+                {
+                    "url": "https://packagist.com",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/composer",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/composer/composer",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2021-04-28T06:42:17+00:00"
         }
     ],
     "packages-dev": [
@@ -150,14 +179,15 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/ColdTrick/releases.git",
-                "reference": "60cbbc82f4b5164723d2b40029fead1c5f2715dd"
+                "reference": "c135064f9fc269e4f4d3ea9f0ef40989165c7b7c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ColdTrick/releases/zipball/60cbbc82f4b5164723d2b40029fead1c5f2715dd",
-                "reference": "60cbbc82f4b5164723d2b40029fead1c5f2715dd",
+                "url": "https://api.github.com/repos/ColdTrick/releases/zipball/c135064f9fc269e4f4d3ea9f0ef40989165c7b7c",
+                "reference": "c135064f9fc269e4f4d3ea9f0ef40989165c7b7c",
                 "shasum": ""
             },
+            "default-branch": true,
             "type": "library",
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -169,7 +199,21 @@
                 "release",
                 "travis"
             ],
-            "time": "2017-11-01T09:37:42+00:00"
+            "support": {
+                "issues": "https://github.com/ColdTrick/releases/issues",
+                "source": "https://github.com/ColdTrick/releases"
+            },
+            "funding": [
+                {
+                    "url": "https://www.paypal.me/ColdTrick",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/ColdTrick",
+                    "type": "github"
+                }
+            ],
+            "time": "2020-07-08T11:28:12+00:00"
         },
         {
             "name": "coldtrick/sniffs",
@@ -188,6 +232,7 @@
             "require": {
                 "squizlabs/php_codesniffer": ">=1.3.4"
             },
+            "default-branch": true,
             "type": "library",
             "autoload": {
                 "psr-0": {
@@ -196,20 +241,33 @@
             },
             "notification-url": "https://packagist.org/downloads/",
             "description": "Elgg coding standards",
+            "support": {
+                "source": "https://github.com/ColdTrick/elgg-coding-standards/tree/master"
+            },
+            "funding": [
+                {
+                    "url": "https://www.paypal.me/ColdTrick",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/ColdTrick",
+                    "type": "github"
+                }
+            ],
             "time": "2015-02-17T14:47:25+00:00"
         },
         {
             "name": "squizlabs/php_codesniffer",
-            "version": "3.3.0",
+            "version": "3.6.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/squizlabs/PHP_CodeSniffer.git",
-                "reference": "d86873af43b4aa9d1f39a3601cc0cfcf02b25266"
+                "reference": "ffced0d2c8fa8e6cdc4d695a743271fab6c38625"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/squizlabs/PHP_CodeSniffer/zipball/d86873af43b4aa9d1f39a3601cc0cfcf02b25266",
-                "reference": "d86873af43b4aa9d1f39a3601cc0cfcf02b25266",
+                "url": "https://api.github.com/repos/squizlabs/PHP_CodeSniffer/zipball/ffced0d2c8fa8e6cdc4d695a743271fab6c38625",
+                "reference": "ffced0d2c8fa8e6cdc4d695a743271fab6c38625",
                 "shasum": ""
             },
             "require": {
@@ -242,12 +300,17 @@
                 }
             ],
             "description": "PHP_CodeSniffer tokenizes PHP, JavaScript and CSS files and detects violations of a defined set of coding standards.",
-            "homepage": "http://www.squizlabs.com/php-codesniffer",
+            "homepage": "https://github.com/squizlabs/PHP_CodeSniffer",
             "keywords": [
                 "phpcs",
                 "standards"
             ],
-            "time": "2018-06-06T23:58:19+00:00"
+            "support": {
+                "issues": "https://github.com/squizlabs/PHP_CodeSniffer/issues",
+                "source": "https://github.com/squizlabs/PHP_CodeSniffer",
+                "wiki": "https://github.com/squizlabs/PHP_CodeSniffer/wiki"
+            },
+            "time": "2021-04-09T00:54:41+00:00"
         }
     ],
     "aliases": [],
@@ -260,5 +323,5 @@
     "prefer-lowest": false,
     "platform": [],
     "platform-dev": [],
-    "plugin-api-version": "1.1.0"
+    "plugin-api-version": "2.0.0"
 }

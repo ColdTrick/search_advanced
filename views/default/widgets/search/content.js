@@ -1,6 +1,4 @@
-define(function(require) {
-	var $ = require('jquery');
-
+define(['jquery'], function($) {
 	$(document).on('submit', '.search-advanced-widget-search-form', function(e) {
 		var $target = $(this).next();
 		

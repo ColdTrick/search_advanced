@@ -1,6 +1,4 @@
-define(function(require) {
-	var $ = require('jquery');
-	var elgg = require('elgg');
+define(['jquery', 'elgg', 'jquery-ui/widgets/autocomplete'], function($, elgg) {
 	
 	var getAutocompleteHelpers = function(query) {
 		// make a clone of the original helpers

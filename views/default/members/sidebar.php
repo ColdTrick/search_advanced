@@ -5,11 +5,10 @@
 
 $form_body = elgg_format_element('div', [], elgg_view('input/text', ['name' => 'q', 'placeholder' => elgg_echo('search_advanced:members:sidebar:q:placeholder')]));
 
-$form_body .= elgg_view('search/filter/entities/user', [
+$form_body .= elgg_view('search/filter/entities/user/user', [
 	'show_button' => false,
 	'show_label' => false,
 	'show_placeholder' => true,
-	'soundex_newline' => true,
 	'module_type' => false,
 ]);
 

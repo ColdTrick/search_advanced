@@ -9,10 +9,6 @@ return array(
 	'search_advanced:settings:combine_search_results:info' => "This will show a combined list of the most recently created content based on your search query. There will be no more grouping on the 'all' page. Filtering with the side menu is still possible.",
 	'search_advanced:settings:combine_search_results:objects' => "Combine objects",
 	'search_advanced:settings:combine_search_results:all' => "Combine all",
-	'search_advanced:settings:search_with_loader' => "Use delayed search",
-	'search_advanced:settings:search_with_loader:info' => "Directly show a loader on the search page and get the results AJAX loaded.",
-	'search_advanced:settings:enable_search_type_selection' => "Enable type selection",
-	'search_advanced:settings:enable_search_type_selection:info' => "Directly show a type selection dropdown in the searchbox.",
 
 	'search_advanced:settings:enable_autocomplete' => "Enable searchbox autocomplete",
 	'search_advanced:settings:enable_autocomplete:info' => "Start typing in the searchbox will give you some quick suggestions.",
@@ -28,12 +24,10 @@ return array(
 	'search_advanced:settings:profile_fields:metadata_search' => "Do not use in profile search",
 	'search_advanced:settings:profile_fields:field' => "Profile field",
 	'search_advanced:settings:user_profile_fields:show_on_form' => "Show on search form",
-	'search_advanced:settings:user_profile_fields:use_soundex' => "Use Soundex",
 	'search_advanced:settings:user_profile_fields:info' => "Allow users to refine their search for users based on profile fields. Currently only text based fields are supported (text, location, url, etc).",
 	'search_advanced:settings:query_required' => "Query required",
 	'search_advanced:settings:query_required:help' => "Is a query required executing a search? If not, search will show a list with recent content (if supported).",
 	
-	'search_advanced:users:profile_field:soundex' => "Use sounds like",
 	'search_advanced:searchbox' => "Search",
 	'search_advanced:autocomplete:placeholder:all' => "[search all content]",
 	'search_advanced:autocomplete:placeholder:type' => "[type: %s]",
@@ -51,10 +45,6 @@ return array(
 	'search_advanced:results:empty_query' => "Please provide a search query",
 	
 	'search_advanced:members:sidebar:q:placeholder' => "Search term or name",
-	
-	'search_advanced:menu:search_list:list:title' => "Change the look of the search results",
-	'search_advanced:menu:search_list:entity' => "Default",
-	'search_advanced:menu:search_list:compact' => "Compact",
 
 	'search:filter:entities:user:title' => "Profile fields",
 	'menu:search_types:header:object' => "Objects",

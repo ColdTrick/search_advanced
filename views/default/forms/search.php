@@ -6,6 +6,7 @@
  */
 
 $is_inline_form = elgg_extract('inline_form', $vars, false);
+unset($vars['inline_form']);
 
 $enable_autocomplete = (bool) (elgg_get_plugin_setting('enable_autocomplete', 'search_advanced') === 'yes');
 $enable_autocomplete = elgg_extract('search_autocomplete', $vars, $enable_autocomplete);
@@ -17,7 +18,6 @@ $value = elgg_extract('value', $vars, get_input('q', get_input('tag')));
 
 echo elgg_view_field([
 	'#type' => 'text',
-	'type' => 'search',
 	'class' => 'search-input',
 	'size' => '21',
 	'name' => 'q',
@@ -28,11 +28,6 @@ echo elgg_view_field([
 	'value' => _elgg_get_display_query($value),
 	'placeholder' => elgg_echo('search_advanced:searchbox'),
 ]);
-
-if (!$is_inline_form && (elgg_get_plugin_setting('enable_search_type_selection', 'search_advanced') === 'yes')) {
-	echo elgg_view_menu('search_type_selection');
-}
-unset($vars['inline_form']);
 
 echo elgg_view_field([
 	'#type' => 'submit',

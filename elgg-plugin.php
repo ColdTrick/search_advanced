@@ -1,17 +1,23 @@
 <?php
 
-use ColdTrick\SearchAdvanced\Bootstrap;
 use Elgg\Router\Middleware\AjaxGatekeeper;
 
-require_once(dirname(__FILE__) . '/lib/functions.php');
-
 return [
-	'bootstrap' => Bootstrap::class,
+	'plugin' => [
+		'version' => '6.1',
+		'dependencies' => [
+			'search' => [
+				'position' => 'after',
+			],
+			'members' => [
+				'position' => 'after',
+				'must_be_active' => false,
+			],
+		],
+	],
 	'settings' => [
 		'combine_search_results' => 'no',
-		'search_with_loader' => 'no',
 		'query_required' => 'yes',
-		'enable_search_type_selection' => 'yes',
 		'enable_autocomplete' => 'yes',
 		'enable_autocomplete_content' => 'yes',
 		'enable_autocomplete_helpers' => 'yes',
@@ -25,6 +31,49 @@ return [
 			],
 		],
 	],
+	'hooks' => [
+		'autocomplete' => [
+			'search_advanced' => [
+				'\ColdTrick\SearchAdvanced\Search::getAutocompleteUsers' => ['priority' => 100],
+				'\ColdTrick\SearchAdvanced\Search::getAutocompleteGroups' => ['priority' => 200],
+			],
+		],
+		'elgg.data' => [
+			'page' => [
+				'\ColdTrick\SearchAdvanced\Search::getAutocompleteHelpers' => [],
+			],
+		],
+		'search:config' => [
+			'search_types' => [
+				'\ColdTrick\SearchAdvanced\Search::getSearchTypes' => [],
+			],
+		],
+		'search:fields' => [
+			'group' => [
+				'\ColdTrick\SearchAdvanced\Search::cleanupGroupMetadataFields' => ['priority' => 999],
+			],
+			'user' => [
+				'\ColdTrick\SearchAdvanced\Search::cleanupUserMetadataFields' => ['priority' => 999],
+			],
+		],
+		'search:options' => [
+			'user' => [
+				'\ColdTrick\SearchAdvanced\Search::sanitizeProfileFieldFilter' => ['priority' => 1],
+				'\ColdTrick\SearchAdvanced\Search::searchUserProfileFilter' => [],
+			],
+		],
+		'search:params' => [
+			'all' => [
+				'\ColdTrick\SearchAdvanced\Search::allowEmptyQuery' => [],
+				'\ColdTrick\SearchAdvanced\Search::allowEmptyQueryWithProfileSearch' => ['priority' => 400],
+			],
+		],
+		'setting' => [
+			'plugin' => [
+				'\ColdTrick\SearchAdvanced\Settings::saveArrayTypeSetting' => [],
+			],
+		],
+	],
 	'widgets' => [
 		'search' => [
 			'context' => ['admin', 'profile', 'dashboard', 'index', 'groups'],
@@ -32,6 +81,11 @@ return [
 		],
 		'search_user' => [
 			'context' => ['admin', 'dashboard', 'index', 'groups'],
+		],
+	],
+	'view_extensions' => [
+		'css/elgg' => [
+			'css/search_advanced.css' => [],
 		],
 	],
 ];

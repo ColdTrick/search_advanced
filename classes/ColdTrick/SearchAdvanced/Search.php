@@ -507,7 +507,10 @@ class Search {
 			return;
 		}
 		
-		$profile_fields = elgg_get_config('profile_fields');
+		$profile_fields = [];
+		foreach (elgg()->fields->get('user', 'user') as $field) {
+			$profile_fields[] = elgg_extract('name', $field);
+		}
 		$configured_fields = elgg_get_plugin_setting('user_profile_fields_search_form', 'search_advanced');
 		
 		if (empty($profile_fields) || empty($configured_fields)) {
@@ -520,8 +523,8 @@ class Search {
 		$configured_fields = json_decode($configured_fields, true);
 		
 		foreach ($filter_fields as $name => $value) {
-			if (!array_key_exists($name, $profile_fields)) {
-				// not a profile filed
+			if (!in_array($name, $profile_fields)) {
+				// not a profile field
 				unset($filter_fields[$name]);
 				continue;
 			}
@@ -575,11 +578,7 @@ class Search {
 			return;
 		}
 		
-		$soundex = elgg_extract('profile_fields_soundex', $filter);
-		
 		foreach ($profile_fields as $profile_field => $value) {
-			
-			$value = elgg()->db->sanitizeString($value);
 			if (elgg_is_empty($value)) {
 				continue;
 			}
@@ -588,7 +587,6 @@ class Search {
 				$search_params['annotation_name_value_pairs'] = [];
 			}
 			
-			// @todo implement soundex
 			$search_params['annotation_name_value_pairs'][] = [
 				'name' => "profile:{$profile_field}",
 				'value' => "%{$value}%",

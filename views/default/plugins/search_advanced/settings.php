@@ -28,28 +28,6 @@ echo elgg_view_field([
 
 echo elgg_view_field([
 	'#type' => 'checkbox',
-	'#label' => elgg_echo('search_advanced:settings:search_with_loader'),
-	'#help' => elgg_echo('search_advanced:settings:search_with_loader:info'),
-	'name' => 'params[search_with_loader]',
-	'checked' => $plugin->search_with_loader === 'yes',
-	'switch' => true,
-	'default' => 'no',
-	'value' => 'yes',
-]);
-
-echo elgg_view_field([
-	'#type' => 'checkbox',
-	'#label' => elgg_echo('search_advanced:settings:enable_search_type_selection'),
-	'#help' => elgg_echo('search_advanced:settings:enable_search_type_selection:info'),
-	'name' => 'params[enable_search_type_selection]',
-	'checked' => $plugin->enable_search_type_selection === 'yes',
-	'switch' => true,
-	'default' => 'no',
-	'value' => 'yes',
-]);
-
-echo elgg_view_field([
-	'#type' => 'checkbox',
 	'#label' => elgg_echo('search_advanced:settings:enable_autocomplete'),
 	'#help' => elgg_echo('search_advanced:settings:enable_autocomplete:info'),
 	'name' => 'params[enable_autocomplete]',

@@ -1,6 +1,7 @@
 {
 	"name": "coldtrick/search_advanced",
 	"description": "This plugin provides additional search features",
+	"homepage": "https://www.coldtrick.com",
 	"type": "elgg-plugin",
 	"keywords": ["elgg", "plugin", "search"],
 	"license": "GPL-2.0-only",
@@ -28,6 +29,6 @@
 		}
 	},
 	"conflict": {
-		"elgg/elgg": "<3.3"
+		"elgg/elgg": "<4.0"
 	}
 }
