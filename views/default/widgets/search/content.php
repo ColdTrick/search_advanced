@@ -24,7 +24,8 @@ $form_body .= elgg_view('input/submit', ['value' => elgg_echo('search'), 'class'
 $form_options = [
 	'body' => $form_body,
 	'action' => '/search',
-	'disable_security' => true
+	'disable_security' => true,
+	'prevent_double_submit' => false,
 ];
 
 if ($container_entity instanceof ElggGroup) {
