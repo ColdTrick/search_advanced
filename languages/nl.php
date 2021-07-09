@@ -1,7 +1,7 @@
 <?php
 /**
- * This file was created by Translation Editor v7.0-beta
- * On 2019-01-08 10:22
+ * This file was created by Translation Editor v8.0
+ * On 2021-07-09 11:04
  */
 
 return array (
@@ -9,8 +9,6 @@ return array (
   'widgets:search:description' => 'Zoek naar content op de site',
   'search_types:combined:objects' => 'Content',
   'search_types:combined:all' => 'Alle resultaten',
-  'search_advanced:settings:enable_search_type_selection' => 'Activeer type selectie',
-  'search_advanced:settings:enable_search_type_selection:info' => 'Toon in een content type selectie optie in de searchbox',
   'search_advanced:settings:enable_autocomplete' => 'Activeer searchbox autocomplete',
   'search_advanced:settings:enable_autocomplete:info' => 'Starten met typen in de searchbox geeft je enkele snelle suggesties',
   'search_advanced:settings:enable_autocomplete_content' => 'Activeer autocomplete content',
@@ -30,13 +28,8 @@ return array (
   'search_advanced:settings:profile_fields:disclaimer' => 'De instellingen hieronder zijn alleen van toepassing op search engines die het ondersteunen. Indien Search Advanced niet de zoekresultaten levert, dan kan het zijn dat deze instellingen geen functie hebben.',
   'search_advanced:results:title' => '%s resultaten voor \'%s\'',
   'search_advanced:members:sidebar:q:placeholder' => 'Zoek naar een gebruiker',
-  'search_advanced:menu:search_list:list:title' => 'Wijzig de weergave van de zoekresultaten',
-  'search_advanced:menu:search_list:entity' => 'Standaard',
-  'search_advanced:menu:search_list:compact' => 'Compact',
   'search:filter:entities:user:title' => 'Profielvelden',
   'menu:search_types:header:object' => 'Content',
-  'search_advanced:settings:search_with_loader' => 'Maak gebruik van vertraagd zoeken',
-  'search_advanced:settings:search_with_loader:info' => 'Toon direct een laad scherm en de zoekresultaten worden via AJAX geladen',
   'search_advanced:settings:profile_fields' => 'Configureer specifieke instellingen voor profiel velden',
   'search_advanced:settings:profile_fields:user' => 'Gebruikers profiel velden',
   'search_advanced:settings:profile_fields:group' => 'Groep profiel velden',
@@ -46,9 +39,7 @@ return array (
   'widgets:search_user:description' => 'Zoek gebruikers op basis van profiel metadata velden',
   'widgets:search_user:no_results' => 'Deze widget kan niet worden gebruikt omdat er geen profiel velden zijn geconfigureerd.',
   'search_advanced:settings:user_profile_fields:show_on_form' => 'Toon op zoek formulier',
-  'search_advanced:settings:user_profile_fields:use_soundex' => 'Gebruik Soundex',
   'search_advanced:settings:user_profile_fields:info' => 'Breidt het zoeken naar gebruikers uit met het zoeken in specifieke profielvelden. Op dit moment werkt dit alleen goed bij tekstvelden (tekst, locatie, url, etc).',
-  'search_advanced:users:profile_field:soundex' => 'Klinkt als',
   'search_advanced:widgets:search:edit:submit_behaviour' => 'Zoekresultaat',
   'search_advanced:widgets:search:edit:submit_behaviour:show_in_widget' => 'Toon in widget',
   'search_advanced:widgets:search:edit:submit_behaviour:go_to_search' => 'Ga naar zoekpagina',
