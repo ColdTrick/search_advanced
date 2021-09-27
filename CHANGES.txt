@@ -1,6 +1,10 @@
 Version history
 ===============
 
+7.0 (2021-09-27):
+
+- changed: updated for Elgg 4
+
 6.1 (2021-06-08):
 
 - added: french translation
