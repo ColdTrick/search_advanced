@@ -31,7 +31,7 @@ if (elgg_extract('show_inline_form', $vars, true)) {
 	$params['inline_form'] = true;
 	
 	$form = elgg_view_form('search', [
-		'action' => elgg_normalize_url('search'),
+		'action' => elgg_generate_url('default:search'),
 		'method' => 'get',
 		'disable_security' => true,
 	], $params);
