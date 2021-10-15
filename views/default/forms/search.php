@@ -22,7 +22,7 @@ echo elgg_view_field([
 	'size' => '21',
 	'name' => 'q',
 	'autocapitalize' => 'off',
-	'autocorrect' => 'off',
+	'spellcheck' => 'false',
 	'autocomplete' => $enable_autocomplete ? 'off' : null,
 	'required' => true,
 	'value' => _elgg_get_display_query($value),
