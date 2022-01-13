@@ -2,7 +2,7 @@
 
 $widget = elgg_extract('entity', $vars);
 
-$types = get_registered_entity_types();
+$types = elgg_entity_types_with_capability('searchable');
 $options_values = [0 => elgg_echo('all')];
 foreach ($types as $type => $subtypes) {
 	if ($widget->getOwnerEntity() instanceof ElggGroup && $type == 'group') {

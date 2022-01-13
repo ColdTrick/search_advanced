@@ -185,8 +185,8 @@ class Search {
 		
 		// validate searchable types
 		if ($type && $subtype) {
-			$searchable_subtypes = get_registered_entity_types($type);
-			if (is_array($searchable_subtypes) && in_array($subtype, $searchable_subtypes)) {
+			$searchable_subtypes = elgg_extract($type, elgg_entity_types_with_capability('searchable'), []);
+			if (in_array($subtype, $searchable_subtypes)) {
 				$result[] = [
 					'type' => 'placeholder',
 					'content' => self::formatAutocompletePlaceholder([

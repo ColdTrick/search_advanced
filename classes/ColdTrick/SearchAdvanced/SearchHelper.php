@@ -31,14 +31,16 @@ class SearchHelper extends \Elgg\Search\Search {
 			unset($current_params['type']);
 			unset($current_params['subtype']);
 			
+			$capabilities = elgg_entity_types_with_capability('searchable');
+			
 			switch ($search_type) {
 				case 'combined:objects':
 					$current_params['type_subtype_pairs'] = [
-						'object' => get_registered_entity_types('object'),
+						'object' => elgg_extract('object', $capabilities, []),
 					];
 					break;
 				case 'combined:all':
-					$current_params['type_subtype_pairs'] = get_registered_entity_types();
+					$current_params['type_subtype_pairs'] = $capabilities;
 					break;
 			}
 		}
