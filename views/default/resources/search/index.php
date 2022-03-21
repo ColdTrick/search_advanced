@@ -177,9 +177,7 @@ if ($register_menu_items) {
 }
 
 if (empty($results)) {
-	$results = elgg_format_element('p', [
-		'class' => 'elgg-no-results',
-	], elgg_echo('notfound'));
+	$results = elgg_view('page/components/no_results', ['no_results' => elgg_echo('notfound')]);
 }
 
 if (get_input('widget_search')) {
