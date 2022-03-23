@@ -37,6 +37,7 @@ define(['jquery', 'elgg', 'jquery-ui/widgets/autocomplete'], function($, elgg) {
 				
 				response(helpers);
 			},
+			delay: 100,
 			search: function() {
 				// custom minLength
 				var term = this.value;
