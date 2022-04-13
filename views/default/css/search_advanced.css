@@ -25,3 +25,8 @@
 		display: none;
 	}	
 }
+
+.search-advanced-inline-form [type='submit'] {
+	display: inline-block;
+	margin-right: 0;
+}

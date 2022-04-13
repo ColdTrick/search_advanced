@@ -16,23 +16,41 @@ if (!$is_inline_form && $enable_autocomplete) {
 
 $value = elgg_extract('value', $vars, get_input('q', get_input('tag')));
 
-echo elgg_view_field([
-	'#type' => 'text',
-	'class' => 'search-input',
-	'size' => '21',
-	'name' => 'q',
-	'autocapitalize' => 'off',
-	'spellcheck' => 'false',
-	'autocomplete' => $enable_autocomplete ? 'off' : null,
-	'required' => true,
-	'value' => _elgg_get_display_query($value),
-	'placeholder' => elgg_echo('search_advanced:searchbox'),
-]);
+$fields = [
+	[
+		'#type' => 'text',
+		'class' => 'search-input', // used to target autocomplete
+		'size' => '21',
+		'name' => 'q',
+		'autocapitalize' => 'off',
+		'spellcheck' => 'false',
+		'autocomplete' => $enable_autocomplete ? 'off' : null,
+		'required' => true,
+		'value' => _elgg_get_display_query($value),
+		'placeholder' => elgg_echo('search_advanced:searchbox'),
+	],
+	[
+		'#type' => 'submit',
+		'value' => elgg_view_icon('search'),
+	],
+];
 
-echo elgg_view_field([
-	'#type' => 'submit',
-	'value' => elgg_view_icon('search'),
-]);
+if ($is_inline_form) {
+	$fields[0]['#class'] = 'elgg-field-stretch';
+	unset($fields[0]['class']);
+	$fields[1]['value'] = elgg_echo('search');
+	
+	echo elgg_view_field([
+		'#type' => 'fieldset',
+		'class' => 'search-advanced-inline-form',
+		'align' => 'horizontal',
+		'fields' => $fields,
+	]);
+} else {
+	foreach ($fields as $field) {
+		echo elgg_view_field($field);
+	}
+}
 
 $values = [
 	'entity_subtype' => get_input('entity_subtype'),
