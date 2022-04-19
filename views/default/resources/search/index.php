@@ -184,6 +184,5 @@ echo elgg_view_page(elgg_echo('search'), [
 	'title' => $title,
 	'content' => $content,
 	'filter' => elgg_view('search/layout/filter', $vars),
-	'filter_id' => 'search',
 	'sidebar' => $sidebar,
 ]);
