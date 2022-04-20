@@ -52,6 +52,11 @@ if ($is_inline_form) {
 	}
 }
 
+$add_filter = elgg_extract('add_filter', $vars, true);
+if (!$add_filter) {
+	return;
+}
+
 $values = [
 	'entity_subtype' => get_input('entity_subtype'),
 	'entity_type' => get_input('entity_type'),
