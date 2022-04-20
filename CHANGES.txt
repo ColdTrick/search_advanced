@@ -1,6 +1,11 @@
 Version history
 ===============
 
+8.1 (2022-04-20):
+
+- added: view var to control if filter is added to search form
+- changed: restructured the search index content
+
 8.0.1 (2022-03-30):
 
 - several small chores/fixes
