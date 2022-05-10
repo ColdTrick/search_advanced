@@ -275,12 +275,11 @@ class Search {
 		];
 		
 		$users = elgg_search($user_options);
-		$users_count = count($users);
-		
-		if (empty($users_count)) {
+		if (empty($users)) {
 			return;
 		}
 		
+		$users_count = count($users);
 		if ($users_count >= elgg_extract('limit', $user_options)) {
 			$user_options['count'] = true;
 			$users_count = elgg_search($user_options);
@@ -340,12 +339,11 @@ class Search {
 		];
 		
 		$groups = elgg_search($group_options);
-		$groups_count = count($groups);
-		
-		if (empty($groups_count)) {
+		if (empty($groups)) {
 			return;
 		}
 		
+		$groups_count = count($groups);
 		if ($groups_count >= elgg_extract('limit', $group_options)) {
 			$group_options['count'] = true;
 			$groups_count = elgg_search($group_options);
