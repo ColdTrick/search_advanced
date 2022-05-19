@@ -27,6 +27,7 @@ return array(
 	'search_advanced:settings:user_profile_fields:info' => "Allow users to refine their search for users based on profile fields. Currently only text based fields are supported (text, location, url, etc).",
 	'search_advanced:settings:query_required' => "Query required",
 	'search_advanced:settings:query_required:help' => "Is a query required executing a search? If not, search will show a list with recent content (if supported).",
+	'search_advanced:settings:searchables' => "Allow searching for the following content",
 	
 	'search_advanced:searchbox' => "Search",
 	'search_advanced:autocomplete:placeholder:all' => "[search all content]",

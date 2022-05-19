@@ -31,6 +31,13 @@ return [
 			],
 		],
 	],
+	'events' => [
+		'ready' => [
+			'system' => [
+				'\ColdTrick\SearchAdvanced\Settings::disableSearchables' => [],
+			],
+		],
+	],
 	'hooks' => [
 		'autocomplete' => [
 			'search_advanced' => [

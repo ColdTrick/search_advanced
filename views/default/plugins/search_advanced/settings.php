@@ -64,6 +64,32 @@ echo elgg_view_field([
 	],
 ]);
 
+$searchables = [];
+
+$searchable_entities = elgg_entity_types_with_capability('searchable');
+foreach ($searchable_entities as $type => $subtypes) {
+	foreach ($subtypes as $subtype) {
+		$setting = "{$type}_{$subtype}_searchable";
+		$label = elgg_echo("item:{$type}:{$subtype}");
+		$searchables[$label] = [
+			'#type' => 'checkbox',
+			'#label' => $label,
+			'name' => "params[{$setting}]",
+			'checked' => (int) elgg_get_plugin_setting($setting, 'search_advanced', 1) !== 0,
+			'switch' => true,
+			'default' => 0,
+			'value' => 1,
+		];
+	}
+}
+
+ksort($searchables);
+
+echo elgg_view_module('info', elgg_echo('search_advanced:settings:searchables'), elgg_view_field([
+	'#type' => 'fieldset',
+	'fields' => $searchables,
+]));
+
 $body = '';
 
 $body .= elgg_view_message('notice', elgg_echo('search_advanced:settings:profile_fields:disclaimer'), ['title' => false]);

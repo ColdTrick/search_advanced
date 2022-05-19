@@ -26,6 +26,7 @@ return array (
   'search_advanced:settings:combine_search_results:objects' => 'Objecten samenvoegen',
   'search_advanced:settings:combine_search_results:all' => 'Alles samenvoegen',
   'search_advanced:settings:profile_fields:disclaimer' => 'De instellingen hieronder zijn alleen van toepassing op search engines die het ondersteunen. Indien Search Advanced niet de zoekresultaten levert, dan kan het zijn dat deze instellingen geen functie hebben.',
+  'search_advanced:settings:searchables' => 'Sta zoeken toe op de volgende content',
   'search_advanced:results:title' => '%s resultaten voor \'%s\'',
   'search_advanced:members:sidebar:q:placeholder' => 'Zoek naar een gebruiker',
   'search:filter:entities:user:title' => 'Profielvelden',
