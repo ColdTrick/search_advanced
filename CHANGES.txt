@@ -1,6 +1,10 @@
 Version history
 ===============
 
+8.2 (2022-06-01):
+
+- added: setting to control which type/subtypes should be searchable
+
 8.1 (2022-04-20):
 
 - added: view var to control if filter is added to search form
