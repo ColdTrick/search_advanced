@@ -2,6 +2,9 @@
 
 namespace ColdTrick\SearchAdvanced;
 
+/**
+ * Various search callbacks
+ */
 class Search {
 	
 	const QUERY_PLACEHOLDER = '_search_advanced_empty_query_placeholder';
@@ -9,13 +12,13 @@ class Search {
 	/**
 	 * Allow searches with empty queries when searching profile fields
 	 *
-	 * @param \Elgg\Hook $hook 'search:params', 'user'
+	 * @param \Elgg\Event $event 'search:params', 'user'
 	 *
 	 * @return void|array
 	 */
-	public static function allowEmptyQueryWithProfileSearch(\Elgg\Hook $hook) {
+	public static function allowEmptyQueryWithProfileSearch(\Elgg\Event $event) {
 		
-		$search_params = $hook->getValue();
+		$search_params = $event->getValue();
 		
 		$allow_empty_query = (bool) elgg_extract('allow_empty_query', $search_params, false);
 		$filter = (array) elgg_extract('search_filter', $search_params, []);
@@ -28,7 +31,7 @@ class Search {
 			return;
 		}
 		
-		foreach ($profile_fields as $field => $query) {
+		foreach ($profile_fields as $query) {
 			if (elgg_is_empty($query)) {
 				continue;
 			}
@@ -49,13 +52,13 @@ class Search {
 	/**
 	 * Allow searches with empty queries
 	 *
-	 * @param \Elgg\Hook $hook 'search:params', 'all'
+	 * @param \Elgg\Event $event 'search:params', 'all'
 	 *
 	 * @return void|array
 	 */
-	public static function allowEmptyQuery(\Elgg\Hook $hook) {
+	public static function allowEmptyQuery(\Elgg\Event $event) {
 		
-		$search_params = $hook->getValue();
+		$search_params = $event->getValue();
 		
 		$allow_empty_query = (bool) elgg_extract('allow_empty_query', $search_params, false);
 		if (!$allow_empty_query && elgg_get_plugin_setting('query_required', 'search_advanced') !== 'no') {
@@ -70,10 +73,10 @@ class Search {
 		// set dummy search query
 		$search_params['query'] = self::QUERY_PLACEHOLDER;
 		
-		// register hook to unset the dummy query
+		// register event to unset the dummy query
 		$entity_type = elgg_extract('type', $search_params, 'all', false);
 		
-		elgg_register_plugin_hook_handler('search:options', $entity_type, __NAMESPACE__ . '\Search::unsetEmptyQueryPlaceholder', 1);
+		elgg_register_event_handler('search:options', $entity_type, __NAMESPACE__ . '\Search::unsetEmptyQueryPlaceholder', 1);
 		
 		return $search_params;
 	}
@@ -81,13 +84,13 @@ class Search {
 	/**
 	 * Unset empty query placeholder
 	 *
-	 * @param \Elgg\Hook $hook 'search:options', '*'
+	 * @param \Elgg\Event $event 'search:options', '*'
 	 *
 	 * @return void|array
 	 */
-	public static function unsetEmptyQueryPlaceholder(\Elgg\Hook $hook) {
+	public static function unsetEmptyQueryPlaceholder(\Elgg\Event $event) {
 		
-		$result = $hook->getValue();
+		$result = $event->getValue();
 		$query = elgg_extract('query', $result);
 		if ($query !== self::QUERY_PLACEHOLDER) {
 			return;
@@ -103,13 +106,13 @@ class Search {
 	/**
 	 * Gets search types
 	 *
-	 * @param \Elgg\Hook $hook 'search:config', 'search_types'
+	 * @param \Elgg\Event $event 'search:config', 'search_types'
 	 *
 	 * @return array
 	 */
-	public static function getSearchTypes(\Elgg\Hook $hook) {
+	public static function getSearchTypes(\Elgg\Event $event) {
 		
-		$result = $hook->getValue();
+		$result = $event->getValue();
 		
 		$combine_results = elgg_get_plugin_setting('combine_search_results', 'search_advanced');
 		switch ($combine_results) {
@@ -127,12 +130,12 @@ class Search {
 	/**
 	 * Returns the search results for users used in the autocomplete
 	 *
-	 * @param \Elgg\Hook $hook 'elgg.data', 'page'
+	 * @param \Elgg\Event $event 'elgg.data', 'page'
 	 *
 	 * @return array
 	 */
-	public static function getAutocompleteHelpers(\Elgg\Hook $hook) {
-		$return = $hook->getValue();
+	public static function getAutocompleteHelpers(\Elgg\Event $event) {
+		$return = $event->getValue();
 		$return['search_advanced']['helpers'] = [];
 
 		if (elgg_get_plugin_setting('enable_autocomplete_helpers', 'search_advanced') === 'no') {
@@ -146,8 +149,10 @@ class Search {
 		$route = _elgg_services()->request->getRoute();
 		$route_name = '';
 		if ($route) {
-			$entity_guid = elgg_extract('guid', $route->getMatchedParameters());
-			$entity = get_entity($entity_guid);
+			$entity_guid = (int) elgg_extract('guid', $route->getMatchedParameters());
+			if ($entity_guid) {
+				$entity = get_entity($entity_guid);
+			}
 			
 			$route_name = $route->getName();
 		}
@@ -177,7 +182,7 @@ class Search {
 				$owner = $page_owner;
 			}
 		
-			if (elgg_extract(0, $route_parts) == 'collection') {
+			if (in_array(elgg_extract(0, $route_parts), ['default', 'collection'])) {
 				$type = elgg_extract(1, $route_parts);
 				$subtype = elgg_extract(2, $route_parts);
 			}
@@ -258,19 +263,19 @@ class Search {
 	/**
 	 * Returns the search results for users used in the autocomplete
 	 *
-	 * @param \Elgg\Hook $hook 'autocomplete', 'search_advanced'
+	 * @param \Elgg\Event $event 'autocomplete', 'search_advanced'
 	 *
 	 * @return array
 	 */
-	public static function getAutocompleteUsers(\Elgg\Hook $hook) {
+	public static function getAutocompleteUsers(\Elgg\Event $event) {
 		
 		if (elgg_get_plugin_setting('enable_autocomplete_content', 'search_advanced') === 'no') {
 			return;
 		}
 		
 		$user_options = [
-			'query' => $hook->getParam('query'),
-			'limit' => $hook->getParam('limit'),
+			'query' => $event->getParam('query'),
+			'limit' => $event->getParam('limit'),
 			'type' => 'user',
 		];
 		
@@ -285,7 +290,7 @@ class Search {
 			$users_count = elgg_search($user_options);
 		}
 		
-		$result = $hook->getValue();
+		$result = $event->getValue();
 		
 		$result[] = [
 			'type' => 'placeholder',
@@ -296,7 +301,7 @@ class Search {
 			'href' => elgg_generate_url('default:search', [
 				'entity_type' => 'user',
 				'search_type' => 'entities',
-				'q' => $hook->getParam('query'),
+				'q' => $event->getParam('query'),
 			]),
 		];
 		
@@ -318,11 +323,11 @@ class Search {
 	/**
 	 * Returns the search results for groups used in the autocomplete
 	 *
-	 * @param \Elgg\Hook $hook 'autocomplete', 'search_advanced'
+	 * @param \Elgg\Event $event 'autocomplete', 'search_advanced'
 	 *
 	 * @return array
 	 */
-	public static function getAutocompleteGroups(\Elgg\Hook $hook) {
+	public static function getAutocompleteGroups(\Elgg\Event $event) {
 		
 		if (!elgg_is_active_plugin('groups')) {
 			return;
@@ -333,8 +338,8 @@ class Search {
 		}
 		
 		$group_options = [
-			'query' => $hook->getParam('query'),
-			'limit' => $hook->getParam('limit'),
+			'query' => $event->getParam('query'),
+			'limit' => $event->getParam('limit'),
 			'type' => 'group',
 		];
 		
@@ -349,7 +354,7 @@ class Search {
 			$groups_count = elgg_search($group_options);
 		}
 		
-		$result = $hook->getValue();
+		$result = $event->getValue();
 		
 		$result[] = [
 			'type' => 'placeholder',
@@ -360,7 +365,7 @@ class Search {
 			'href' => elgg_generate_url('default:search', [
 				'entity_type' => 'group',
 				'search_type' => 'entities',
-				'q' => $hook->getParam('query'),
+				'q' => $event->getParam('query'),
 			]),
 		];
 		
@@ -381,7 +386,9 @@ class Search {
 	
 	/**
 	 * Formats some information into contents for an autocomplete placeholder
-	 * @param array $params
+	 *
+	 * @param array $params parameters
+	 *
 	 * @return string
 	 */
 	protected static function formatAutocompletePlaceholder(array $params) {
@@ -411,18 +418,18 @@ class Search {
 	/**
 	 * Remove configured fields from allowed user profile fields
 	 *
-	 * @param \Elgg\Hook $hook 'search:fields', 'user'
+	 * @param \Elgg\Event $event 'search:fields', 'user'
 	 *
 	 * @return void|array
 	 */
-	public static function cleanupUserMetadataFields(\Elgg\Hook $hook) {
+	public static function cleanupUserMetadataFields(\Elgg\Event $event) {
 		
 		$remove_fields = elgg_get_plugin_setting('user_profile_fields_metadata_search', 'search_advanced');
 		if (empty($remove_fields)) {
 			return;
 		}
 		
-		$fields = $hook->getValue();
+		$fields = $event->getValue();
 		if (empty($fields)) {
 			return;
 		}
@@ -455,18 +462,18 @@ class Search {
 	/**
 	 * Remove configured metadata fields from allowed group metadata fields
 	 *
-	 * @param \Elgg\Hook $hook 'search:fields', 'group'
+	 * @param \Elgg\Event $event 'search:fields', 'group'
 	 *
 	 * @return void|array
 	 */
-	public static function cleanupGroupMetadataFields(\Elgg\Hook $hook) {
+	public static function cleanupGroupMetadataFields(\Elgg\Event $event) {
 		
 		$remove_fields = elgg_get_plugin_setting('group_profile_fields_metadata_search', 'search_advanced');
 		if (empty($remove_fields)) {
 			return;
 		}
 		
-		$fields = $hook->getValue();
+		$fields = $event->getValue();
 		if (empty($fields) || empty($fields['metadata'])) {
 			return;
 		}
@@ -487,13 +494,13 @@ class Search {
 	/**
 	 * Sanitize the profile fields filter to only allow configured profile fields
 	 *
-	 * @param \Elgg\Hook $hook 'search:options', 'user'
+	 * @param \Elgg\Event $event 'search:options', 'user'
 	 *
 	 * @return void|array
 	 */
-	public static function sanitizeProfileFieldFilter(\Elgg\Hook $hook) {
+	public static function sanitizeProfileFieldFilter(\Elgg\Event $event) {
 		
-		$search_params = $hook->getValue();
+		$search_params = $event->getValue();
 		
 		$filter = elgg_extract('search_filter', $search_params);
 		if (empty($filter)) {
@@ -509,6 +516,7 @@ class Search {
 		foreach (elgg()->fields->get('user', 'user') as $field) {
 			$profile_fields[] = elgg_extract('name', $field);
 		}
+		
 		$configured_fields = elgg_get_plugin_setting('user_profile_fields_search_form', 'search_advanced');
 		
 		if (empty($profile_fields) || empty($configured_fields)) {
@@ -558,13 +566,13 @@ class Search {
 	/**
 	 * Apply profile search filter on user search
 	 *
-	 * @param \Elgg\Hook $hook 'search:options', 'user'
+	 * @param \Elgg\Event $event 'search:options', 'user'
 	 *
 	 * @return void|array
 	 */
-	public static function searchUserProfileFilter(\Elgg\Hook $hook) {
+	public static function searchUserProfileFilter(\Elgg\Event $event) {
 		
-		$search_params = $hook->getValue();
+		$search_params = $event->getValue();
 		
 		$filter = elgg_extract('search_filter', $search_params);
 		if (empty($filter)) {

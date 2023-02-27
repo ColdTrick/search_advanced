@@ -11,10 +11,10 @@ unset($vars['inline_form']);
 $enable_autocomplete = (bool) (elgg_get_plugin_setting('enable_autocomplete', 'search_advanced') === 'yes');
 $enable_autocomplete = elgg_extract('search_autocomplete', $vars, $enable_autocomplete);
 if (!$is_inline_form && $enable_autocomplete) {
-	elgg_require_js('search_advanced/autocomplete');
+	elgg_require_js('forms/search');
 }
 
-$value = elgg_extract('value', $vars, get_input('q', get_input('tag')));
+$value = (string) elgg_extract('value', $vars, get_input('q', get_input('tag')));
 
 $fields = [
 	[
@@ -69,6 +69,7 @@ foreach ($values as $name => $value) {
 	if (!isset($value)) {
 		continue;
 	}
+	
 	echo elgg_view_field([
 		'#type' => 'hidden',
 		'name' => $name,

@@ -59,17 +59,15 @@ if (elgg_is_empty($query)) {
 		}
 	
 		switch ($params['search_type']) {
-			case 'entities' :
-				if ($params['type'] && $params['type'] != $type) {
+			case 'entities':
+				if ($params['type'] && $params['type'] !== $type) {
 					return false;
-				} else if ($params['subtype'] && $params['subtype'] !== $subtype) {
+				} elseif ($params['subtype'] && $params['subtype'] !== $subtype) {
 					return false;
 				}
-	
 				return true;
-	
 			// custom search type
-			default :
+			default:
 				return $params['search_type'] == $search_type;
 		}
 	};

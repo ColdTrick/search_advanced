@@ -15,7 +15,7 @@ $params = [
 	'query' => $q,
 	'limit' => $limit,
 ];
-$result = elgg_trigger_plugin_hook('autocomplete', 'search_advanced', $params, []);
+$result = elgg_trigger_event_results('autocomplete', 'search_advanced', $params, []);
 
 echo json_encode(array_values($result));
 

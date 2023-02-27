@@ -18,9 +18,8 @@ define(['jquery', 'elgg', 'jquery-ui/widgets/autocomplete'], function($, elgg) {
 		
 		$(this)
 		// don't navigate away from the field on tab when selecting an item
-		.bind( "keydown", function(event) {
-			if ( event.keyCode === $.ui.keyCode.TAB &&
-					$( this ).data( "autocomplete" ).menu.active ) {
+		.bind("keydown", function(event) {
+			if (event.keyCode === $.ui.keyCode.TAB && $(this).data('autocomplete').menu.active) {
 				event.preventDefault();
 			}
 		})
@@ -31,7 +30,7 @@ define(['jquery', 'elgg', 'jquery-ui/widgets/autocomplete'], function($, elgg) {
 				
 				$.getJSON(elgg.normalize_url("/search_advanced/autocomplete"), {
 					q: request.term,
-				}).done(function(data) {					
+				}).done(function(data) {
 					response(helpers.concat(data));
 				});
 				
@@ -41,7 +40,7 @@ define(['jquery', 'elgg', 'jquery-ui/widgets/autocomplete'], function($, elgg) {
 			search: function() {
 				// custom minLength
 				var term = this.value;
-				if ( term.length < 2){
+				if (term.length < 2) {
 					return false;
 				}
 
@@ -51,14 +50,15 @@ define(['jquery', 'elgg', 'jquery-ui/widgets/autocomplete'], function($, elgg) {
 				// prevent value inserted on focus
 				return false;
 			},
-			select: function( event, ui ) {
+			select: function(event, ui) {
 				if (ui.item.href) {
 					document.location.href = ui.item.href;
-				} else if(ui.item.type == "placeholder"){
+				} else if (ui.item.type == 'placeholder') {
 					return false;
 				} else {
 					this.value = ui.item.value;
 				}
+				
 				return false;
 			},
 			autoFocus: false,

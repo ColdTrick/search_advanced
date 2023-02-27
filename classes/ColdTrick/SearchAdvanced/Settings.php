@@ -2,23 +2,26 @@
 
 namespace ColdTrick\SearchAdvanced;
 
+/**
+ * Plugin settings
+ */
 class Settings {
 	
 	/**
 	 * Modifies the value of the array type setting
 	 *
-	 * @param \Elgg\Hook $hook 'setting', 'plugin'
+	 * @param \Elgg\Event $event 'setting', 'plugin'
 	 *
 	 * @return array
 	 */
-	public static function saveArrayTypeSetting(\Elgg\Hook $hook) {
+	public static function saveArrayTypeSetting(\Elgg\Event $event) {
 		
-		$plugin = $hook->getParam('plugin');
+		$plugin = $event->getParam('plugin');
 		if (!$plugin instanceof \ElggPlugin || $plugin->getID() !== 'search_advanced') {
 			return;
 		}
 		
-		$value = $hook->getParam('value');
+		$value = $event->getParam('value');
 		if (!is_array($value)) {
 			return;
 		}

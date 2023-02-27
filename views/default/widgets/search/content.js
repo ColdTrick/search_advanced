@@ -10,10 +10,10 @@ define(['jquery', 'elgg/Ajax'], function($, Ajax) {
 		data.append('widget_search', 1);
 		
 		ajax.path('search', {
-			data : data,
+			data: data,
 			success: function (result) {
 				$target.html(result).addClass("mtm");
 			}
-		})		
+		});
 	});
 });

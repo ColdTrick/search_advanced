@@ -8,7 +8,7 @@ $form_body = elgg_view('input/text', ['name' => 'q', 'required' => true]);
 $type = '';
 $types = $widget->types;
 if (!empty($types)) {
-	list($type, $subtype) = explode(':' , $types);
+	list($type, $subtype) = explode(':', $types);
 }
 
 if (!empty($type)) {

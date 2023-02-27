@@ -2,6 +2,9 @@
 
 namespace ColdTrick\SearchAdvanced;
 
+/**
+ * Search helper
+ */
 class SearchHelper extends \Elgg\Search\Search {
 	
 	/**
@@ -13,7 +16,6 @@ class SearchHelper extends \Elgg\Search\Search {
 	 * @param bool   $count       Count
 	 *
 	 * @return int|string
-	 * @throws \InvalidParameterException
 	 */
 	public function listResults($search_type, $type = null, $subtype = null, $count = false) {
 		$current_params = $this->params;
@@ -49,15 +51,15 @@ class SearchHelper extends \Elgg\Search\Search {
 		$current_params = _elgg_services()->search->normalizeOptions($current_params);
 				
 		switch ($search_type) {
-			case 'entities' :
-				if ($subtype && _elgg_services()->hooks->hasHandler('search', "$type:$subtype")) {
-					$hook_type = "$type:$subtype";
+			case 'entities':
+				if ($subtype && _elgg_services()->events->hasHandler('search', "{$type}:{$subtype}")) {
+					$hook_type = "{$type}:{$subtype}";
 				} else {
 					$hook_type = $type;
 				}
 				break;
 
-			default :
+			default:
 				$hook_type = $search_type;
 				break;
 		}
@@ -67,28 +69,17 @@ class SearchHelper extends \Elgg\Search\Search {
 			'count' => 0,
 		];
 
-		if (_elgg_services()->hooks->hasHandler('search', $hook_type)) {
-			elgg_deprecated_notice("
-			'search','$hook_type' plugin hook has been deprecated and may be removed.
-			Please consult the documentation for the new core search API
-			and update your use of search hooks.
-		", '3.0');
-			$results = elgg_trigger_plugin_hook('search', $hook_type, $current_params, $results);
-			if ($count) {
-				return (int) $results['count'];
-			}
-		} else {
-			$current_params['count'] = true;
-			$results['count'] = (int) elgg_search($current_params);
-			if ($count) {
-				return $results['count'];
-			}
-			if (!empty($results['count'])) {
-				unset($current_params['count']);
-				$results['entities'] = elgg_search($current_params);
-			}
+		$current_params['count'] = true;
+		$results['count'] = (int) elgg_search($current_params);
+		if ($count) {
+			return $results['count'];
 		}
-
+		
+		if (!empty($results['count'])) {
+			unset($current_params['count']);
+			$results['entities'] = elgg_search($current_params);
+		}
+	
 		if (empty($results['entities'])) {
 			return '';
 		}

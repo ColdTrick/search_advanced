@@ -15,8 +15,10 @@ if (!elgg_is_empty($search_type)) {
 		if (!elgg_is_empty($subtype)) {
 			$views[] = "search/filter/{$search_type}/{$type}/{$subtype}";
 		}
+		
 		$views[] = "search/filter/{$search_type}/{$type}/default";
 	}
+	
 	$views[] = "search/filter/{$search_type}";
 }
 
@@ -24,6 +26,7 @@ if (!elgg_is_empty($type)) {
 	if (!elgg_is_empty($subtype)) {
 		$views[] = "search/filter/{$type}/{$subtype}";
 	}
+	
 	$views[] = "search/filter/{$type}/default";
 }
 

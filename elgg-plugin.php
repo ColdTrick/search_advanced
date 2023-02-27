@@ -32,13 +32,6 @@ return [
 		],
 	],
 	'events' => [
-		'ready' => [
-			'system' => [
-				'\ColdTrick\SearchAdvanced\Settings::disableSearchables' => [],
-			],
-		],
-	],
-	'hooks' => [
 		'autocomplete' => [
 			'search_advanced' => [
 				'\ColdTrick\SearchAdvanced\Search::getAutocompleteUsers' => ['priority' => 100],
@@ -48,6 +41,11 @@ return [
 		'elgg.data' => [
 			'page' => [
 				'\ColdTrick\SearchAdvanced\Search::getAutocompleteHelpers' => [],
+			],
+		],
+		'ready' => [
+			'system' => [
+				'\ColdTrick\SearchAdvanced\Settings::disableSearchables' => [],
 			],
 		],
 		'search:config' => [

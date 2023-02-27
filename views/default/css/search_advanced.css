@@ -1,4 +1,4 @@
-.search-advanced-autocomplete-placeholder {	
+.search-advanced-autocomplete-placeholder {
 	> label {
 		display: flex;
 		cursor: pointer;
@@ -17,13 +17,13 @@
 				text-overflow: ellipsis;
 			}
 		}
-	}	
+	}
 }
 
 .search-autocomplete {
 	.elgg-autocomplete-item-remove {
 		display: none;
-	}	
+	}
 }
 
 .search-advanced-inline-form [type='submit'] {
