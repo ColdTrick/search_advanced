@@ -40,7 +40,7 @@ define(['jquery', 'elgg', 'jquery-ui/widgets/autocomplete'], function($, elgg) {
 			search: function() {
 				// custom minLength
 				var term = this.value;
-				if (term.length < 2) {
+				if (term.length < 2 || term.length > 50) {
 					return false;
 				}
 
