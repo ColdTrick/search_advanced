@@ -1,6 +1,12 @@
 Version history
 ===============
 
+9.0 (2023-06-02):
+
+- changed: conflict with Elgg < 5.0
+- changed: updated for Elgg 5
+- fixed: do not autocomplete for very long search terms
+
 8.2 (2022-06-01):
 
 - added: setting to control which type/subtypes should be searchable
