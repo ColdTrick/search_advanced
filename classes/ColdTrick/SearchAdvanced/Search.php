@@ -542,7 +542,7 @@ class Search {
 			}
 			
 			if (elgg_is_empty($value)) {
-				// no sumbitted value
+				// no submitted value
 				unset($filter_fields[$name]);
 				continue;
 			}
