@@ -43,6 +43,11 @@ return [
 				'\ColdTrick\SearchAdvanced\Search::getAutocompleteHelpers' => [],
 			],
 		],
+		'index_entity_type_subtypes' => [
+			'opensearch' => [
+				'\ColdTrick\SearchAdvanced\Plugins\OpenSearch::unregisterPreventedSearchTypes' => [],
+			],
+		],
 		'ready' => [
 			'system' => [
 				'\ColdTrick\SearchAdvanced\Settings::disableSearchables' => [],

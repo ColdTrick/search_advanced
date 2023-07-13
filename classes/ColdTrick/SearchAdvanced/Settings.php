@@ -12,18 +12,18 @@ class Settings {
 	 *
 	 * @param \Elgg\Event $event 'setting', 'plugin'
 	 *
-	 * @return array
+	 * @return null|string
 	 */
-	public static function saveArrayTypeSetting(\Elgg\Event $event) {
+	public static function saveArrayTypeSetting(\Elgg\Event $event): ?string {
 		
 		$plugin = $event->getParam('plugin');
 		if (!$plugin instanceof \ElggPlugin || $plugin->getID() !== 'search_advanced') {
-			return;
+			return null;
 		}
 		
 		$value = $event->getParam('value');
 		if (!is_array($value)) {
-			return;
+			return null;
 		}
 		
 		return json_encode($value);
@@ -34,9 +34,9 @@ class Settings {
 	 *
 	 * @param \Elgg\Event $event 'ready', 'system'
 	 *
-	 * @return array
+	 * @return void
 	 */
-	public static function disableSearchables(\Elgg\Event $event) {
+	public static function disableSearchables(\Elgg\Event $event): void {
 		if (elgg_in_context('admin')) {
 			// admin pages should always be able to list/view/configure original searchable type/subtypes
 			return;
