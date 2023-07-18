@@ -31,7 +31,8 @@ $fields = [
 	],
 	[
 		'#type' => 'submit',
-		'value' => elgg_view_icon('search'),
+		'icon' => 'search',
+		'aria-label' => elgg_echo('search'),
 	],
 ];
 
