@@ -19,7 +19,7 @@ if (!empty($type)) {
 	}
 }
 
-$form_body .= elgg_view('input/submit', ['value' => elgg_echo('search'), 'class' => 'hidden']);
+$form_body .= elgg_view('input/submit', ['text' => elgg_echo('search'), 'class' => 'hidden']);
 
 $form_options = [
 	'body' => $form_body,

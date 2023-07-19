@@ -50,7 +50,7 @@ foreach ($output as $row) {
 }
 
 if ($show_button) {
-	$body .= elgg_format_element('div', [], elgg_view('input/submit', ['value' => elgg_echo('search')]));
+	$body .= elgg_format_element('div', [], elgg_view('input/submit', ['text' => elgg_echo('search')]));
 }
 
 $module_type = elgg_extract('module_type', $vars, 'aside');
