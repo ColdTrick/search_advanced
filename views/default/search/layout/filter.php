@@ -9,6 +9,8 @@ if (elgg_extract('show_inline_form', $vars, true)) {
 		'method' => 'get',
 		'disable_security' => true,
 		'enable_autocomplete' => false,
+		'role' => 'search',
+		'aria-label' => elgg_echo('search:aria:label:site_search'),
 	], $params);
 }
 

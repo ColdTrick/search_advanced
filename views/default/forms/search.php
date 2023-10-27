@@ -18,7 +18,7 @@ $value = (string) elgg_extract('value', $vars, get_input('q', get_input('tag')))
 
 $fields = [
 	[
-		'#type' => 'text',
+		'#type' => 'search',
 		'class' => 'search-input', // used to target autocomplete
 		'size' => '21',
 		'name' => 'q',
@@ -28,18 +28,19 @@ $fields = [
 		'required' => true,
 		'value' => _elgg_get_display_query($value),
 		'placeholder' => elgg_echo('search_advanced:searchbox'),
+		'aria-label' => elgg_echo('search'), // because we don't add #label
 	],
 	[
 		'#type' => 'submit',
 		'icon' => 'search',
-		'aria-label' => elgg_echo('search'),
+		'aria-label' => elgg_echo('search'), // because we don't add text
 	],
 ];
 
 if ($is_inline_form) {
 	$fields[0]['#class'] = 'elgg-field-stretch';
 	unset($fields[0]['class']);
-	$fields[1]['value'] = elgg_echo('search');
+	$fields[1]['text'] = elgg_echo('search');
 	
 	echo elgg_view_field([
 		'#type' => 'fieldset',
