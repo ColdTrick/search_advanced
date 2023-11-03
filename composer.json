@@ -10,7 +10,6 @@
 		"issues": "https://github.com/ColdTrick/search_advanced/issues"
 	},
 	"require": {
-		"composer/installers": "^1.0.8",
 		"bower-asset/history.js": "^1.8.0"
 	},
 	"repositories": [
@@ -22,9 +21,6 @@
 	"config": {
 		"fxp-asset": {
             "enabled": false
-		},
-		"allow-plugins": {
-			"composer/installers": true
 		}
 	},
 	"conflict": {
