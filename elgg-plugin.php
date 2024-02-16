@@ -94,7 +94,7 @@ return [
 		],
 	],
 	'view_extensions' => [
-		'css/elgg' => [
+		'elgg.css' => [
 			'css/search_advanced.css' => [],
 		],
 	],
