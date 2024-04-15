@@ -277,6 +277,7 @@ class Search {
 			'query' => $event->getParam('query'),
 			'limit' => $event->getParam('limit'),
 			'type' => 'user',
+			'subtype' => 'user',
 		];
 		
 		$users = elgg_search($user_options);
@@ -300,6 +301,7 @@ class Search {
 			]),
 			'href' => elgg_generate_url('default:search', [
 				'entity_type' => 'user',
+				'entity_subtype' => 'user',
 				'search_type' => 'entities',
 				'q' => $event->getParam('query'),
 			]),
@@ -341,6 +343,7 @@ class Search {
 			'query' => $event->getParam('query'),
 			'limit' => $event->getParam('limit'),
 			'type' => 'group',
+			'subtype' => 'group',
 		];
 		
 		$groups = elgg_search($group_options);
@@ -364,6 +367,7 @@ class Search {
 			]),
 			'href' => elgg_generate_url('default:search', [
 				'entity_type' => 'group',
+				'entity_subtype' => 'group',
 				'search_type' => 'entities',
 				'q' => $event->getParam('query'),
 			]),
