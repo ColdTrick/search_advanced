@@ -14,43 +14,32 @@ $profile_field_values = json_decode($profile_field_values, true);
 $show_placeholder = (bool) elgg_extract('show_placeholder', $vars, true);
 $show_label = (bool) elgg_extract('show_label', $vars, false);
 
-$output = [];
+$body = '';
 foreach ($profile_fields as $field) {
 	$profile_field = elgg_extract('name', $field);
 	if (!in_array($profile_field, $profile_field_values)) {
 		continue;
 	}
 	
-	$label = elgg_extract('#label', $field);
-
-	$row = new stdClass();
-	$row->label = $label;
-	$row->class = "search-filter-profile-field-{$profile_field}";
-	$row->input = elgg_view('input/text', [
+	$body .= elgg_view_field([
+		'#type' => 'search',
+		'#label' => $show_label ? elgg_extract('#label', $field) : null,
 		'name' => "filter[profile_fields][{$profile_field}]",
 		'value' => elgg_extract($profile_field, $submit_values),
-		'placeholder' => $show_placeholder ? $label : '',
+		'placeholder' => $show_placeholder ? elgg_extract('#label', $field) : null,
 	]);
-	
-	$output[] = $row;
 }
 
-if (empty($output)) {
+if (empty($body)) {
 	return;
 }
 
-$show_button = (bool) elgg_extract('show_button', $vars, false);
-
-$body = '';
-foreach ($output as $row) {
-	$result = $show_label ? elgg_format_element('label', [], $row->label) : '';
-	$result .= $row->input;
-		
-	$body .= elgg_format_element('div', ['class' => $row->class], $result);
-}
-
-if ($show_button) {
-	$body .= elgg_format_element('div', [], elgg_view('input/submit', ['text' => elgg_echo('search')]));
+if (elgg_extract('show_button', $vars, false)) {
+	$body .= elgg_view_field([
+		'#type' => 'submit',
+		'text' => elgg_echo('search'),
+		'icon' => 'search',
+	]);
 }
 
 $module_type = elgg_extract('module_type', $vars, 'aside');

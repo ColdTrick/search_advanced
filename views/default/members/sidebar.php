@@ -3,7 +3,12 @@
  * Members sidebar
  */
 
-$form_body = elgg_format_element('div', [], elgg_view('input/text', ['name' => 'q', 'placeholder' => elgg_echo('search_advanced:members:sidebar:q:placeholder')]));
+$form_body = elgg_view_field([
+	'#type' => 'search',
+	'name' => 'q',
+	'placeholder' => elgg_echo('search_advanced:members:sidebar:q:placeholder'),
+	'aria-label' => elgg_echo('members:search'), // because we don't add #label
+]);
 
 $form_body .= elgg_view('search/filter/entities/user/user', [
 	'show_button' => false,
@@ -12,11 +17,26 @@ $form_body .= elgg_view('search/filter/entities/user/user', [
 	'module_type' => false,
 ]);
 
-$form_body .= '<div>';
-$form_body .= elgg_view('input/hidden', ['name' => 'search_type', 'value' => 'entities']);
-$form_body .= elgg_view('input/hidden', ['name' => 'entity_type', 'value' => 'user']);
-$form_body .= elgg_view('input/submit', ['text' => elgg_echo('search')]);
-$form_body .= '</div>';
+$form_body .= elgg_view_field([
+	'#type' => 'hidden',
+	'name' => 'search_type',
+	'value' => 'entities',
+]);
+$form_body .= elgg_view_field([
+	'#type' => 'hidden',
+	'name' => 'entity_type',
+	'value' => 'user',
+]);
+$form_body .= elgg_view_field([
+	'#type' => 'hidden',
+	'name' => 'entity_subtype',
+	'value' => 'user',
+]);
+$form_body .= elgg_view_field([
+	'#type' => 'submit',
+	'text' => elgg_echo('search'),
+	'icon' => 'search',
+]);
 
 $body = elgg_view('input/form', [
 	'method' => 'GET',

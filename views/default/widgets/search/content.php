@@ -3,7 +3,7 @@
 $widget = $vars['entity'];
 $container_entity = $widget->getContainerEntity();
 
-$form_body = elgg_view('input/text', ['name' => 'q', 'required' => true]);
+$form_body = '';
 
 $type = '';
 $types = $widget->types;
@@ -12,14 +12,42 @@ if (!empty($types)) {
 }
 
 if (!empty($type)) {
-	$form_body .= elgg_view('input/hidden', ['name' => 'search_type', 'value' => 'entities']);
-	$form_body .= elgg_view('input/hidden', ['name' => 'entity_type', 'value' => $type]);
+	$form_body .= elgg_view_field([
+		'#type' => 'hidden',
+		'name' => 'search_type',
+		'value' => 'entities',
+	]);
+	$form_body .= elgg_view_field([
+		'#type' => 'hidden',
+		'name' => 'entity_type',
+		'value' => $type,
+	]);
+	
 	if (!empty($subtype)) {
-		$form_body .= elgg_view('input/hidden', ['name' => 'entity_subtype', 'value' => $subtype]);
+		$form_body .= elgg_view_field([
+			'#type' => 'hidden',
+			'name' => 'entity_subtype',
+			'value' => $subtype,
+		]);
 	}
 }
 
-$form_body .= elgg_view('input/submit', ['text' => elgg_echo('search'), 'class' => 'hidden']);
+$form_body .= elgg_view_field([
+	'#type' => 'fieldset',
+	'align' => 'horizontal',
+	'fields' => [
+		[
+			'#type' => 'search',
+			'#class' => 'elgg-field-stretch',
+			'name' => 'q',
+			'required' => false,
+		],
+		[
+			'#type' => 'submit',
+			'text' => elgg_echo('search'),
+		],
+	],
+]);
 
 $form_options = [
 	'body' => $form_body,
@@ -33,7 +61,7 @@ if ($container_entity instanceof ElggGroup) {
 }
 
 if ($widget->submit_behaviour !== 'go_to_search') {
-	elgg_require_js('widgets/search/content');
+	elgg_import_esm('widgets/search/content');
 
 	$form_options['class'] = 'search-advanced-widget-search-form';
 }

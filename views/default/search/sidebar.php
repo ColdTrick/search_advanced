@@ -5,11 +5,21 @@ if (empty($form_body)) {
 	return;
 }
 
-$form_body .= '<div>';
-$form_body .= elgg_view('input/hidden', ['name' => 'search_type', 'value' => get_input('search_type')]);
-$form_body .= elgg_view('input/hidden', ['name' => 'entity_type', 'value' => get_input('entity_type')]);
-$form_body .= elgg_view('input/hidden', ['name' => 'entity_subtype', 'value' => get_input('entity_subtype')]);
-$form_body .= '</div>';
+$form_body .= elgg_view_field([
+	'#type' => 'hidden',
+	'name' => 'search_type',
+	'value' => get_input('search_type'),
+]);
+$form_body .= elgg_view_field([
+	'#type' => 'hidden',
+	'name' => 'entity_type',
+	'value' => get_input('entity_type'),
+]);
+$form_body .= elgg_view_field([
+	'#type' => 'hidden',
+	'name' => 'entity_subtype',
+	'value' => get_input('entity_subtype'),
+]);
 
 echo elgg_view('input/form', [
 	'method' => 'GET',

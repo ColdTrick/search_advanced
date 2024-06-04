@@ -90,9 +90,7 @@ echo elgg_view_module('info', elgg_echo('search_advanced:settings:searchables'),
 	'fields' => $searchables,
 ]));
 
-$body = '';
-
-$body .= elgg_view_message('notice', elgg_echo('search_advanced:settings:profile_fields:disclaimer'), ['title' => false]);
+$body = elgg_view_message('notice', elgg_echo('search_advanced:settings:profile_fields:disclaimer'), ['title' => false]);
 
 $user_profile_fields = elgg_view('plugins/search_advanced/settings/user_profile_fields', $vars);
 

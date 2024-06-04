@@ -7,8 +7,21 @@ $params['module_type'] = false;
 
 $form_body = elgg_view('search/filter/entities/user/user', $params);
 if ($form_body) {
-	$form_body .= elgg_view('input/hidden', ['name' => 'search_type', 'value' => 'entities']);
-	$form_body .= elgg_view('input/hidden', ['name' => 'entity_type', 'value' => 'user']);
+	$form_body .= elgg_view_field([
+		'#type' => 'hidden',
+		'name' => 'search_type',
+		'value' => 'entities',
+	]);
+	$form_body .= elgg_view_field([
+		'#type' => 'hidden',
+		'name' => 'entity_type',
+		'value' => 'user',
+	]);
+	$form_body .= elgg_view_field([
+		'#type' => 'hidden',
+		'name' => 'entity_subtype',
+		'value' => 'user',
+	]);
 	
 	echo elgg_view('input/form', [
 		'action' => 'search',

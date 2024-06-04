@@ -98,8 +98,7 @@ class SearchHelper extends \Elgg\Search\Search {
 	}
 	
 	/**
-	 * {@inheritDoc}
-	 * @see \Elgg\Search\Search::initParams()
+	 * {@inheritdoc}
 	 */
 	protected function initParams(array $params = []) {
 		$defaults = [
@@ -108,6 +107,6 @@ class SearchHelper extends \Elgg\Search\Search {
 		
 		$params = array_merge($defaults, $params);
 		
-		return parent::initParams($params);
+		parent::initParams($params);
 	}
 }

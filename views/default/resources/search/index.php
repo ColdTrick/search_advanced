@@ -24,7 +24,7 @@ if ($container_guid && !is_array($container_guid)) {
 	elgg_set_page_owner_guid($container_guid);
 }
 
-$query = elgg_extract('query', $params);
+$query = (string) elgg_extract('query', $params, '');
 
 $sidebar = false;
 $title = elgg_echo('search');
@@ -92,7 +92,7 @@ if (elgg_is_empty($query)) {
 				elgg_register_menu_item('page', [
 					'name' => "item:$type:$subtype",
 					'text' => elgg_echo("item:$type:$subtype"),
-					'href' => elgg_http_add_url_query_elements('search', [
+					'href' => elgg_generate_url('default:search', [
 						'q' => elgg_extract('query', $params),
 						'entity_type' => $type,
 						'entity_subtype' => $subtype,
@@ -126,7 +126,7 @@ if (elgg_is_empty($query)) {
 				elgg_register_menu_item('page', [
 					'name' => "search_types:{$search_type}",
 					'text' => elgg_echo("search_types:{$search_type}"),
-					'href' => elgg_http_add_url_query_elements('search', [
+					'href' => elgg_generate_url('default:search', [
 						'q' => $params['query'],
 						'search_type' => $search_type,
 					]),
@@ -150,7 +150,7 @@ if (elgg_is_empty($query)) {
 		elgg_register_menu_item('page', [
 			'name' => '_all',
 			'text' => elgg_echo('all'),
-			'href' => elgg_http_add_url_query_elements('search', [
+			'href' => elgg_generate_url('default:search', [
 				'q' => elgg_extract('query', $params),
 				'owner_guid' => $params['owner_guid'],
 				'search_type' => 'all',
@@ -161,7 +161,9 @@ if (elgg_is_empty($query)) {
 	}
 	
 	if (empty($results)) {
-		$results = elgg_view('page/components/no_results', ['no_results' => elgg_echo('notfound')]);
+		$results = elgg_view('page/components/no_results', [
+			'no_results' => true,
+		]);
 	}
 	
 	if (get_input('widget_search')) {

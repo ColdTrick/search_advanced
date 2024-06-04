@@ -11,7 +11,7 @@ unset($vars['inline_form']);
 $enable_autocomplete = (bool) (elgg_get_plugin_setting('enable_autocomplete', 'search_advanced') === 'yes');
 $enable_autocomplete = elgg_extract('search_autocomplete', $vars, $enable_autocomplete);
 if (!$is_inline_form && $enable_autocomplete) {
-	elgg_require_js('forms/search');
+	elgg_import_esm('forms/search');
 }
 
 $value = (string) elgg_extract('value', $vars, get_input('q', get_input('tag')));
@@ -19,12 +19,12 @@ $value = (string) elgg_extract('value', $vars, get_input('q', get_input('tag')))
 $fields = [
 	[
 		'#type' => 'search',
-		'class' => 'search-input', // used to target autocomplete
+		'class' => 'search-input',
 		'size' => '21',
 		'name' => 'q',
 		'autocapitalize' => 'off',
-		'spellcheck' => 'false',
 		'autocomplete' => $enable_autocomplete ? 'off' : null,
+		'spellcheck' => 'false',
 		'required' => true,
 		'value' => _elgg_get_display_query($value),
 		'placeholder' => elgg_echo('search_advanced:searchbox'),
@@ -60,15 +60,15 @@ if (!$add_filter) {
 }
 
 $values = [
-	'entity_subtype' => get_input('entity_subtype'),
-	'entity_type' => get_input('entity_type'),
+	'entity_subtype' => get_input('entity_subtype', ''),
+	'entity_type' => get_input('entity_type', ''),
 	'owner_guid' => get_input('owner_guid'),
 	'container_guid' => get_input('container_guid'),
 	'search_type' => get_input('search_type', 'all'),
 ];
 
 foreach ($values as $name => $value) {
-	if (!isset($value)) {
+	if (empty($value)) {
 		continue;
 	}
 	

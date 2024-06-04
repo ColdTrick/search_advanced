@@ -37,8 +37,7 @@ foreach ($profile_fields as $field) {
 	
 	$metadata_name = elgg_extract('name', $field);
 	
-	$label = elgg_extract('#label', $field);
-	$label .= " ({$type})";
+	$label = elgg_extract('#label', $field) . " ({$type})";
 
 	$show_field_options = [
 		'name' => 'params[user_profile_fields_search_form][]',
