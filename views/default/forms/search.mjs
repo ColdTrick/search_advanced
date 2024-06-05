@@ -76,7 +76,7 @@ $(".elgg-form-search .search-input").each(function() {
 		
 		return $("<li></li>")
 			.data("item.autocomplete", item)
-			.append("<a class='search-advanced-autocomplete-" + item.type + "'>" + item.content + "</a>")
+			.append("<span class='search-advanced-autocomplete-" + item.type + "'>" + item.content + "</span>")
 			.appendTo(ul);
 	};
 });
