@@ -43,7 +43,9 @@ $body = elgg_view('input/form', [
 	'disable_security' => true,
 	'action' => 'search',
 	'body' => $form_body,
-	'class' => 'search-advanced-user-search'
+	'class' => 'search-advanced-user-search',
+	'role' => 'search',
+	'aria-label' => elgg_echo('members:aria:label:member_search'),
 ]);
 
 echo elgg_view_module('aside', elgg_echo('members:search'), $body);
