@@ -26,7 +26,7 @@ $fields = [
 		'autocomplete' => $enable_autocomplete ? 'off' : null,
 		'spellcheck' => 'false',
 		'required' => true,
-		'value' => _elgg_get_display_query($value),
+		'value' => $value,
 		'placeholder' => elgg_echo('search_advanced:searchbox'),
 		'aria-label' => elgg_echo('search'), // because we don't add #label
 	],
