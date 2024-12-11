@@ -1,6 +1,10 @@
 Version history
 ===============
 
+11.0.1 (2024-12-11):
+
+- changed: search form input does not double encode html entities
+
 11.0 (2024-06-28):
 
 - changed: updated for Elgg 6
