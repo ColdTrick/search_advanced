@@ -38,7 +38,7 @@ $(".elgg-form-search .search-input").each(function() {
 			
 			response(helpers);
 		},
-		delay: 100,
+		delay: 200,
 		search: function() {
 			// custom minLength
 			var term = this.value;
