@@ -1,6 +1,10 @@
 Version history
 ===============
 
+11.0.2 (2025-05-07):
+
+- several small chores/fixes
+
 11.0.1 (2024-12-11):
 
 - changed: search form input does not double encode html entities
