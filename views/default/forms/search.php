@@ -54,8 +54,7 @@ if ($is_inline_form) {
 	}
 }
 
-$add_filter = elgg_extract('add_filter', $vars, true);
-if (!$add_filter) {
+if (!elgg_extract('add_filter', $vars, true)) {
 	return;
 }
 

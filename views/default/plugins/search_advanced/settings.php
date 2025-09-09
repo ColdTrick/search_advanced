@@ -72,13 +72,10 @@ foreach ($searchable_entities as $type => $subtypes) {
 		$setting = "{$type}_{$subtype}_searchable";
 		$label = elgg_echo("item:{$type}:{$subtype}");
 		$searchables[$label] = [
-			'#type' => 'checkbox',
+			'#type' => 'switch',
 			'#label' => $label,
 			'name' => "params[{$setting}]",
-			'checked' => (int) elgg_get_plugin_setting($setting, 'search_advanced', 1) !== 0,
-			'switch' => true,
-			'default' => 0,
-			'value' => 1,
+			'value' => elgg_get_plugin_setting($setting, 'search_advanced', 1),
 		];
 	}
 }
