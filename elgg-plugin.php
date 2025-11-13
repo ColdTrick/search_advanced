@@ -4,7 +4,7 @@ use Elgg\Router\Middleware\AjaxGatekeeper;
 
 return [
 	'plugin' => [
-		'version' => '11.0.2',
+		'version' => '11.0.3',
 		'dependencies' => [
 			'search' => [
 				'position' => 'after',
