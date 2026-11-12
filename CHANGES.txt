@@ -1,6 +1,10 @@
 Version history
 ===============
 
+11.0.5 (2026-11-12):
+
+- several small chores/fixes
+
 11.0.4 (2026-05-29):
 
 - several small chores/fixes
